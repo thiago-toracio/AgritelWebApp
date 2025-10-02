@@ -19,31 +19,22 @@ const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine
   const [mapboxError, setMapboxError] = useState<string | null>(null);
 
   useEffect(() => {
-    console.log('🗺️ MachineMap montado');
     const initializeMap = async () => {
-      console.log('🚀 Iniciando inicialização do mapa...');
-      
       if (!mapContainer.current) {
-        console.error('❌ Container do mapa não encontrado');
         setMapboxError('Container não encontrado');
         setMapLoaded(true);
         return;
       }
       
-      console.log('✅ Container encontrado');
-      
       try {
         const token = "pk.eyJ1IjoicmFmYWVsb3Jhc21vIiwiYSI6ImNtZWlrMjBhaDAzNzgybHEwaWl5OTZjYjIifQ.XJKLRgv-kKSvUGkPRsChEQ";
-        console.log('🔑 Token configurado:', token ? 'SIM' : 'NÃO');
         
         if (!token) {
-          console.log('⚠️ Sem token, mostrando fallback');
           setMapboxError('Token do Mapbox não configurado');
           setMapLoaded(true);
           return;
         }
 
-        console.log('🌍 Inicializando Mapbox...');
         mapboxgl.accessToken = token;
         
         map.current = new mapboxgl.Map({
@@ -54,28 +45,23 @@ const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine
           maxBounds: PARANA_BOUNDS.bounds,
         });
 
-        console.log('🎮 Adicionando controles...');
         map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
 
         map.current.on('load', () => {
-          console.log('✅ Mapa carregado com sucesso!');
           setMapLoaded(true);
         });
 
-        map.current.on('error', (e) => {
-          console.error('❌ Erro do Mapbox:', e);
+        map.current.on('error', () => {
           setMapboxError('Erro ao carregar mapa do Mapbox');
           setMapLoaded(true);
         });
 
       } catch (error) {
-        console.error('❌ Erro ao inicializar mapa:', error);
         setMapboxError('Erro ao carregar mapa');
         setMapLoaded(true);
       }
     };
 
-    // Usar fallback imediatamente se não houver container
     if (!mapContainer.current) {
       setMapboxError('Usando modo de demonstração');
       setMapLoaded(true);
@@ -84,7 +70,6 @@ const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine
     }
 
     return () => {
-      console.log('🧹 Limpando mapa...');
       map.current?.remove();
     };
   }, []);
@@ -102,8 +87,6 @@ const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine
       }
     }
   }, [focusOnMachine, machines, mapLoaded, mapboxError]);
-
-  console.log('🎨 Renderizando MachineMap', { mapLoaded, mapboxError, machinesCount: machines.length });
 
   return (
     <div className="relative w-full h-full bg-background">
