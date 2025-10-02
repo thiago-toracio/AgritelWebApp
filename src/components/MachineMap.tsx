@@ -19,24 +19,31 @@ const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine
   const [mapboxError, setMapboxError] = useState<string | null>(null);
 
   useEffect(() => {
+    console.log('🗺️ MachineMap montado');
     const initializeMap = async () => {
-      console.log('Iniciando mapa...');
+      console.log('🚀 Iniciando inicialização do mapa...');
+      
       if (!mapContainer.current) {
-        console.log('Container do mapa não encontrado');
+        console.error('❌ Container do mapa não encontrado');
+        setMapboxError('Container não encontrado');
+        setMapLoaded(true);
         return;
       }
       
+      console.log('✅ Container encontrado');
+      
       try {
         const token = "pk.eyJ1IjoicmFmYWVsb3Jhc21vIiwiYSI6ImNtZWlrMjBhaDAzNzgybHEwaWl5OTZjYjIifQ.XJKLRgv-kKSvUGkPRsChEQ";
-        console.log('Token obtido:', token ? 'configurado' : 'não configurado');
+        console.log('🔑 Token configurado:', token ? 'SIM' : 'NÃO');
         
         if (!token) {
-          console.log('Mostrando mapa de fallback');
+          console.log('⚠️ Sem token, mostrando fallback');
           setMapboxError('Token do Mapbox não configurado');
-          setMapLoaded(true); // Show fallback
+          setMapLoaded(true);
           return;
         }
 
+        console.log('🌍 Inicializando Mapbox...');
         mapboxgl.accessToken = token;
         
         map.current = new mapboxgl.Map({
@@ -47,22 +54,37 @@ const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine
           maxBounds: PARANA_BOUNDS.bounds,
         });
 
+        console.log('🎮 Adicionando controles...');
         map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
 
         map.current.on('load', () => {
+          console.log('✅ Mapa carregado com sucesso!');
+          setMapLoaded(true);
+        });
+
+        map.current.on('error', (e) => {
+          console.error('❌ Erro do Mapbox:', e);
+          setMapboxError('Erro ao carregar mapa do Mapbox');
           setMapLoaded(true);
         });
 
       } catch (error) {
-        console.error('Erro ao inicializar mapa:', error);
+        console.error('❌ Erro ao inicializar mapa:', error);
         setMapboxError('Erro ao carregar mapa');
-        setMapLoaded(true); // Show fallback
+        setMapLoaded(true);
       }
     };
 
-    initializeMap();
+    // Usar fallback imediatamente se não houver container
+    if (!mapContainer.current) {
+      setMapboxError('Usando modo de demonstração');
+      setMapLoaded(true);
+    } else {
+      initializeMap();
+    }
 
     return () => {
+      console.log('🧹 Limpando mapa...');
       map.current?.remove();
     };
   }, []);
@@ -81,14 +103,16 @@ const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine
     }
   }, [focusOnMachine, machines, mapLoaded, mapboxError]);
 
+  console.log('🎨 Renderizando MachineMap', { mapLoaded, mapboxError, machinesCount: machines.length });
+
   return (
-    <div className="relative w-full h-full">
-      {/* Mapbox container */}
-      <div ref={mapContainer} className="absolute inset-0" />
+    <div className="relative w-full h-full bg-background">
+      {/* Mapbox container - sempre presente */}
+      <div ref={mapContainer} className="absolute inset-0 z-0" />
       
       {/* Fallback for when Mapbox fails */}
       {mapboxError && (
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 to-slate-800"
+        <div className="absolute inset-0 z-10 bg-gradient-to-br from-slate-900 to-slate-800"
           style={{
             backgroundImage: `
               radial-gradient(circle at 25% 25%, hsl(var(--agriculture-green) / 0.1) 0%, transparent 50%),
@@ -118,15 +142,30 @@ const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine
         </div>
       )}
       
-      {/* Machine markers overlay */}
-      {mapLoaded && machines.map((machine) => (
-        <MachineMarker
-          key={machine.id}
-          machine={machine}
-          isSelected={selectedMachine === machine.id}
-          onClick={() => onMachineSelect(machine.id)}
-        />
-      ))}
+      {/* Machine markers overlay - sempre visível quando carregado */}
+      {mapLoaded && (
+        <div className="absolute inset-0 z-20 pointer-events-none">
+          {machines.map((machine) => (
+            <div key={machine.id} className="pointer-events-auto">
+              <MachineMarker
+                machine={machine}
+                isSelected={selectedMachine === machine.id}
+                onClick={() => onMachineSelect(machine.id)}
+              />
+            </div>
+          ))}
+        </div>
+      )}
+      
+      {/* Loading indicator */}
+      {!mapLoaded && (
+        <div className="absolute inset-0 z-30 flex items-center justify-center bg-background">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+            <p className="text-muted-foreground">Carregando mapa...</p>
+          </div>
+        </div>
+      )}
       
       {/* Map attribution */}
       <div className="absolute bottom-4 right-4 text-xs text-muted-foreground bg-background/80 px-2 py-1 rounded">

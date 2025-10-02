@@ -8,6 +8,8 @@ import MapControls from '@/components/MapControls';
 import AlertsPanel from '@/components/AlertsPanel';
 
 const Index = () => {
+  console.log('📱 Index component montado');
+  
   const [machines] = useState<MachineData[]>(mockMachines);
   const [selectedMachine, setSelectedMachine] = useState<string | undefined>();
   const [isGridOpen, setIsGridOpen] = useState(false);
@@ -15,6 +17,15 @@ const Index = () => {
   const [isAlertsPanelOpen, setIsAlertsPanelOpen] = useState(false);
   const [alerts, setAlerts] = useState<MachineAlert[]>([]);
   const [focusOnMachine, setFocusOnMachine] = useState<string | undefined>();
+  
+  console.log('📊 Estado:', { 
+    machinesCount: machines.length, 
+    selectedMachine, 
+    isGridOpen, 
+    isSidebarOpen, 
+    isAlertsPanelOpen,
+    alertsCount: alerts.length 
+  });
 
   // Gerar alertas com base nas máquinas
   const generatedAlerts = useMemo(() => {
@@ -123,6 +134,8 @@ const Index = () => {
   const handleShowAreasList = () => console.log('Mostrar lista de áreas');
   const handleDrawPolygon = () => console.log('Desenhar polígono');
   const handleDrawCircle = () => console.log('Desenhar círculo');
+
+  console.log('🎨 Renderizando Index');
 
   return (
     <div className="relative h-screen w-full overflow-hidden bg-background">
