@@ -1,0 +1,139 @@
+import { useEffect, useRef, useState } from 'react';
+import mapboxgl from 'mapbox-gl';
+import 'mapbox-gl/dist/mapbox-gl.css';
+import { MachineData } from '@/types/machine';
+import MachineMarker from './MachineMarker';
+import { getMapboxToken, PARANA_BOUNDS } from '@/lib/mapbox';
+
+interface MachineMapProps {
+  machines: MachineData[];
+  selectedMachine?: string;
+  onMachineSelect: (machineId: string) => void;
+  focusOnMachine?: string;
+}
+
+const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine }: MachineMapProps) => {
+  const mapContainer = useRef<HTMLDivElement>(null);
+  const map = useRef<mapboxgl.Map | null>(null);
+  const [mapLoaded, setMapLoaded] = useState(false);
+  const [mapboxError, setMapboxError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const initializeMap = async () => {
+      console.log('Iniciando mapa...');
+      if (!mapContainer.current) {
+        console.log('Container do mapa não encontrado');
+        return;
+      }
+      
+      try {
+        const token = "pk.eyJ1IjoicmFmYWVsb3Jhc21vIiwiYSI6ImNtZWlrMjBhaDAzNzgybHEwaWl5OTZjYjIifQ.XJKLRgv-kKSvUGkPRsChEQ";
+        console.log('Token obtido:', token ? 'configurado' : 'não configurado');
+        
+        if (!token) {
+          console.log('Mostrando mapa de fallback');
+          setMapboxError('Token do Mapbox não configurado');
+          setMapLoaded(true); // Show fallback
+          return;
+        }
+
+        mapboxgl.accessToken = token;
+        
+        map.current = new mapboxgl.Map({
+          container: mapContainer.current,
+          style: 'mapbox://styles/mapbox/satellite-streets-v12',
+          center: PARANA_BOUNDS.center,
+          zoom: PARANA_BOUNDS.zoom,
+          maxBounds: PARANA_BOUNDS.bounds,
+        });
+
+        map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
+
+        map.current.on('load', () => {
+          setMapLoaded(true);
+        });
+
+      } catch (error) {
+        console.error('Erro ao inicializar mapa:', error);
+        setMapboxError('Erro ao carregar mapa');
+        setMapLoaded(true); // Show fallback
+      }
+    };
+
+    initializeMap();
+
+    return () => {
+      map.current?.remove();
+    };
+  }, []);
+
+  // Focus on machine when focusOnMachine changes
+  useEffect(() => {
+    if (focusOnMachine && map.current && mapLoaded && !mapboxError) {
+      const machine = machines.find(m => m.id === focusOnMachine);
+      if (machine) {
+        map.current.flyTo({
+          center: [machine.location.longitude, machine.location.latitude],
+          zoom: 15,
+          duration: 1000
+        });
+      }
+    }
+  }, [focusOnMachine, machines, mapLoaded, mapboxError]);
+
+  return (
+    <div className="relative w-full h-full">
+      {/* Mapbox container */}
+      <div ref={mapContainer} className="absolute inset-0" />
+      
+      {/* Fallback for when Mapbox fails */}
+      {mapboxError && (
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 to-slate-800"
+          style={{
+            backgroundImage: `
+              radial-gradient(circle at 25% 25%, hsl(var(--agriculture-green) / 0.1) 0%, transparent 50%),
+              radial-gradient(circle at 75% 75%, hsl(var(--agriculture-blue) / 0.1) 0%, transparent 50%)
+            `
+          }}
+        >
+          <div className="absolute inset-0 opacity-20">
+            <svg width="100%" height="100%">
+              <defs>
+                <pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse">
+                  <path d="M 50 0 L 0 0 0 50" fill="none" stroke="hsl(var(--border))" strokeWidth="0.5"/>
+                </pattern>
+              </defs>
+              <rect width="100%" height="100%" fill="url(#grid)" />
+            </svg>
+          </div>
+          
+          <div className="absolute top-4 left-4 bg-agriculture-blue/10 border border-agriculture-blue/20 text-agriculture-blue px-4 py-3 rounded-lg text-sm max-w-md">
+            <p className="font-medium">Mapa do Paraná configurado!</p>
+            <p className="text-xs mt-1 opacity-90">
+              Para ver o mapa real, adicione seu token do Mapbox nas configurações do Supabase.
+              <br />
+              <span className="text-xs opacity-75">Obtenha em: mapbox.com → Tokens</span>
+            </p>
+          </div>
+        </div>
+      )}
+      
+      {/* Machine markers overlay */}
+      {mapLoaded && machines.map((machine) => (
+        <MachineMarker
+          key={machine.id}
+          machine={machine}
+          isSelected={selectedMachine === machine.id}
+          onClick={() => onMachineSelect(machine.id)}
+        />
+      ))}
+      
+      {/* Map attribution */}
+      <div className="absolute bottom-4 right-4 text-xs text-muted-foreground bg-background/80 px-2 py-1 rounded">
+        Monitoramento Agrícola - Paraná
+      </div>
+    </div>
+  );
+};
+
+export default MachineMap;

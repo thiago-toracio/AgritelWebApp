@@ -1,0 +1,307 @@
+import { MachineData } from '@/types/machine';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
+import { Separator } from '@/components/ui/separator';
+import { 
+  X, 
+  MapPin, 
+  Fuel, 
+  Clock, 
+  User, 
+  Settings, 
+  Thermometer, 
+  Gauge,
+  Battery,
+  Droplets,
+  Activity,
+  AlertTriangle
+} from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { formatDistanceToNow } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
+
+interface MachineSidebarProps {
+  machine: MachineData | null;
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+const MachineSidebar = ({ machine, isOpen, onClose }: MachineSidebarProps) => {
+  if (!isOpen || !machine) return null;
+
+  const getStatusColor = (status: MachineData['status']) => {
+    switch (status) {
+      case 'active':
+        return 'text-status-active';
+      case 'idle':
+        return 'text-status-idle';
+      case 'maintenance':
+        return 'text-status-maintenance';
+      case 'offline':
+        return 'text-status-offline';
+      default:
+        return 'text-muted-foreground';
+    }
+  };
+
+  const getStatusBadgeVariant = (status: MachineData['status']) => {
+    switch (status) {
+      case 'active':
+        return 'default';
+      case 'idle':
+        return 'secondary';
+      case 'maintenance':
+        return 'destructive';
+      case 'offline':
+        return 'outline';
+    }
+  };
+
+  const getTelemetryStatus = (value: number, min: number, max: number, optimal?: [number, number]) => {
+    if (optimal && value >= optimal[0] && value <= optimal[1]) return 'success';
+    if (value < min || value > max) return 'error';
+    return 'warning';
+  };
+
+  return (
+    <div className="fixed top-0 right-0 h-full w-96 bg-gradient-overlay border-l border-border shadow-overlay backdrop-blur-sm z-50 animate-slide-right overflow-y-auto">
+      <div className="p-6">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h2 className="text-xl font-semibold text-card-foreground">{machine.name}</h2>
+            <p className="text-sm text-muted-foreground capitalize">{machine.type}</p>
+          </div>
+          <Button variant="ghost" size="sm" onClick={onClose}>
+            <X className="w-4 h-4" />
+          </Button>
+        </div>
+
+        {/* Status Card */}
+        <Card className="mb-6">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-medium flex items-center justify-between">
+              Status Atual
+              <Badge variant={getStatusBadgeVariant(machine.status)}>
+                {machine.status}
+              </Badge>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Activity className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-sm text-muted-foreground">Velocidade</span>
+                </div>
+                <span className={cn("font-medium", getStatusColor(machine.status))}>
+                  {machine.speed} km/h
+                </span>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Clock className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-sm text-muted-foreground">Última atualização</span>
+                </div>
+                <span className="text-sm text-card-foreground">
+                  {formatDistanceToNow(machine.lastUpdate, { addSuffix: true, locale: ptBR })}
+                </span>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <MapPin className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-sm text-muted-foreground">Coordenadas</span>
+                </div>
+                <span className="text-sm text-card-foreground font-mono">
+                  {machine.location.latitude.toFixed(6)}, {machine.location.longitude.toFixed(6)}
+                </span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Operator & Task */}
+        {(machine.operator || machine.task || machine.area) && (
+          <Card className="mb-6">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-medium">Operação</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {machine.operator && (
+                <div className="flex items-center space-x-2">
+                  <User className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-sm text-muted-foreground">Operador:</span>
+                  <span className="text-sm text-card-foreground font-medium">{machine.operator}</span>
+                </div>
+              )}
+              {machine.task && (
+                <div className="flex items-center space-x-2">
+                  <Settings className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-sm text-muted-foreground">Tarefa:</span>
+                  <span className="text-sm text-card-foreground">{machine.task}</span>
+                </div>
+              )}
+              {machine.area && (
+                <div className="flex items-center space-x-2">
+                  <MapPin className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-sm text-muted-foreground">Área:</span>
+                  <span className="text-sm text-card-foreground">{machine.area}</span>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Fuel & Hours */}
+        <Card className="mb-6">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-medium">Consumo</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center space-x-2">
+                  <Fuel className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-sm text-muted-foreground">Combustível</span>
+                </div>
+                <span className={cn(
+                  "text-sm font-medium",
+                  machine.fuel < 20 ? "text-warning" : "text-card-foreground"
+                )}>
+                  {machine.fuel}%
+                </span>
+              </div>
+              <Progress 
+                value={machine.fuel} 
+                className="h-2"
+              />
+              {machine.fuel < 20 && (
+                <div className="flex items-center space-x-1 mt-1">
+                  <AlertTriangle className="w-3 h-3 text-warning" />
+                  <span className="text-xs text-warning">Nível baixo de combustível</span>
+                </div>
+              )}
+            </div>
+
+            <Separator />
+
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <Clock className="w-4 h-4 text-muted-foreground" />
+                <span className="text-sm text-muted-foreground">Horas de operação</span>
+              </div>
+              <span className="text-sm text-card-foreground font-medium">
+                {machine.operationHours.toLocaleString()}h
+              </span>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Telemetry */}
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-medium">Telemetria</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-1">
+                <div className="flex items-center space-x-1">
+                  <Thermometer className="w-3 h-3 text-muted-foreground" />
+                  <span className="text-xs text-muted-foreground">Temp. Motor</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <span className={cn(
+                    "text-sm font-medium",
+                    getTelemetryStatus(machine.telemetry.engineTemp, 60, 100, [80, 95]) === 'error' 
+                      ? "text-error" 
+                      : getTelemetryStatus(machine.telemetry.engineTemp, 60, 100, [80, 95]) === 'warning'
+                      ? "text-warning"
+                      : "text-success"
+                  )}>
+                    {machine.telemetry.engineTemp}°C
+                  </span>
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <div className="flex items-center space-x-1">
+                  <Gauge className="w-3 h-3 text-muted-foreground" />
+                  <span className="text-xs text-muted-foreground">Press. Óleo</span>
+                </div>
+                <span className="text-sm font-medium text-card-foreground">
+                  {machine.telemetry.oilPressure} bar
+                </span>
+              </div>
+
+              <div className="space-y-1">
+                <div className="flex items-center space-x-1">
+                  <Droplets className="w-3 h-3 text-muted-foreground" />
+                  <span className="text-xs text-muted-foreground">Press. Hidráulica</span>
+                </div>
+                <span className="text-sm font-medium text-card-foreground">
+                  {machine.telemetry.hydraulicPressure} bar
+                </span>
+              </div>
+
+              <div className="space-y-1">
+                <div className="flex items-center space-x-1">
+                  <Battery className="w-3 h-3 text-muted-foreground" />
+                  <span className="text-xs text-muted-foreground">Bateria</span>
+                </div>
+                <span className="text-sm font-medium text-card-foreground">
+                  {machine.telemetry.batteryVoltage}V
+                </span>
+              </div>
+            </div>
+
+            {(machine.telemetry.workingWidth || machine.telemetry.seedLevel || machine.telemetry.fertilizerLevel) && (
+              <>
+                <Separator />
+                <div className="space-y-3">
+                  {machine.telemetry.workingWidth && (
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-muted-foreground">Largura de trabalho</span>
+                      <span className="text-sm text-card-foreground font-medium">
+                        {machine.telemetry.workingWidth}m
+                      </span>
+                    </div>
+                  )}
+                  
+                  {machine.telemetry.seedLevel && (
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-sm text-muted-foreground">Nível de sementes</span>
+                        <span className="text-sm text-card-foreground font-medium">
+                          {machine.telemetry.seedLevel}%
+                        </span>
+                      </div>
+                      <Progress value={machine.telemetry.seedLevel} className="h-2" />
+                    </div>
+                  )}
+                  
+                  {machine.telemetry.fertilizerLevel && (
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-sm text-muted-foreground">Nível de fertilizante</span>
+                        <span className="text-sm text-card-foreground font-medium">
+                          {machine.telemetry.fertilizerLevel}%
+                        </span>
+                      </div>
+                      <Progress value={machine.telemetry.fertilizerLevel} className="h-2" />
+                    </div>
+                  )}
+                </div>
+              </>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+};
+
+export default MachineSidebar;
