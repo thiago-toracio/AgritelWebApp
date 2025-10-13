@@ -52,7 +52,7 @@ VITE_API_TARGET=https://localhost:44348
 VITE_BUILD_BASE=/reactappview/
 
 # Build Output Destination
-COPY_DESTINATION_PATH=../3sat.web/WebApp/ReactApp
+COPY_DESTINATION_PATH=../3sat.web/WebApp/ReactAppView
 ```
 
 ### Build Scripts

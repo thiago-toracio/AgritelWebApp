@@ -9,8 +9,8 @@
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview",
-    "postbuild": "shx cp -r dist/* \"$COPY_DESTINATION_PATH\" 2>nul || :",
-    "test:env": "dotenv -e .env -- node -e \"console.log(process.env)\""
+    "postbuild": "dotenv -- npx cross-env-shell \"npx shx rm -rf '$COPY_DESTINATION_PATH' && npx copyfiles -u 1 dist/**/* '$COPY_DESTINATION_PATH'\"",
+    "test:env": "dotenv -- npx cross-env-shell \"echo O caminho é: '$COPY_DESTINATION_PATH'\""
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
