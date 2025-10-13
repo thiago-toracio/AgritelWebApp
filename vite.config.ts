@@ -8,9 +8,9 @@ export default defineConfig(({ mode, command }) => {
   // Load environment variables
   const env = loadEnv(mode, process.cwd(), '');
   
-  // Set default for VITE_MOCK_ENABLED based on command
-  // dev: true (use mock), build: false (use real API)
-  const mockEnabled = env.VITE_MOCK_ENABLED ?? (command === 'serve' ? 'true' : 'false');
+  // Set VITE_MOCK_ENABLED based on command
+  // build: ALWAYS false (real API), dev: use .env or default true (mock)
+  const mockEnabled = command === 'build' ? 'false' : (env.VITE_MOCK_ENABLED ?? 'true');
   
   const defaultConfig = {
     plugins: [
