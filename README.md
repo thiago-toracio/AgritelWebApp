@@ -32,8 +32,54 @@ cd <YOUR_PROJECT_NAME>
 # Step 3: Install the necessary dependencies.
 npm i
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Step 4: Install build tools as dev dependencies (resolves peer dependency conflicts).
+npm install -D copyfiles cross-env dotenv-cli shx
+
+# Step 5: Start the development server with auto-reloading and an instant preview.
 npm run dev
+```
+
+## Build Configuration
+
+This project includes integration with Visual Studio (3sat.web). The build output is automatically copied to the ASP.NET project.
+
+### Environment Variables
+
+Create a `.env` file based on `.env.example`:
+
+```bash
+# API Configuration
+VITE_API_TARGET=https://localhost:44348
+
+# Build Configuration  
+VITE_BUILD_BASE=/reactappview/
+
+# Build Output Destination
+COPY_DESTINATION_PATH=../3sat.web/WebApp/ReactApp
+```
+
+### Build Scripts
+
+After installing the dev dependencies, add these scripts to `package.json`:
+
+```json
+"scripts": {
+  "postbuild": "shx cp -r dist/* \"$COPY_DESTINATION_PATH\" 2>nul || :",
+  "test:env": "dotenv -e .env -- node -e \"console.log(process.env)\""
+}
+```
+
+- `postbuild`: Automatically copies build output to Visual Studio project
+- `test:env`: Tests environment variable configuration
+
+### Building for Production
+
+```bash
+# Development build
+npm run build:dev
+
+# Production build (automatically copies to Visual Studio)
+npm run build
 ```
 
 **Edit a file directly in GitHub**
