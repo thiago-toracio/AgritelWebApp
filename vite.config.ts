@@ -27,7 +27,6 @@ export default defineConfig(({ mode, command }) => {
       server: {
         host: "::",  // Required for Lovable
         port: 8080,  // Required for Lovable
-        open: env.VITE_APP_BASE_PATH || false,
         proxy: {
           '/api': {
             target: env.VITE_API_TARGET || 'https://localhost:44348',
