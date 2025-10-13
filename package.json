@@ -8,7 +8,9 @@
     "build": "vite build",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "postbuild": "shx cp -r dist/* \"$COPY_DESTINATION_PATH\" 2>nul || :",
+    "test:env": "dotenv -e .env -- node -e \"console.log(process.env)\""
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
