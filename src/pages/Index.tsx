@@ -1,6 +1,6 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { MachineData, MachineAlert } from '@/types/machine';
-import { mockMachines } from '@/data/mockMachines';
+import { machineService } from '@/services/api/machineService';
 import MachineMap from '@/components/MachineMap';
 import MachineGrid from '@/components/MachineGrid';
 import MachineSidebar from '@/components/MachineSidebar';
@@ -8,13 +8,31 @@ import MapControls from '@/components/MapControls';
 import AlertsPanel from '@/components/AlertsPanel';
 
 const Index = () => {
-  const [machines] = useState<MachineData[]>(mockMachines);
+  const [machines, setMachines] = useState<MachineData[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [selectedMachine, setSelectedMachine] = useState<string | undefined>();
   const [isGridOpen, setIsGridOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isAlertsPanelOpen, setIsAlertsPanelOpen] = useState(false);
   const [alerts, setAlerts] = useState<MachineAlert[]>([]);
   const [focusOnMachine, setFocusOnMachine] = useState<string | undefined>();
+
+  // Fetch machines on mount
+  useEffect(() => {
+    const loadMachines = async () => {
+      try {
+        setIsLoading(true);
+        const data = await machineService.getMachines();
+        setMachines(data);
+      } catch (error) {
+        console.error('Failed to load machines:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadMachines();
+  }, []);
 
   // Gerar alertas com base nas máquinas
   const generatedAlerts = useMemo(() => {
@@ -123,6 +141,19 @@ const Index = () => {
   const handleShowAreasList = () => console.log('Mostrar lista de áreas');
   const handleDrawPolygon = () => console.log('Desenhar polígono');
   const handleDrawCircle = () => console.log('Desenhar círculo');
+
+  if (isLoading) {
+    return (
+      <div className="flex h-screen w-full items-center justify-center bg-background">
+        <div className="text-center">
+          <div className="mb-4 text-xl font-semibold">Carregando máquinas...</div>
+          <div className="text-muted-foreground">
+            {import.meta.env.VITE_MOCK_ENABLED === 'true' ? '🔧 Modo Mock' : '🌐 API Real'}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="relative h-screen w-full overflow-hidden bg-background">

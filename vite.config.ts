@@ -8,6 +8,10 @@ export default defineConfig(({ mode, command }) => {
   // Load environment variables
   const env = loadEnv(mode, process.cwd(), '');
   
+  // Set default for VITE_MOCK_ENABLED based on command
+  // dev: true (use mock), build: false (use real API)
+  const mockEnabled = env.VITE_MOCK_ENABLED ?? (command === 'serve' ? 'true' : 'false');
+  
   const defaultConfig = {
     plugins: [
       react(),
@@ -17,6 +21,9 @@ export default defineConfig(({ mode, command }) => {
       alias: {
         "@": path.resolve(__dirname, "./src"),
       },
+    },
+    define: {
+      'import.meta.env.VITE_MOCK_ENABLED': JSON.stringify(mockEnabled),
     },
   };
 
