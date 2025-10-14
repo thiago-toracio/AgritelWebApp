@@ -1,41 +1,29 @@
 import React from 'react';
-import grainHarvesterGreen from '@/assets/icons/machines/grain-harvester-green.svg';
-import grainHarvesterYellow from '@/assets/icons/machines/grain-harvester-yellow.svg';
-import grainHarvesterBlue from '@/assets/icons/machines/grain-harvester-blue.svg';
-import grainHarvesterRed from '@/assets/icons/machines/grain-harvester-red.svg';
-import grainHarvesterGray from '@/assets/icons/machines/grain-harvester-gray.svg';
+import { MachineStatusColor } from '@/utils/machineStatus';
 
 interface MachineIconProps {
-  type: 'colhedora' | 'transbordo' | 'caminhao';
-  color: 'green' | 'yellow' | 'blue' | 'red' | 'gray';
+  type: string; // e.g., "sugar-cane-harvester", "loader-sugar-cane", "truck"
+  color: MachineStatusColor;
   heading?: number;
   size?: number;
 }
 
 const MachineIcon = ({ type, color, heading = 0, size = 48 }: MachineIconProps) => {
-  const getIconSrc = () => {
-    // Por enquanto todos os tipos usam o grain-harvester
-    // Futuramente podemos adicionar outros SVGs para transbordo e caminhão
-    switch (color) {
-      case 'green':
-        return grainHarvesterGreen;
-      case 'yellow':
-        return grainHarvesterYellow;
-      case 'blue':
-        return grainHarvesterBlue;
-      case 'red':
-        return grainHarvesterRed;
-      case 'gray':
-        return grainHarvesterGray;
-      default:
-        return grainHarvesterGray;
+  const getIconPath = () => {
+    try {
+      // Dynamically construct the icon path: ${type}-${color}.svg
+      return new URL(`/src/assets/icons/machines/${type}-${color}.svg`, import.meta.url).href;
+    } catch (error) {
+      console.error(`Icon not found: ${type}-${color}.svg`, error);
+      // Fallback to grain-harvester if icon not found
+      return new URL(`/src/assets/icons/machines/grain-harvester-${color}.svg`, import.meta.url).href;
     }
   };
 
   return (
     <div className="inline-block">
       <img
-        src={getIconSrc()}
+        src={getIconPath()}
         alt={`${type} ${color}`}
         style={{
           width: size,
