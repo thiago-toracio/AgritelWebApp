@@ -29,6 +29,7 @@ const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine
   const markers = useRef<{ [key: string]: { marker: mapboxgl.Marker; root: ReactDOM.Root } }>({});
   const [mapLoaded, setMapLoaded] = useState(false);
   const [mapboxError, setMapboxError] = useState<string | null>(null);
+  const hasAdjustedInitialBounds = useRef(false);
 
   useEffect(() => {
     const initializeMap = async () => {
@@ -61,22 +62,6 @@ const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine
 
         map.current.on('load', () => {
           setMapLoaded(true);
-          
-          // Calcular bounds baseado nas coordenadas das máquinas
-          if (machines.length > 0) {
-            const bounds = new mapboxgl.LngLatBounds();
-            
-            machines.forEach(machine => {
-              bounds.extend([machine.location.longitude, machine.location.latitude]);
-            });
-            
-            // Ajustar mapa para mostrar todas as máquinas
-            map.current?.fitBounds(bounds, {
-              padding: { top: 100, bottom: 100, left: 100, right: 100 },
-              maxZoom: 14,
-              duration: 1000
-            });
-          }
         });
 
         map.current.on('error', () => {
@@ -172,6 +157,27 @@ const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine
     });
   }, [machines, mapLoaded, mapboxError, selectedMachine, onMachineSelect]);
 
+  // Ajustar bounds para mostrar todas as máquinas na primeira carga
+  useEffect(() => {
+    if (!map.current || !mapLoaded || mapboxError || hasAdjustedInitialBounds.current) return;
+    
+    if (machines.length > 0) {
+      const bounds = new mapboxgl.LngLatBounds();
+      
+      machines.forEach(machine => {
+        bounds.extend([machine.location.longitude, machine.location.latitude]);
+      });
+      
+      // Ajustar mapa para mostrar todas as máquinas
+      map.current.fitBounds(bounds, {
+        padding: { top: 100, bottom: 100, left: 100, right: 100 },
+        maxZoom: 14,
+        duration: 1000
+      });
+      
+      hasAdjustedInitialBounds.current = true;
+    }
+  }, [machines, mapLoaded, mapboxError]);
 
   // Focus on machine when focusOnMachine changes
   useEffect(() => {
