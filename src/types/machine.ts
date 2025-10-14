@@ -6,7 +6,7 @@ export interface MachineLocation {
 export interface MachineData {
   id: string;
   name: string;
-  type: 'colhedora' | 'transbordo' | 'caminhao';
+  type: string; // e.g., "sugar-cane-harvester", "loader-sugar-cane", "truck"
   direction?: number; // degrees (0-360)
   status: 'active' | 'idle' | 'maintenance' | 'offline';
   location: MachineLocation;
