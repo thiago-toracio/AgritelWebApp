@@ -3,6 +3,7 @@ import { MachineData } from '@/types/machine';
 import { AlertTriangle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import MachineIcon from './MachineIcons';
+import { getMachineStatus } from '@/utils/machineStatus';
 
 interface FallbackMachineMarkerProps {
   machine: MachineData;
@@ -17,7 +18,9 @@ const FallbackMachineMarker: React.FC<FallbackMachineMarkerProps> = ({ machine, 
     top: `${Math.abs(machine.id.charCodeAt(1) % 70) + 15}%`
   };
 
+  const status = getMachineStatus(machine);
   const hasAlert = machine.status === 'maintenance' || machine.fuel < 20;
+  const heading = machine.deviceMessage?.gps?.heading || 0;
 
   return (
     <div
@@ -26,7 +29,7 @@ const FallbackMachineMarker: React.FC<FallbackMachineMarkerProps> = ({ machine, 
       onClick={onClick}
     >
       {/* Active status pulse animation */}
-      {machine.status === 'active' && (
+      {status.color === 'green' && (
         <div className="absolute inset-0 rounded-full animate-pulse-green" />
       )}
       
@@ -40,8 +43,8 @@ const FallbackMachineMarker: React.FC<FallbackMachineMarkerProps> = ({ machine, 
       >
         <MachineIcon 
           type={machine.type} 
-          status={machine.status} 
-          direction={machine.direction || 0}
+          color={status.color}
+          heading={heading}
           size={48}
         />
         
@@ -57,7 +60,7 @@ const FallbackMachineMarker: React.FC<FallbackMachineMarkerProps> = ({ machine, 
       <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
         <div className="bg-card border border-border rounded-lg px-3 py-2 shadow-overlay whitespace-nowrap">
           <div className="text-sm font-medium text-card-foreground">{machine.name}</div>
-          <div className="text-xs text-muted-foreground capitalize">{machine.status}</div>
+          <div className="text-xs text-muted-foreground">{status.label}</div>
           <div className="text-xs text-muted-foreground">{machine.speed} km/h</div>
         </div>
       </div>

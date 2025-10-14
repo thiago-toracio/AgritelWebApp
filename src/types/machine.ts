@@ -27,6 +27,21 @@ export interface MachineData {
     seedLevel?: number; // percentage
     fertilizerLevel?: number; // percentage
   };
+  // Device message data for status determination
+  deviceMessage?: {
+    hasLostConnection?: boolean;
+    transmissionReason?: string;
+    flag?: {
+      working?: boolean;
+      dislocating?: boolean;
+      maneuvering?: boolean;
+      idling?: boolean;
+      ignition?: boolean;
+    };
+    gps?: {
+      heading?: number; // degrees (0-360)
+    };
+  };
 }
 
 export interface MachineAlert {
