@@ -4,6 +4,7 @@ import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { MachineData } from '@/types/machine';
 import MachineMarker from './MachineMarker';
+import FallbackMachineMarker from './FallbackMachineMarker';
 import { getMapboxToken, PARANA_BOUNDS } from '@/lib/mapbox';
 
 interface MachineMapProps {
@@ -16,7 +17,7 @@ interface MachineMapProps {
 const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine }: MachineMapProps) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
-  const markers = useRef<{ [key: string]: mapboxgl.Marker }>({});
+  const markers = useRef<{ [key: string]: { marker: mapboxgl.Marker; root: ReactDOM.Root } }>({});
   const [mapLoaded, setMapLoaded] = useState(false);
   const [mapboxError, setMapboxError] = useState<string | null>(null);
 
@@ -73,7 +74,10 @@ const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine
 
     return () => {
       // Clean up markers
-      Object.values(markers.current).forEach(marker => marker.remove());
+      Object.values(markers.current).forEach(({ marker, root }) => {
+        root.unmount();
+        marker.remove();
+      });
       markers.current = {};
       map.current?.remove();
     };
@@ -86,18 +90,27 @@ const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine
     // Remove old markers that no longer exist
     Object.keys(markers.current).forEach(id => {
       if (!machines.find(m => m.id === id)) {
-        markers.current[id].remove();
+        const { marker, root } = markers.current[id];
+        root.unmount();
+        marker.remove();
         delete markers.current[id];
       }
     });
 
     // Add or update markers
     machines.forEach(machine => {
-      const existingMarker = markers.current[machine.id];
+      const existing = markers.current[machine.id];
       
-      if (existingMarker) {
-        // Update existing marker position
-        existingMarker.setLngLat([machine.location.longitude, machine.location.latitude]);
+      if (existing) {
+        // Update existing marker position and content
+        existing.marker.setLngLat([machine.location.longitude, machine.location.latitude]);
+        existing.root.render(
+          <MachineMarker
+            machine={machine}
+            isSelected={selectedMachine === machine.id}
+            onClick={() => onMachineSelect(machine.id)}
+          />
+        );
       } else {
         // Create new marker
         const el = document.createElement('div');
@@ -115,31 +128,11 @@ const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine
           .setLngLat([machine.location.longitude, machine.location.latitude])
           .addTo(map.current);
 
-        markers.current[machine.id] = marker;
+        markers.current[machine.id] = { marker, root };
       }
     });
   }, [machines, mapLoaded, mapboxError, selectedMachine, onMachineSelect]);
 
-  // Update marker selection state
-  useEffect(() => {
-    if (!map.current || !mapLoaded || mapboxError) return;
-
-    machines.forEach(machine => {
-      const marker = markers.current[machine.id];
-      if (marker) {
-        const el = marker.getElement();
-        const root = ReactDOM.createRoot(el);
-        
-        root.render(
-          <MachineMarker
-            machine={machine}
-            isSelected={selectedMachine === machine.id}
-            onClick={() => onMachineSelect(machine.id)}
-          />
-        );
-      }
-    });
-  }, [selectedMachine, machines, mapLoaded, mapboxError, onMachineSelect]);
 
   // Focus on machine when focusOnMachine changes
   useEffect(() => {
@@ -157,8 +150,8 @@ const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine
 
   return (
     <div className="relative w-full h-full bg-background">
-      {/* Mapbox container - sempre presente */}
-      <div ref={mapContainer} className="absolute inset-0 z-0" />
+      {/* Mapbox container - interativo */}
+      <div ref={mapContainer} className="absolute inset-0 z-0" style={{ pointerEvents: 'auto' }} />
       
       {/* Fallback for when Mapbox fails */}
       {mapboxError && (
@@ -198,7 +191,7 @@ const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine
         <div className="absolute inset-0 z-20 pointer-events-none">
           {machines.map((machine) => (
             <div key={machine.id} className="pointer-events-auto">
-              <MachineMarker
+              <FallbackMachineMarker
                 machine={machine}
                 isSelected={selectedMachine === machine.id}
                 onClick={() => onMachineSelect(machine.id)}
