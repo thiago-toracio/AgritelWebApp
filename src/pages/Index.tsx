@@ -4,7 +4,7 @@ import { machineService } from '@/services/api/machineService';
 import MachineMap from '@/components/MachineMap';
 import MachineGrid from '@/components/MachineGrid';
 import MachineSidebar from '@/components/MachineSidebar';
-import MapControls from '@/components/MapControls';
+import MapControls, { MapStyle } from '@/components/MapControls';
 import AlertsPanel from '@/components/AlertsPanel';
 
 const Index = () => {
@@ -16,6 +16,7 @@ const Index = () => {
   const [isAlertsPanelOpen, setIsAlertsPanelOpen] = useState(false);
   const [alerts, setAlerts] = useState<MachineAlert[]>([]);
   const [focusOnMachine, setFocusOnMachine] = useState<string | undefined>();
+  const [mapStyle, setMapStyle] = useState<MapStyle>('satellite');
 
   // Fetch machines on mount
   useEffect(() => {
@@ -135,12 +136,9 @@ const Index = () => {
     ? machines.find(m => m.id === selectedMachine) 
     : null;
 
-  // Mock map control handlers
-  const handleMeasureDistance = () => console.log('Medir distância');
-  const handleShowAreas = () => console.log('Mostrar áreas');
-  const handleShowAreasList = () => console.log('Mostrar lista de áreas');
-  const handleDrawPolygon = () => console.log('Desenhar polígono');
-  const handleDrawCircle = () => console.log('Desenhar círculo');
+  const handleMapStyleChange = (style: MapStyle) => {
+    setMapStyle(style);
+  };
 
   if (isLoading) {
     return (
@@ -163,6 +161,7 @@ const Index = () => {
         selectedMachine={selectedMachine}
         onMachineSelect={handleMachineSelect}
         focusOnMachine={focusOnMachine}
+        mapStyle={mapStyle}
       />
 
       {/* Map Controls */}
@@ -170,12 +169,9 @@ const Index = () => {
         machines={machines}
         alerts={alerts}
         onToggleGrid={handleToggleGrid}
-        onMeasureDistance={handleMeasureDistance}
-        onShowAreas={handleShowAreas}
-        onShowAreasList={handleShowAreasList}
-        onDrawPolygon={handleDrawPolygon}
-        onDrawCircle={handleDrawCircle}
         onToggleAlerts={handleToggleAlerts}
+        onMapStyleChange={handleMapStyleChange}
+        currentMapStyle={mapStyle}
       />
 
       {/* Machine Grid Overlay */}

@@ -1,14 +1,10 @@
-import { useMemo } from 'react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { 
   Grid2X2, 
-  Ruler,
-  Shapes,
-  List,
-  Pentagon,
-  Circle,
+  Map,
   Settings,
   AlertTriangle,
   CornerDownRight,
@@ -18,30 +14,35 @@ import {
 import ThemeToggle from './ThemeToggle';
 import { MachineData, MachineAlert } from '@/types/machine';
 
+export type MapStyle = 'satellite' | 'streets' | 'outdoors' | 'dark' | 'light';
+
 interface MapControlsProps {
   machines: MachineData[];
   alerts: MachineAlert[];
   onToggleGrid: () => void;
-  onMeasureDistance: () => void;
-  onShowAreas: () => void;
-  onShowAreasList: () => void;
-  onDrawPolygon: () => void;
-  onDrawCircle: () => void;
   onToggleAlerts: () => void;
+  onMapStyleChange: (style: MapStyle) => void;
+  currentMapStyle: MapStyle;
 }
 
 const MapControls = ({ 
   machines, 
   alerts,
   onToggleGrid,
-  onMeasureDistance,
-  onShowAreas,
-  onShowAreasList,
-  onDrawPolygon,
-  onDrawCircle,
-  onToggleAlerts
+  onToggleAlerts,
+  onMapStyleChange,
+  currentMapStyle
 }: MapControlsProps) => {
+  const [showMapStyles, setShowMapStyles] = useState(false);
   const alertsCount = alerts.filter(alert => !alert.resolved).length;
+
+  const mapStyles: { value: MapStyle; label: string }[] = [
+    { value: 'satellite', label: 'Satélite' },
+    { value: 'streets', label: 'Ruas' },
+    { value: 'outdoors', label: 'Outdoor' },
+    { value: 'dark', label: 'Escuro' },
+    { value: 'light', label: 'Claro' }
+  ];
 
   // Categorização das máquinas
   const trabalhando = machines.filter(m => m.status === 'active' && m.speed > 5).length;
@@ -106,55 +107,40 @@ const MapControls = ({
         <Card className="bg-gradient-overlay border-border/50 shadow-overlay backdrop-blur-sm">
           <CardContent className="p-2">
             <div className="flex flex-col space-y-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={onMeasureDistance}
-                className="w-10 h-10 p-0"
-                title="Medir Distância"
-              >
-                <Ruler className="w-6 h-6" />
-              </Button>
-              
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={onShowAreas}
-                className="w-10 h-10 p-0"
-                title="Mostrar Áreas"
-              >
-                <Shapes className="w-6 h-6" />
-              </Button>
-              
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={onShowAreasList}
-                className="w-10 h-10 p-0"
-                title="Lista de Áreas"
-              >
-                <List className="w-6 h-6" />
-              </Button>
-              
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={onDrawPolygon}
-                className="w-10 h-10 p-0"
-                title="Desenhar Polígono"
-              >
-                <Pentagon className="w-6 h-6" />
-              </Button>
-              
-               <Button
-                variant="ghost"
-                size="sm"
-                onClick={onDrawCircle}
-                className="w-10 h-10 p-0"
-                title="Desenhar Círculo"
-              >
-                <Circle className="w-6 h-6" />
-              </Button>
+              <div className="relative">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowMapStyles(!showMapStyles)}
+                  className="w-10 h-10 p-0"
+                  title="Alterar Mapa"
+                >
+                  <Map className="w-6 h-6" />
+                </Button>
+                
+                {showMapStyles && (
+                  <Card className="absolute left-14 top-0 min-w-[140px] bg-gradient-overlay border-border/50 shadow-overlay backdrop-blur-sm">
+                    <CardContent className="p-2">
+                      <div className="flex flex-col space-y-1">
+                        {mapStyles.map((style) => (
+                          <Button
+                            key={style.value}
+                            variant={currentMapStyle === style.value ? "default" : "ghost"}
+                            size="sm"
+                            onClick={() => {
+                              onMapStyleChange(style.value);
+                              setShowMapStyles(false);
+                            }}
+                            className="w-full justify-start text-sm"
+                          >
+                            {style.label}
+                          </Button>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+              </div>
               
               <div className="w-full h-px bg-border my-1" />
               

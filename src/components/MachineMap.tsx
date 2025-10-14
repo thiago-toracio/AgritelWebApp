@@ -6,15 +6,25 @@ import { MachineData } from '@/types/machine';
 import MachineMarker from './MachineMarker';
 import FallbackMachineMarker from './FallbackMachineMarker';
 import { getMapboxToken, PARANA_BOUNDS } from '@/lib/mapbox';
+import { MapStyle } from './MapControls';
+
+const MAP_STYLES: Record<MapStyle, string> = {
+  satellite: 'mapbox://styles/mapbox/satellite-streets-v12',
+  streets: 'mapbox://styles/mapbox/streets-v12',
+  outdoors: 'mapbox://styles/mapbox/outdoors-v12',
+  dark: 'mapbox://styles/mapbox/dark-v11',
+  light: 'mapbox://styles/mapbox/light-v11'
+};
 
 interface MachineMapProps {
   machines: MachineData[];
   selectedMachine?: string;
   onMachineSelect: (machineId: string) => void;
   focusOnMachine?: string;
+  mapStyle: MapStyle;
 }
 
-const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine }: MachineMapProps) => {
+const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine, mapStyle }: MachineMapProps) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const markers = useRef<{ [key: string]: { marker: mapboxgl.Marker; root: ReactDOM.Root } }>({});
@@ -42,10 +52,10 @@ const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine
         
         map.current = new mapboxgl.Map({
           container: mapContainer.current,
-          style: 'mapbox://styles/mapbox/satellite-streets-v12',
+          style: MAP_STYLES[mapStyle],
           center: PARANA_BOUNDS.center,
           zoom: PARANA_BOUNDS.zoom,
-          // Remover maxBounds para permitir navegação livre
+          attributionControl: false, // Remove attribution control
         });
 
         map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
@@ -98,6 +108,13 @@ const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine
       map.current?.remove();
     };
   }, [machines]);
+
+  // Update map style when mapStyle prop changes
+  useEffect(() => {
+    if (map.current && mapLoaded && !mapboxError) {
+      map.current.setStyle(MAP_STYLES[mapStyle]);
+    }
+  }, [mapStyle, mapLoaded, mapboxError]);
 
   // Create and update Mapbox GL markers
   useEffect(() => {
@@ -228,10 +245,6 @@ const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine
         </div>
       )}
       
-      {/* Map attribution */}
-      <div className="absolute bottom-4 right-4 text-xs text-muted-foreground bg-background/80 px-2 py-1 rounded">
-        Monitoramento Agrícola - Paraná
-      </div>
     </div>
   );
 };
