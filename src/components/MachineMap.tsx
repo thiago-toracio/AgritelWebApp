@@ -1,10 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
+import ReactDOM from 'react-dom/client';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { MachineData } from '@/types/machine';
 import MachineMarker from './MachineMarker';
-import MachineIcon from './MachineIcons';
-import { AlertTriangle } from 'lucide-react';
 import { getMapboxToken, PARANA_BOUNDS } from '@/lib/mapbox';
 
 interface MachineMapProps {
@@ -17,6 +16,7 @@ interface MachineMapProps {
 const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine }: MachineMapProps) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
+  const markers = useRef<{ [key: string]: mapboxgl.Marker }>({});
   const [mapLoaded, setMapLoaded] = useState(false);
   const [mapboxError, setMapboxError] = useState<string | null>(null);
 
@@ -72,9 +72,74 @@ const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine
     }
 
     return () => {
+      // Clean up markers
+      Object.values(markers.current).forEach(marker => marker.remove());
+      markers.current = {};
       map.current?.remove();
     };
   }, []);
+
+  // Create and update Mapbox GL markers
+  useEffect(() => {
+    if (!map.current || !mapLoaded || mapboxError) return;
+
+    // Remove old markers that no longer exist
+    Object.keys(markers.current).forEach(id => {
+      if (!machines.find(m => m.id === id)) {
+        markers.current[id].remove();
+        delete markers.current[id];
+      }
+    });
+
+    // Add or update markers
+    machines.forEach(machine => {
+      const existingMarker = markers.current[machine.id];
+      
+      if (existingMarker) {
+        // Update existing marker position
+        existingMarker.setLngLat([machine.location.longitude, machine.location.latitude]);
+      } else {
+        // Create new marker
+        const el = document.createElement('div');
+        const root = ReactDOM.createRoot(el);
+        
+        root.render(
+          <MachineMarker
+            machine={machine}
+            isSelected={selectedMachine === machine.id}
+            onClick={() => onMachineSelect(machine.id)}
+          />
+        );
+
+        const marker = new mapboxgl.Marker({ element: el, anchor: 'center' })
+          .setLngLat([machine.location.longitude, machine.location.latitude])
+          .addTo(map.current);
+
+        markers.current[machine.id] = marker;
+      }
+    });
+  }, [machines, mapLoaded, mapboxError, selectedMachine, onMachineSelect]);
+
+  // Update marker selection state
+  useEffect(() => {
+    if (!map.current || !mapLoaded || mapboxError) return;
+
+    machines.forEach(machine => {
+      const marker = markers.current[machine.id];
+      if (marker) {
+        const el = marker.getElement();
+        const root = ReactDOM.createRoot(el);
+        
+        root.render(
+          <MachineMarker
+            machine={machine}
+            isSelected={selectedMachine === machine.id}
+            onClick={() => onMachineSelect(machine.id)}
+          />
+        );
+      }
+    });
+  }, [selectedMachine, machines, mapLoaded, mapboxError, onMachineSelect]);
 
   // Focus on machine when focusOnMachine changes
   useEffect(() => {
@@ -127,69 +192,19 @@ const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine
         </div>
       )}
       
-      {/* Machine markers overlay - sempre visível quando carregado */}
-      {mapLoaded && map.current && !mapboxError && (
+      
+      {/* Fallback demo markers quando Mapbox falha */}
+      {mapboxError && mapLoaded && (
         <div className="absolute inset-0 z-20 pointer-events-none">
           {machines.map((machine) => (
-            <MachineMarker
-              key={machine.id}
-              machine={machine}
-              isSelected={selectedMachine === machine.id}
-              onClick={() => onMachineSelect(machine.id)}
-              map={map.current!}
-            />
-          ))}
-        </div>
-      )}
-      
-      {/* Fallback markers for demo mode */}
-      {mapLoaded && mapboxError && (
-        <div className="absolute inset-0 z-20 pointer-events-none">
-          {machines.map((machine) => {
-            // Simplified demo positioning when Mapbox is not available
-            const demoPosition = {
-              left: `${Math.abs(machine.id.charCodeAt(0) % 80) + 10}%`,
-              top: `${Math.abs(machine.id.charCodeAt(1) % 70) + 15}%`
-            };
-            
-            const hasAlert = machine.status === 'maintenance' || machine.fuel < 20;
-            
-            return (
-              <div
-                key={machine.id}
-                className="absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer group pointer-events-auto"
-                style={demoPosition}
+            <div key={machine.id} className="pointer-events-auto">
+              <MachineMarker
+                machine={machine}
+                isSelected={selectedMachine === machine.id}
                 onClick={() => onMachineSelect(machine.id)}
-              >
-                {machine.status === 'active' && (
-                  <div className="absolute inset-0 rounded-full animate-pulse-green" />
-                )}
-                
-                <div className={`relative flex items-center justify-center transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-110 ${selectedMachine === machine.id ? 'scale-125 shadow-glow' : ''}`}>
-                  <MachineIcon 
-                    type={machine.type} 
-                    status={machine.status} 
-                    direction={machine.direction || 0}
-                    size={48}
-                  />
-                  
-                  {hasAlert && (
-                    <div className="absolute -top-1 -right-1 w-5 h-5 bg-warning rounded-full flex items-center justify-center">
-                      <AlertTriangle className="w-3 h-3 text-background" />
-                    </div>
-                  )}
-                </div>
-                
-                <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
-                  <div className="bg-card border border-border rounded-lg px-3 py-2 shadow-overlay whitespace-nowrap">
-                    <div className="text-sm font-medium text-card-foreground">{machine.name}</div>
-                    <div className="text-xs text-muted-foreground capitalize">{machine.status}</div>
-                    <div className="text-xs text-muted-foreground">{machine.speed} km/h</div>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
+              />
+            </div>
+          ))}
         </div>
       )}
       

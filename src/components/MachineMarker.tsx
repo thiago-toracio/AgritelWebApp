@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import mapboxgl from 'mapbox-gl';
+import React from 'react';
 import { MachineData } from '@/types/machine';
 import { AlertTriangle } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -9,44 +8,14 @@ interface MachineMarkerProps {
   machine: MachineData;
   isSelected: boolean;
   onClick: () => void;
-  map: mapboxgl.Map;
 }
 
-const MachineMarker: React.FC<MachineMarkerProps> = ({ machine, isSelected, onClick, map }) => {
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-
-  // Convert geographic coordinates to screen pixels
-  useEffect(() => {
-    const updatePosition = () => {
-      const point = map.project([machine.location.longitude, machine.location.latitude]);
-      setPosition({ x: point.x, y: point.y });
-    };
-
-    // Initial position
-    updatePosition();
-
-    // Update position when map moves/zooms
-    map.on('move', updatePosition);
-    map.on('zoom', updatePosition);
-    map.on('rotate', updatePosition);
-
-    return () => {
-      map.off('move', updatePosition);
-      map.off('zoom', updatePosition);
-      map.off('rotate', updatePosition);
-    };
-  }, [map, machine.location.longitude, machine.location.latitude]);
-
+const MachineMarker: React.FC<MachineMarkerProps> = ({ machine, isSelected, onClick }) => {
   const hasAlert = machine.status === 'maintenance' || machine.fuel < 20;
 
   return (
     <div
-      className="absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer group transition-all duration-200"
-      style={{ 
-        left: `${position.x}px`, 
-        top: `${position.y}px`,
-        pointerEvents: 'auto'
-      }}
+      className="cursor-pointer group transition-all duration-200"
       onClick={onClick}
     >
       {/* Active status pulse animation */}
