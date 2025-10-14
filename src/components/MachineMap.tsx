@@ -124,6 +124,13 @@ const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine
 
   // Create and update Mapbox GL markers
   useEffect(() => {
+    console.log('🗺️ Markers useEffect triggered:', { 
+      hasMap: !!map.current, 
+      mapLoaded, 
+      mapboxError,
+      machinesCount: machines.length 
+    });
+    
     if (!map.current || !mapLoaded || mapboxError) return;
 
     // Remove old markers that no longer exist
@@ -137,10 +144,12 @@ const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine
     });
 
     // Add or update markers
+    console.log('🚜 Processing machines for markers:', machines.length);
     machines.forEach(machine => {
       const existing = markers.current[machine.id];
       
       if (existing) {
+        console.log('♻️ Updating existing marker:', machine.id);
         // Update existing marker position and content
         existing.marker.setLngLat([machine.location.longitude, machine.location.latitude]);
         existing.root.render(
@@ -151,6 +160,7 @@ const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine
           />
         );
       } else {
+        console.log('✨ Creating new marker:', machine.id);
         // Create new marker
         const el = document.createElement('div');
         const root = ReactDOM.createRoot(el);
