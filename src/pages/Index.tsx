@@ -9,7 +9,7 @@ import AlertsPanel from '@/components/AlertsPanel';
 
 const Index = () => {
   const [machines, setMachines] = useState<MachineData[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
   const [selectedMachine, setSelectedMachine] = useState<string | undefined>();
   const [isGridOpen, setIsGridOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -20,19 +20,23 @@ const Index = () => {
 
   // Fetch machines on mount
   useEffect(() => {
-    loadMachines();
+    loadMachines(true);
   }, []);
 
-  const loadMachines = async () => {
+  const loadMachines = async (isInitial = false) => {
     try {
-      setIsLoading(true);
+      if (isInitial) {
+        setIsInitialLoading(true);
+      }
       const data = await machineService.getMachines();
       setMachines(data);
       console.log('✅ Máquinas carregadas:', data.length);
     } catch (error) {
       console.error('Failed to load machines:', error);
     } finally {
-      setIsLoading(false);
+      if (isInitial) {
+        setIsInitialLoading(false);
+      }
     }
   };
 
@@ -141,7 +145,7 @@ const Index = () => {
     setMapStyle(style);
   };
 
-  if (isLoading) {
+  if (isInitialLoading) {
     return (
       <div className="flex h-screen w-full items-center justify-center bg-background">
         <div className="text-center">
