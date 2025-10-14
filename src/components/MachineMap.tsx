@@ -113,6 +113,13 @@ const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine
   useEffect(() => {
     if (map.current && mapLoaded && !mapboxError) {
       map.current.setStyle(MAP_STYLES[mapStyle]);
+      
+      // Re-add markers after style loads
+      map.current.once('style.load', () => {
+        Object.values(markers.current).forEach(({ marker }) => {
+          marker.addTo(map.current!);
+        });
+      });
     }
   }, [mapStyle, mapLoaded, mapboxError]);
 
