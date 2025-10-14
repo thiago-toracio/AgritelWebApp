@@ -533,5 +533,222 @@ export const mockMachines: MachineData[] = [
       batteryVoltage: 12.1,
       workingWidth: 9.5
     }
+  },
+  // Máquinas de teste para visualizar todos os estados de cores
+  {
+    id: 'TEST001',
+    name: 'Colheitadeira Teste - Verde (Trabalhando)',
+    type: 'colhedora',
+    status: 'active',
+    location: { latitude: -23.5600, longitude: -46.6400 },
+    speed: 7,
+    fuel: 65,
+    operationHours: 1500,
+    lastUpdate: new Date(Date.now() - 1 * 60 * 1000),
+    operator: 'Teste Verde',
+    area: 'Área de Teste',
+    task: 'Teste de status verde',
+    direction: 0,
+    telemetry: {
+      engineTemp: 90,
+      oilPressure: 4.0,
+      hydraulicPressure: 170,
+      batteryVoltage: 12.5,
+      workingWidth: 9.0
+    },
+    deviceMessage: {
+      hasLostConnection: false,
+      transmissionReason: 'NORMAL',
+      flag: {
+        working: true,
+        dislocating: false,
+        maneuvering: false,
+        idling: false,
+        ignition: true
+      },
+      gps: {
+        heading: 45
+      }
+    }
+  },
+  {
+    id: 'TEST002',
+    name: 'Colheitadeira Teste - Azul (Deslocando)',
+    type: 'colhedora',
+    status: 'active',
+    location: { latitude: -23.5610, longitude: -46.6410 },
+    speed: 15,
+    fuel: 70,
+    operationHours: 1600,
+    lastUpdate: new Date(Date.now() - 1 * 60 * 1000),
+    operator: 'Teste Azul',
+    area: 'Área de Teste',
+    task: 'Teste de status azul',
+    direction: 0,
+    telemetry: {
+      engineTemp: 85,
+      oilPressure: 3.9,
+      hydraulicPressure: 165,
+      batteryVoltage: 12.6,
+      workingWidth: 9.0
+    },
+    deviceMessage: {
+      hasLostConnection: false,
+      transmissionReason: 'NORMAL',
+      flag: {
+        working: false,
+        dislocating: true,
+        maneuvering: false,
+        idling: false,
+        ignition: true
+      },
+      gps: {
+        heading: 135
+      }
+    }
+  },
+  {
+    id: 'TEST003',
+    name: 'Colheitadeira Teste - Amarelo (Manobra)',
+    type: 'colhedora',
+    status: 'idle',
+    location: { latitude: -23.5620, longitude: -46.6420 },
+    speed: 3,
+    fuel: 55,
+    operationHours: 1700,
+    lastUpdate: new Date(Date.now() - 2 * 60 * 1000),
+    operator: 'Teste Amarelo',
+    area: 'Área de Teste',
+    task: 'Teste de status amarelo',
+    direction: 0,
+    telemetry: {
+      engineTemp: 88,
+      oilPressure: 4.1,
+      hydraulicPressure: 168,
+      batteryVoltage: 12.4,
+      workingWidth: 9.0
+    },
+    deviceMessage: {
+      hasLostConnection: false,
+      transmissionReason: 'NORMAL',
+      flag: {
+        working: false,
+        dislocating: false,
+        maneuvering: true,
+        idling: false,
+        ignition: true
+      },
+      gps: {
+        heading: 225
+      }
+    }
+  },
+  {
+    id: 'TEST004',
+    name: 'Colheitadeira Teste - Vermelho (Parado)',
+    type: 'colhedora',
+    status: 'idle',
+    location: { latitude: -23.5630, longitude: -46.6430 },
+    speed: 0,
+    fuel: 45,
+    operationHours: 1800,
+    lastUpdate: new Date(Date.now() - 3 * 60 * 1000),
+    operator: 'Teste Vermelho',
+    area: 'Área de Teste',
+    task: 'Teste de status vermelho',
+    direction: 0,
+    telemetry: {
+      engineTemp: 75,
+      oilPressure: 3.5,
+      hydraulicPressure: 150,
+      batteryVoltage: 12.3,
+      workingWidth: 9.0
+    },
+    deviceMessage: {
+      hasLostConnection: false,
+      transmissionReason: 'NORMAL',
+      flag: {
+        working: false,
+        dislocating: false,
+        maneuvering: false,
+        idling: true,
+        ignition: true
+      },
+      gps: {
+        heading: 315
+      }
+    }
+  },
+  {
+    id: 'TEST005',
+    name: 'Colheitadeira Teste - Vermelho (Parado Desligado)',
+    type: 'colhedora',
+    status: 'offline',
+    location: { latitude: -23.5640, longitude: -46.6440 },
+    speed: 0,
+    fuel: 80,
+    operationHours: 1900,
+    lastUpdate: new Date(Date.now() - 5 * 60 * 1000),
+    operator: 'Teste Vermelho Desligado',
+    area: 'Área de Teste',
+    task: 'Teste de status vermelho desligado',
+    direction: 0,
+    telemetry: {
+      engineTemp: 40,
+      oilPressure: 0,
+      hydraulicPressure: 0,
+      batteryVoltage: 12.2,
+      workingWidth: 9.0
+    },
+    deviceMessage: {
+      hasLostConnection: false,
+      transmissionReason: 'NORMAL',
+      flag: {
+        working: false,
+        dislocating: false,
+        maneuvering: false,
+        idling: false,
+        ignition: false
+      },
+      gps: {
+        heading: 0
+      }
+    }
+  },
+  {
+    id: 'TEST006',
+    name: 'Colheitadeira Teste - Cinza (Sem Sinal)',
+    type: 'colhedora',
+    status: 'offline',
+    location: { latitude: -23.5650, longitude: -46.6450 },
+    speed: 0,
+    fuel: 30,
+    operationHours: 2000,
+    lastUpdate: new Date(Date.now() - 15 * 60 * 1000),
+    operator: 'Teste Cinza',
+    area: 'Área de Teste',
+    task: 'Teste de status cinza',
+    direction: 0,
+    telemetry: {
+      engineTemp: 45,
+      oilPressure: 0,
+      hydraulicPressure: 0,
+      batteryVoltage: 12.0,
+      workingWidth: 9.0
+    },
+    deviceMessage: {
+      hasLostConnection: true,
+      transmissionReason: 'GALILEO_HEAD_PACK_EVENT',
+      flag: {
+        working: false,
+        dislocating: false,
+        maneuvering: false,
+        idling: false,
+        ignition: false
+      },
+      gps: {
+        heading: 90
+      }
+    }
   }
 ];
