@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -9,7 +9,8 @@ import {
   AlertTriangle,
   CornerDownRight,
   StopCircle,
-  ArrowRightLeft
+  ArrowRightLeft,
+  RefreshCw
 } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 import { MachineData, MachineAlert } from '@/types/machine';
@@ -23,6 +24,7 @@ interface MapControlsProps {
   onToggleAlerts: () => void;
   onMapStyleChange: (style: MapStyle) => void;
   currentMapStyle: MapStyle;
+  onRefresh: () => void;
 }
 
 const MapControls = ({ 
@@ -31,10 +33,27 @@ const MapControls = ({
   onToggleGrid,
   onToggleAlerts,
   onMapStyleChange,
-  currentMapStyle
+  currentMapStyle,
+  onRefresh
 }: MapControlsProps) => {
   const [showMapStyles, setShowMapStyles] = useState(false);
+  const [countdown, setCountdown] = useState(60);
   const alertsCount = alerts.filter(alert => !alert.resolved).length;
+
+  // Timer de atualização automática
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          onRefresh();
+          return 60;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [onRefresh]);
 
   const mapStyles: { value: MapStyle; label: string }[] = [
     { value: 'satellite', label: 'Satélite' },
@@ -96,6 +115,13 @@ const MapControls = ({
                   </Badge>
                 </div>
               )}
+              
+              <div className="flex items-center space-x-1.5">
+                <RefreshCw className="w-4 h-4 text-muted-foreground" />
+                <span className="text-xs text-muted-foreground whitespace-nowrap">
+                  {countdown}s para atualizar
+                </span>
+              </div>
             </div>
           </CardContent>
         </Card>

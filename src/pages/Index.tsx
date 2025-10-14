@@ -20,20 +20,21 @@ const Index = () => {
 
   // Fetch machines on mount
   useEffect(() => {
-    const loadMachines = async () => {
-      try {
-        setIsLoading(true);
-        const data = await machineService.getMachines();
-        setMachines(data);
-      } catch (error) {
-        console.error('Failed to load machines:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     loadMachines();
   }, []);
+
+  const loadMachines = async () => {
+    try {
+      setIsLoading(true);
+      const data = await machineService.getMachines();
+      setMachines(data);
+      console.log('✅ Máquinas carregadas:', data.length);
+    } catch (error) {
+      console.error('Failed to load machines:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   // Gerar alertas com base nas máquinas
   const generatedAlerts = useMemo(() => {
@@ -172,6 +173,7 @@ const Index = () => {
         onToggleAlerts={handleToggleAlerts}
         onMapStyleChange={handleMapStyleChange}
         currentMapStyle={mapStyle}
+        onRefresh={loadMachines}
       />
 
       {/* Machine Grid Overlay */}
