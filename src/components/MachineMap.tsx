@@ -45,13 +45,29 @@ const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine
           style: 'mapbox://styles/mapbox/satellite-streets-v12',
           center: PARANA_BOUNDS.center,
           zoom: PARANA_BOUNDS.zoom,
-          maxBounds: PARANA_BOUNDS.bounds,
+          // Remover maxBounds para permitir navegação livre
         });
 
         map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
 
         map.current.on('load', () => {
           setMapLoaded(true);
+          
+          // Calcular bounds baseado nas coordenadas das máquinas
+          if (machines.length > 0) {
+            const bounds = new mapboxgl.LngLatBounds();
+            
+            machines.forEach(machine => {
+              bounds.extend([machine.location.longitude, machine.location.latitude]);
+            });
+            
+            // Ajustar mapa para mostrar todas as máquinas
+            map.current?.fitBounds(bounds, {
+              padding: { top: 100, bottom: 100, left: 100, right: 100 },
+              maxZoom: 14,
+              duration: 1000
+            });
+          }
         });
 
         map.current.on('error', () => {
@@ -81,7 +97,7 @@ const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine
       markers.current = {};
       map.current?.remove();
     };
-  }, []);
+  }, [machines]);
 
   // Create and update Mapbox GL markers
   useEffect(() => {
@@ -141,8 +157,9 @@ const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine
       if (machine) {
         map.current.flyTo({
           center: [machine.location.longitude, machine.location.latitude],
-          zoom: 15,
-          duration: 1000
+          zoom: 16,
+          duration: 1500,
+          essential: true // Garante que a animação acontece mesmo se o usuário está interagindo
         });
       }
     }
