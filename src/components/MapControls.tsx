@@ -76,6 +76,13 @@ const MapControls = ({
           <CardContent className="p-3">
             <div className="flex items-center space-x-3 md:space-x-4 overflow-x-auto scrollbar-hide whitespace-nowrap justify-center px-2">
               <div className="flex items-center space-x-1.5">
+                <RefreshCw className="w-4 h-4 text-muted-foreground" />
+                <span className="text-xs text-muted-foreground whitespace-nowrap">
+                  {countdown}s
+                </span>
+              </div>
+              
+              <div className="flex items-center space-x-1.5">
                 <Settings className="w-5 h-5 text-green-500" />
                 <span className="text-sm text-card-foreground whitespace-nowrap">
                   <span className="font-medium text-green-500">{trabalhando}</span> trabalhando
@@ -115,13 +122,6 @@ const MapControls = ({
                   </Badge>
                 </div>
               )}
-              
-              <div className="flex items-center space-x-1.5">
-                <RefreshCw className="w-4 h-4 text-muted-foreground" />
-                <span className="text-xs text-muted-foreground whitespace-nowrap">
-                  {countdown}s
-                </span>
-              </div>
             </div>
           </CardContent>
         </Card>

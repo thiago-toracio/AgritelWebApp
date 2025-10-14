@@ -54,7 +54,7 @@ const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine
           style: MAP_STYLES[mapStyle],
           center: PARANA_BOUNDS.center,
           zoom: PARANA_BOUNDS.zoom,
-          attributionControl: false, // Remove attribution control
+          attributionControl: false,
         });
 
         map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
@@ -106,7 +106,7 @@ const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine
       markers.current = {};
       map.current?.remove();
     };
-  }, [machines]);
+  }, []); // Removido 'machines' da dependência para não recriar o mapa
 
   // Update map style when mapStyle prop changes
   useEffect(() => {
