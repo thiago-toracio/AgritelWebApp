@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 147.89 398.06">
+  <defs>
+    <style>
+      .cls-1 {
+        stroke-width: 5px;
+      }
+
+      .cls-1, .cls-2, .cls-3, .cls-4 {
+        stroke-miterlimit: 10;
+      }
+
+      .cls-1, .cls-2, .cls-5, .cls-4, .cls-6 {
+        fill: none;
+      }
+
+      .cls-1, .cls-2, .cls-4, .cls-6 {
+        stroke: #ffb700;
+      }
+
+      .cls-7 {
+        fill: url(#Orchid_14);
+      }
+
+      .cls-7, .cls-2, .cls-8, .cls-9, .cls-10, .cls-11, .cls-12, .cls-13, .cls-14 {
+        mix-blend-mode: multiply;
+      }
+
+      .cls-15, .cls-9 {
+        fill: #ffb700;
+      }
+
+      .cls-16 {
+        fill: url(#linear-gradient-2);
+      }
+
+      .cls-2, .cls-4 {
+        stroke-width: 8px;
+      }
+
+      .cls-8 {
+        fill: url(#Orchid_14-5);
+      }
+
+      .cls-3, .cls-5 {
+        stroke: #000;
+      }
+
+      .cls-17 {
+        fill: url(#radial-gradient);
+      }
+
+      .cls-18 {
+        isolation: isolate;
+      }
+
+      .cls-5 {
+        stroke-width: 2.5px;
+      }
+
+      .cls-5, .cls-6 {
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .cls-10 {
+        fill: url(#Orchid_14-2);
+      }
+
+      .cls-12 {
+        fill: url(#linear-gradient-3);
+      }
+
+      .cls-13 {
+        fill: url(#Orchid_14-4);
+      }
+
+      .cls-19 {
+        fill: url(#linear-gradient);
+      }
+
+      .cls-14 {
+        fill: url(#Orchid_14-3);
+      }
+    </style>
+    <linearGradient id="Orchid_14" data-name="Orchid 14" x1="94.85" y1="368.02" x2="114.51" y2="368.02" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffb700"/>
+      <stop offset=".22" stop-color="#ffb700" stop-opacity=".76"/>
+      <stop offset=".6" stop-color="#ffb700" stop-opacity=".36"/>
+      <stop offset=".87" stop-color="#ffb700" stop-opacity=".1"/>
+      <stop offset="1" stop-color="#ffb700" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="Orchid_14-2" data-name="Orchid 14" x1="-7264.8" y1="2632.02" x2="-7245.14" y2="2632.02" gradientTransform="translate(-7211.76 3000.03) rotate(-180)" xlink:href="#Orchid_14"/>
+    <linearGradient id="Orchid_14-3" data-name="Orchid 14" x1="73.95" y1="311.94" x2="73.95" y2="363.4" xlink:href="#Orchid_14"/>
+    <linearGradient id="Orchid_14-4" data-name="Orchid 14" x1="107.7" y1="302.09" x2="138.01" y2="302.09" xlink:href="#Orchid_14"/>
+    <linearGradient id="Orchid_14-5" data-name="Orchid 14" x1="-7078.69" y1="302.09" x2="-7048.37" y2="302.09" gradientTransform="translate(-7038.5) rotate(-180) scale(1 -1)" xlink:href="#Orchid_14"/>
+    <linearGradient id="linear-gradient" x1="144.85" y1="143.41" x2="118.03" y2="143.41" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#828899"/>
+      <stop offset=".22" stop-color="#828899" stop-opacity=".59"/>
+      <stop offset=".46" stop-color="#828899" stop-opacity=".17"/>
+      <stop offset=".58" stop-color="#828899" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-2" x1="-7054.11" y1="143.41" x2="-7080.94" y2="143.41" gradientTransform="translate(-7051.08) rotate(-180) scale(1 -1)" xlink:href="#linear-gradient"/>
+    <radialGradient id="radial-gradient" cx="73.95" cy="247.38" fx="73.95" fy="247.38" r="9.14" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ff192e"/>
+      <stop offset=".07" stop-color="#ec1528"/>
+      <stop offset=".24" stop-color="#c80d1e"/>
+      <stop offset=".41" stop-color="#ab0716"/>
+      <stop offset=".58" stop-color="#970310"/>
+      <stop offset=".74" stop-color="#8b000d"/>
+      <stop offset=".91" stop-color="#87000c"/>
+    </radialGradient>
+    <linearGradient id="linear-gradient-3" x1="73.95" y1="70.06" x2="73.95" y2="26.24" gradientUnits="userSpaceOnUse">
+      <stop offset=".51" stop-color="#ffb700"/>
+      <stop offset=".61" stop-color="#ffb700" stop-opacity=".76"/>
+      <stop offset=".78" stop-color="#ffb700" stop-opacity=".36"/>
+      <stop offset=".89" stop-color="#ffb700" stop-opacity=".1"/>
+      <stop offset=".95" stop-color="#ffb700" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <g class="cls-18">
+    <g id="Layer_2" data-name="Layer 2">
+      <g id="artwork">
+        <g>
+          <g>
+            <path class="cls-15" d="M101.9,132.62h-55.9c-2.76,0-5,2.24-5,5v50.21c0,2.76,2.24,5,5,5h16.41v17.04h23.09v-17.04h16.41c2.76,0,5-2.24,5-5v-50.21c0-2.76-2.24-5-5-5Z"/>
+            <path class="cls-9" d="M101.9,132.62h-55.9c-2.76,0-5,2.24-5,5v50.21c0,2.76,2.24,5,5,5h16.41v17.04h23.09v-17.04h16.41c2.76,0,5-2.24,5-5v-50.21c0-2.76-2.24-5-5-5Z"/>
+          </g>
+          <g>
+            <g>
+              <path class="cls-15" d="M111.23,385.59l-16.38,8.33v-51.82l16.38,8.33c2.01,1.02,3.28,3.09,3.28,5.35v24.46c0,2.26-1.27,4.32-3.28,5.35Z"/>
+              <path class="cls-7" d="M111.23,385.59l-16.38,8.33v-51.82l16.38,8.33c2.01,1.02,3.28,3.09,3.28,5.35v24.46c0,2.26-1.27,4.32-3.28,5.35Z"/>
+            </g>
+            <g>
+              <path class="cls-15" d="M36.66,350.44l16.38-8.33v51.82l-16.38-8.33c-2.01-1.02-3.28-3.09-3.28-5.35v-24.46c0-2.26,1.27-4.32,3.28-5.35Z"/>
+              <path class="cls-10" d="M36.66,350.44l16.38-8.33v51.82l-16.38-8.33c-2.01-1.02-3.28-3.09-3.28-5.35v-24.46c0-2.26,1.27-4.32,3.28-5.35Z"/>
+            </g>
+          </g>
+          <g>
+            <rect class="cls-15" x="46.84" y="306.03" width="54.21" height="92.03" rx="6" ry="6"/>
+            <rect class="cls-14" x="46.84" y="306.03" width="54.21" height="92.03" rx="6" ry="6"/>
+          </g>
+          <circle cx="62.98" cy="312.89" r="9.69"/>
+          <g>
+            <g>
+              <rect x="119.91" y="264.73" width="24.61" height="75.03" rx="8" ry="8"/>
+              <g>
+                <rect class="cls-15" x="107.7" y="260.5" width="30.32" height="83.19" rx="10" ry="10"/>
+                <rect class="cls-13" x="107.7" y="260.5" width="30.32" height="83.19" rx="10" ry="10"/>
+              </g>
+            </g>
+            <g>
+              <rect x="3.37" y="264.73" width="24.61" height="75.03" rx="8" ry="8"/>
+              <g>
+                <rect class="cls-15" x="9.88" y="260.5" width="30.32" height="83.19" rx="10" ry="10"/>
+                <rect class="cls-8" x="9.88" y="260.5" width="30.32" height="83.19" rx="10" ry="10"/>
+              </g>
+            </g>
+          </g>
+          <g>
+            <g>
+              <g>
+                <line class="cls-4" x1="128" y1="146.76" x2="97" y2="146.76"/>
+                <line class="cls-2" x1="128" y1="146.76" x2="97" y2="146.76"/>
+              </g>
+              <g>
+                <rect x="120.84" y="109.25" width="24.61" height="75.03" rx="8" ry="8"/>
+                <path class="cls-19" d="M147.89,118.84h0c0-1.04-.65-1.97-1.63-2.33l-25.43-9.25c-1.61-.59-3.32.61-3.32,2.33h0c0,1.04.65,1.97,1.63,2.33l25.43,9.25c1.61.59,3.32-.61,3.32-2.33ZM147.89,133.44h0c0-1.04-.65-1.97-1.63-2.33l-25.43-9.25c-1.61-.59-3.32.61-3.32,2.33h0c0,1.04.65,1.97,1.63,2.33l25.43,9.25c1.61.59,3.32-.61,3.32-2.33ZM147.89,148.04h0c0-1.04-.65-1.97-1.63-2.33l-25.43-9.25c-1.61-.59-3.32.61-3.32,2.33h0c0,1.04.65,1.97,1.63,2.33l25.43,9.25c1.61.59,3.32-.61,3.32-2.33ZM147.89,162.64h0c0-1.04-.65-1.97-1.63-2.33l-25.43-9.25c-1.61-.59-3.32.61-3.32,2.33h0c0,1.04.65,1.97,1.63,2.33l25.43,9.25c1.61.59,3.32-.61,3.32-2.33ZM147.89,177.23h0c0-1.04-.65-1.97-1.63-2.33l-25.43-9.25c-1.61-.59-3.32.61-3.32,2.33h0c0,1.04.65,1.97,1.63,2.33l25.43,9.25c1.61.59,3.32-.61,3.32-2.33Z"/>
+              </g>
+              <rect class="cls-15" x="113.75" y="154.64" width="25.19" height="37.57" rx="3" ry="3"/>
+            </g>
+            <g>
+              <g>
+                <line class="cls-4" x1="19.89" y1="146.76" x2="50.89" y2="146.76"/>
+                <line class="cls-2" x1="19.89" y1="146.76" x2="50.89" y2="146.76"/>
+              </g>
+              <g>
+                <rect x="2.43" y="109.25" width="24.61" height="75.03" rx="8" ry="8"/>
+                <path class="cls-16" d="M3.32,121.17l25.43-9.25c.98-.36,1.63-1.29,1.63-2.33h0c0-1.72-1.71-2.91-3.32-2.33L1.63,116.52C.65,116.87,0,117.8,0,118.84H0c0,1.72,1.71,2.91,3.32,2.33ZM3.32,135.77l25.43-9.25c.98-.36,1.63-1.29,1.63-2.33h0c0-1.72-1.71-2.91-3.32-2.33l-25.43,9.25C.65,131.47,0,132.4,0,133.44H0c0,1.72,1.71,2.91,3.32,2.33ZM3.32,150.37l25.43-9.25c.98-.36,1.63-1.29,1.63-2.33h0c0-1.72-1.71-2.91-3.32-2.33l-25.43,9.25C.65,146.07,0,147,0,148.04H0c0,1.72,1.71,2.91,3.32,2.33ZM3.32,164.96l25.43-9.25c.98-.36,1.63-1.29,1.63-2.33h0c0-1.72-1.71-2.91-3.32-2.33l-25.43,9.25C.65,160.67,0,161.6,0,162.64H0c0,1.72,1.71,2.91,3.32,2.33ZM3.32,179.56l25.43-9.25c.98-.36,1.63-1.29,1.63-2.33h0c0-1.72-1.71-2.91-3.32-2.33l-25.43,9.25C.65,175.26,0,176.19,0,177.23h0c0,1.72,1.71,2.91,3.32,2.33Z"/>
+              </g>
+              <rect class="cls-15" x="8.95" y="154.64" width="25.19" height="37.57" rx="3" ry="3" transform="translate(43.08 346.85) rotate(-180)"/>
+            </g>
+          </g>
+          <g>
+            <g>
+              <line class="cls-5" x1="94.6" y1="223.44" x2="130.33" y2="223.44"/>
+              <path d="M140.88,230.91l-9.14-3.44c-1.45-.55-2.37-1.98-2.26-3.53h0c.15-2.14,2.16-3.64,4.25-3.18l9.24,2.05c1.7.38,2.86,1.94,2.74,3.67l-.1,1.39c-.16,2.34-2.54,3.86-4.73,3.04Z"/>
+            </g>
+            <g>
+              <line class="cls-5" x1="53.29" y1="223.44" x2="17.56" y2="223.44"/>
+              <path d="M7.01,230.91l9.14-3.44c1.45-.55,2.37-1.98,2.26-3.53h0c-.15-2.14-2.16-3.64-4.25-3.18l-9.24,2.05c-1.7.38-2.86,1.94-2.74,3.67l.1,1.39c.16,2.34,2.54,3.86,4.73,3.04Z"/>
+            </g>
+          </g>
+          <path d="M45.5,200.89h56.89v11.31c0,6-4.87,10.87-10.87,10.87h-35.15c-6,0-10.87-4.87-10.87-10.87v-11.31h0Z" transform="translate(147.89 423.95) rotate(180)"/>
+          <rect class="cls-15" x="29.72" y="210.25" width="88.46" height="102.55" rx="16" ry="16"/>
+          <g class="cls-11">
+            <g>
+              <line class="cls-6" x1="42.02" y1="301.03" x2="42.02" y2="222.85"/>
+              <line class="cls-6" x1="49.12" y1="301.03" x2="49.12" y2="222.85"/>
+              <line class="cls-6" x1="56.21" y1="301.03" x2="56.21" y2="222.85"/>
+              <line class="cls-6" x1="63.3" y1="301.03" x2="63.3" y2="222.85"/>
+              <line class="cls-6" x1="70.4" y1="238.26" x2="70.4" y2="222.85"/>
+              <line class="cls-6" x1="70.4" y1="301.03" x2="70.4" y2="256.5"/>
+              <line class="cls-6" x1="77.49" y1="238.26" x2="77.49" y2="222.85"/>
+              <line class="cls-6" x1="77.49" y1="301.03" x2="77.49" y2="256.5"/>
+              <line class="cls-6" x1="84.59" y1="301.03" x2="84.59" y2="222.85"/>
+              <line class="cls-6" x1="91.68" y1="301.03" x2="91.68" y2="222.85"/>
+              <line class="cls-6" x1="98.77" y1="301.03" x2="98.77" y2="222.85"/>
+              <line class="cls-6" x1="105.87" y1="301.03" x2="105.87" y2="222.85"/>
+            </g>
+          </g>
+          <circle class="cls-17" cx="73.95" cy="247.38" r="6.37"/>
+          <g class="cls-11">
+            <path class="cls-15" d="M73.94,241.01c3.52,0,6.37,2.85,6.37,6.37s-2.85,6.37-6.37,6.37-6.37-2.85-6.37-6.37,2.85-6.37,6.37-6.37M73.94,240.26c-3.92,0-7.12,3.19-7.12,7.12s3.19,7.12,7.12,7.12,7.12-3.19,7.12-7.12-3.19-7.12-7.12-7.12h0Z"/>
+          </g>
+          <g class="cls-11">
+            <g>
+              <line class="cls-6" x1="53.5" y1="363.57" x2="94.39" y2="363.57"/>
+              <line class="cls-6" x1="53.5" y1="370.67" x2="94.39" y2="370.67"/>
+              <line class="cls-6" x1="53.5" y1="377.76" x2="94.39" y2="377.76"/>
+              <line class="cls-6" x1="53.5" y1="384.85" x2="94.39" y2="384.85"/>
+            </g>
+            <rect class="cls-6" x="53.5" y="357.31" width="40.89" height="33.81" rx="4.73" ry="4.73"/>
+          </g>
+          <g>
+            <rect class="cls-15" x="52.17" y="77.36" width="43.45" height="14.38"/>
+            <rect class="cls-15" x="26.67" y="167.97" width="94.55" height="15.17"/>
+            <g>
+              <g>
+                <line class="cls-1" x1="95.11" y1="175.01" x2="95.11" y2="61.37"/>
+                <rect x="92.35" y="168.27" width="5.52" height="13.49" rx="2.76" ry="2.76"/>
+              </g>
+              <g>
+                <line class="cls-1" x1="52.78" y1="175.01" x2="52.78" y2="61.37"/>
+                <rect x="50.02" y="168.27" width="5.52" height="13.49" rx="2.76" ry="2.76"/>
+              </g>
+            </g>
+          </g>
+          <g>
+            <g>
+              <polygon class="cls-15" points="119.91 64.82 27.98 64.82 17.98 44.26 129.91 44.26 119.91 64.82"/>
+              <polygon class="cls-15" points="119.91 64.82 27.98 64.82 17.98 44.26 129.91 44.26 119.91 64.82"/>
+            </g>
+            <g>
+              <g>
+                <rect class="cls-15" x="17.98" y="17.07" width="111.93" height="27.25"/>
+                <rect class="cls-12" x="17.98" y="17.07" width="111.93" height="27.25"/>
+              </g>
+              <rect x="17.98" y="17.07" width="111.93" height="7.58"/>
+              <g>
+                <path class="cls-3" d="M24.78,16.58l-1.94-15.04c-.08-.59-.58-1.03-1.17-1.03s-1.1.44-1.17,1.03l-1.94,15.04h6.22Z"/>
+                <path class="cls-3" d="M129.33,16.58l-1.94-15.04c-.08-.59-.58-1.03-1.17-1.03s-1.1.44-1.17,1.03l-1.94,15.04h6.22Z"/>
+                <path class="cls-3" d="M87.51,16.58l-1.94-15.04c-.08-.59-.58-1.03-1.17-1.03s-1.1.44-1.17,1.03l-1.94,15.04h6.22Z"/>
+                <path class="cls-3" d="M108.42,16.58l-1.94-15.04c-.08-.59-.58-1.03-1.17-1.03s-1.1.44-1.17,1.03l-1.94,15.04h6.22Z"/>
+                <path class="cls-3" d="M45.69,16.58l-1.94-15.04c-.08-.59-.58-1.03-1.17-1.03s-1.1.44-1.17,1.03l-1.94,15.04h6.22Z"/>
+                <path class="cls-3" d="M66.6,16.58l-1.94-15.04c-.08-.59-.58-1.03-1.17-1.03s-1.1.44-1.17,1.03l-1.94,15.04h6.22Z"/>
+              </g>
+            </g>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

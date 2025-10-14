@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 136.26 361.76">
+  <defs>
+    <style>
+      .cls-1 {
+        stroke: url(#Orchid_6);
+      }
+
+      .cls-1, .cls-2, .cls-3, .cls-4, .cls-5, .cls-6, .cls-7, .cls-8, .cls-9, .cls-10 {
+        mix-blend-mode: multiply;
+      }
+
+      .cls-1, .cls-11, .cls-5, .cls-12, .cls-6, .cls-13, .cls-14, .cls-15, .cls-16, .cls-10 {
+        fill: none;
+      }
+
+      .cls-1, .cls-5, .cls-12, .cls-6, .cls-14, .cls-16, .cls-10 {
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .cls-1, .cls-5, .cls-12, .cls-6, .cls-14, .cls-10 {
+        stroke-width: 9.2px;
+      }
+
+      .cls-17 {
+        fill: #ffb700;
+      }
+
+      .cls-2 {
+        fill: url(#Orchid_5);
+      }
+
+      .cls-18 {
+        fill: url(#linear-gradient-2);
+      }
+
+      .cls-3 {
+        fill: url(#Orchid_5-3);
+      }
+
+      .cls-4 {
+        fill: url(#Orchid_5-4);
+      }
+
+      .cls-19 {
+        fill: url(#linear-gradient-4);
+      }
+
+      .cls-5 {
+        stroke: url(#Orchid_6-2);
+      }
+
+      .cls-20 {
+        fill: url(#linear-gradient-5);
+      }
+
+      .cls-21 {
+        isolation: isolate;
+      }
+
+      .cls-12, .cls-13, .cls-15 {
+        stroke: #ffb700;
+      }
+
+      .cls-6 {
+        stroke: url(#Orchid_14);
+      }
+
+      .cls-13 {
+        stroke-width: 1.15px;
+      }
+
+      .cls-13, .cls-15 {
+        stroke-miterlimit: 10;
+      }
+
+      .cls-8 {
+        fill: url(#linear-gradient-3);
+      }
+
+      .cls-14 {
+        stroke: #828899;
+      }
+
+      .cls-15 {
+        stroke-width: 5.75px;
+      }
+
+      .cls-22 {
+        fill: url(#linear-gradient-6);
+      }
+
+      .cls-9 {
+        fill: url(#Orchid_5-2);
+      }
+
+      .cls-23 {
+        fill: #a3aabf;
+      }
+
+      .cls-16 {
+        stroke: #000;
+        stroke-width: 2.3px;
+      }
+
+      .cls-24 {
+        fill: url(#linear-gradient);
+      }
+
+      .cls-10 {
+        stroke: url(#Orchid_14-2);
+      }
+
+      .cls-25 {
+        clip-path: url(#clippath);
+      }
+    </style>
+    <linearGradient id="Orchid_6" data-name="Orchid 6" x1="-7115.44" y1="97.3" x2="-7079.68" y2="97.3" gradientTransform="translate(-7073.48) rotate(-180) scale(1 -1)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#828899"/>
+      <stop offset=".38" stop-color="#828899" stop-opacity=".59"/>
+      <stop offset=".8" stop-color="#828899" stop-opacity=".17"/>
+      <stop offset="1" stop-color="#828899" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient" x1="-7076.42" y1="94.05" x2="-7102.39" y2="94.05" gradientTransform="translate(-7073.48) rotate(-180) scale(1 -1)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#828899"/>
+      <stop offset=".22" stop-color="#828899" stop-opacity=".59"/>
+      <stop offset=".46" stop-color="#828899" stop-opacity=".17"/>
+      <stop offset=".58" stop-color="#828899" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="Orchid_6-2" data-name="Orchid 6" x1="94.3" y1="97.3" x2="130.06" y2="97.3" gradientTransform="matrix(1,0,0,1,0,0)" xlink:href="#Orchid_6"/>
+    <linearGradient id="linear-gradient-2" x1="133.32" y1="94.05" x2="107.35" y2="94.05" gradientTransform="matrix(1,0,0,1,0,0)" xlink:href="#linear-gradient"/>
+    <linearGradient id="linear-gradient-3" x1="68.13" y1="345.4" x2="68.13" y2="361.63" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#a3aabf"/>
+      <stop offset=".11" stop-color="#a3aabf" stop-opacity=".94"/>
+      <stop offset=".31" stop-color="#a3aabf" stop-opacity=".78"/>
+      <stop offset=".57" stop-color="#a3aabf" stop-opacity=".51"/>
+      <stop offset=".88" stop-color="#a3aabf" stop-opacity=".15"/>
+      <stop offset="1" stop-color="#a3aabf" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-4" x1="93.71" y1="60.99" x2="81.3" y2="80.84" gradientUnits="userSpaceOnUse">
+      <stop offset=".23" stop-color="#828899"/>
+      <stop offset=".52" stop-color="#828899" stop-opacity=".59"/>
+      <stop offset=".85" stop-color="#828899" stop-opacity=".17"/>
+      <stop offset="1" stop-color="#828899" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="Orchid_14" data-name="Orchid 14" x1="96.6" y1="256.92" x2="132.36" y2="256.92" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffb700"/>
+      <stop offset=".22" stop-color="#ffb700" stop-opacity=".76"/>
+      <stop offset=".6" stop-color="#ffb700" stop-opacity=".36"/>
+      <stop offset=".87" stop-color="#ffb700" stop-opacity=".1"/>
+      <stop offset="1" stop-color="#ffb700" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-5" x1="133.32" y1="253.67" x2="107.35" y2="253.67" gradientTransform="matrix(1,0,0,1,0,0)" xlink:href="#linear-gradient"/>
+    <linearGradient id="Orchid_14-2" data-name="Orchid 14" x1="-7113.14" y1="256.92" x2="-7077.38" y2="256.92" gradientTransform="translate(-7073.48) rotate(-180) scale(1 -1)" xlink:href="#Orchid_14"/>
+    <linearGradient id="linear-gradient-6" x1="-7076.42" y1="253.67" x2="-7102.39" y2="253.67" xlink:href="#linear-gradient"/>
+    <linearGradient id="Orchid_5" data-name="Orchid 5" x1="654.03" y1="607.89" x2="654.03" y2="590.23" gradientTransform="translate(722.16 935.41) rotate(-180)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#a3aabf"/>
+      <stop offset=".49" stop-color="#a3aabf" stop-opacity=".47"/>
+      <stop offset=".84" stop-color="#a3aabf" stop-opacity=".13"/>
+      <stop offset="1" stop-color="#a3aabf" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="Orchid_5-2" data-name="Orchid 5" x1="68.13" y1="252.11" x2="68.13" y2="172.28" gradientTransform="matrix(1,0,0,1,0,0)" xlink:href="#Orchid_5"/>
+    <linearGradient id="Orchid_5-3" data-name="Orchid 5" x1="68.13" y1="304.85" x2="68.13" y2="223.53" gradientTransform="matrix(1,0,0,1,0,0)" xlink:href="#Orchid_5"/>
+    <linearGradient id="Orchid_5-4" data-name="Orchid 5" x1="68.13" y1="339.32" x2="68.13" y2="277.94" gradientTransform="matrix(1,0,0,1,0,0)" xlink:href="#Orchid_5"/>
+    <clipPath id="clippath">
+      <rect class="cls-11" x="42.14" y="74.95" width="51.97" height="67.78" rx="23.51" ry="23.51"/>
+    </clipPath>
+  </defs>
+  <g class="cls-21">
+    <g id="Layer_2" data-name="Layer 2">
+      <g id="artwork">
+        <g>
+          <path d="M103.83,64.36h2.88V22h-2.88v4.49h-10.07v-4.49h-2.88v42.36h2.88v-9.9h10.07v9.9ZM103.83,41.62v4.12h-10.07v-4.12h10.07ZM93.76,39.32v-4.12h10.07v4.12h-10.07ZM103.83,28.79v4.12h-10.07v-4.12h10.07ZM93.76,52.15v-4.12h10.07v4.12h-10.07Z"/>
+          <g>
+            <g>
+              <line class="cls-14" x1="10.8" y1="97.3" x2="37.36" y2="97.3"/>
+              <line class="cls-1" x1="10.8" y1="97.3" x2="37.36" y2="97.3"/>
+            </g>
+            <g>
+              <rect x="2.36" y="60.99" width="20.37" height="72.62" rx="7.74" ry="7.74"/>
+              <path class="cls-24" d="M3.22,72.53l24.61-8.96c.95-.34,1.58-1.24,1.58-2.25h0c0-1.66-1.65-2.82-3.22-2.25L1.58,68.02C.63,68.37,0,69.27,0,70.27H0c0,1.66,1.65,2.82,3.22,2.25ZM3.22,86.66l24.61-8.96c.95-.34,1.58-1.24,1.58-2.25h0c0-1.66-1.65-2.82-3.22-2.25L1.58,82.15C.63,82.5,0,83.4,0,84.4H0c0,1.66,1.65,2.82,3.22,2.25ZM3.22,100.79l24.61-8.96c.95-.34,1.58-1.24,1.58-2.25h0c0-1.66-1.65-2.82-3.22-2.25L1.58,96.28C.63,96.63,0,97.53,0,98.53H0c0,1.66,1.65,2.82,3.22,2.25ZM3.22,114.92l24.61-8.96c.95-.34,1.58-1.24,1.58-2.25h0c0-1.66-1.65-2.82-3.22-2.25L1.58,110.41C.63,110.76,0,111.66,0,112.66H0c0,1.66,1.65,2.82,3.22,2.25ZM3.22,129.05l24.61-8.96c.95-.34,1.58-1.24,1.58-2.25h0c0-1.66-1.65-2.82-3.22-2.25L1.58,124.54C.63,124.89,0,125.79,0,126.79H0c0,1.66,1.65,2.82,3.22,2.25Z"/>
+            </g>
+          </g>
+          <g>
+            <g>
+              <line class="cls-14" x1="125.46" y1="97.3" x2="98.9" y2="97.3"/>
+              <line class="cls-5" x1="125.46" y1="97.3" x2="98.9" y2="97.3"/>
+            </g>
+            <g>
+              <rect x="113.53" y="60.99" width="20.37" height="72.62" rx="7.74" ry="7.74"/>
+              <path class="cls-18" d="M136.26,70.27h0c0-1.01-.63-1.91-1.58-2.25l-24.61-8.96c-1.56-.57-3.22.59-3.22,2.25h0c0,1.01.63,1.91,1.58,2.25l24.61,8.96c1.56.57,3.22-.59,3.22-2.25ZM136.26,84.4h0c0-1.01-.63-1.91-1.58-2.25l-24.61-8.96c-1.56-.57-3.22.59-3.22,2.25h0c0,1.01.63,1.91,1.58,2.25l24.61,8.96c1.56.57,3.22-.59,3.22-2.25ZM136.26,98.53h0c0-1.01-.63-1.91-1.58-2.25l-24.61-8.96c-1.56-.57-3.22.59-3.22,2.25h0c0,1.01.63,1.91,1.58,2.25l24.61,8.96c1.56.57,3.22-.59,3.22-2.25ZM136.26,112.66h0c0-1.01-.63-1.91-1.58-2.25l-24.61-8.96c-1.56-.57-3.22.59-3.22,2.25h0c0,1.01.63,1.91,1.58,2.25l24.61,8.96c1.56.57,3.22-.59,3.22-2.25ZM136.26,126.79h0c0-1.01-.63-1.91-1.58-2.25l-24.61-8.96c-1.56-.57-3.22.59-3.22,2.25h0c0,1.01.63,1.91,1.58,2.25l24.61,8.96c1.56.57,3.22-.59,3.22-2.25Z"/>
+            </g>
+          </g>
+          <rect class="cls-23" x="30.09" y="58.57" width="76.98" height="121.13" rx="5.75" ry="5.75"/>
+          <g>
+            <line class="cls-15" x1="95.12" y1="323.02" x2="95.12" y2="350.91"/>
+            <line class="cls-15" x1="41.14" y1="323.02" x2="41.14" y2="350.91"/>
+          </g>
+          <g>
+            <rect class="cls-23" x="33.09" y="340.06" width="70.09" height="21.7" rx="4.6" ry="4.6"/>
+            <rect class="cls-8" x="33.09" y="340.06" width="70.09" height="21.7" rx="4.6" ry="4.6"/>
+          </g>
+          <rect x="49.84" y="140.35" width="36.58" height="31.58"/>
+          <path class="cls-17" d="M90.88,22.75v50.3h-45.51V22.75c0-9.15,5.41-17.04,13.2-20.65,2.9-1.35,6.14-2.09,9.55-2.09s6.66.75,9.56,2.1c2.45,1.13,4.66,2.68,6.53,4.55,4.12,4.12,6.67,9.8,6.67,16.09Z"/>
+          <path d="M77.68,2.1v2.28c0,5.28-4.28,9.56-9.56,9.56s-9.55-4.28-9.55-9.56v-2.29c2.9-1.35,6.14-2.09,9.55-2.09s6.66.75,9.56,2.1Z"/>
+          <g>
+            <rect x="38.43" y="60.5" width="59.4" height="82.83" rx="26.87" ry="26.87"/>
+            <rect class="cls-19" x="38.43" y="60.5" width="59.4" height="82.83" rx="26.87" ry="26.87"/>
+          </g>
+          <g>
+            <g>
+              <g>
+                <line class="cls-12" x1="127.76" y1="256.92" x2="101.2" y2="256.92"/>
+                <line class="cls-6" x1="127.76" y1="256.92" x2="101.2" y2="256.92"/>
+              </g>
+              <g>
+                <rect x="113.53" y="220.61" width="20.37" height="72.62" rx="7.74" ry="7.74"/>
+                <path class="cls-20" d="M136.26,229.89h0c0-1.01-.63-1.91-1.58-2.25l-24.61-8.96c-1.56-.57-3.22.59-3.22,2.25h0c0,1.01.63,1.91,1.58,2.25l24.61,8.96c1.56.57,3.22-.59,3.22-2.25ZM136.26,244.02h0c0-1.01-.63-1.91-1.58-2.25l-24.61-8.96c-1.56-.57-3.22.59-3.22,2.25h0c0,1.01.63,1.91,1.58,2.25l24.61,8.96c1.56.57,3.22-.59,3.22-2.25ZM136.26,258.15h0c0-1.01-.63-1.91-1.58-2.25l-24.61-8.96c-1.56-.57-3.22.59-3.22,2.25h0c0,1.01.63,1.91,1.58,2.25l24.61,8.96c1.56.57,3.22-.59,3.22-2.25ZM136.26,272.28h0c0-1.01-.63-1.91-1.58-2.25l-24.61-8.96c-1.56-.57-3.22.59-3.22,2.25h0c0,1.01.63,1.91,1.58,2.25l24.61,8.96c1.56.57,3.22-.59,3.22-2.25ZM136.26,286.41h0c0-1.01-.63-1.91-1.58-2.25l-24.61-8.96c-1.56-.57-3.22.59-3.22,2.25h0c0,1.01.63,1.91,1.58,2.25l24.61,8.96c1.56.57,3.22-.59,3.22-2.25Z"/>
+              </g>
+            </g>
+            <g>
+              <g>
+                <line class="cls-12" x1="8.5" y1="256.92" x2="35.06" y2="256.92"/>
+                <line class="cls-10" x1="8.5" y1="256.92" x2="35.06" y2="256.92"/>
+              </g>
+              <g>
+                <rect x="2.36" y="220.61" width="20.37" height="72.62" rx="7.74" ry="7.74"/>
+                <path class="cls-22" d="M3.22,232.14l24.61-8.96c.95-.34,1.58-1.24,1.58-2.25h0c0-1.66-1.65-2.82-3.22-2.25l-24.61,8.96C.63,227.98,0,228.88,0,229.89H0c0,1.66,1.65,2.82,3.22,2.25ZM3.22,246.27l24.61-8.96c.95-.34,1.58-1.24,1.58-2.25h0c0-1.66-1.65-2.82-3.22-2.25l-24.61,8.96C.63,242.11,0,243.01,0,244.02H0c0,1.66,1.65,2.82,3.22,2.25ZM3.22,260.4l24.61-8.96c.95-.34,1.58-1.24,1.58-2.25h0c0-1.66-1.65-2.82-3.22-2.25l-24.61,8.96C.63,256.24,0,257.14,0,258.15H0c0,1.66,1.65,2.82,3.22,2.25ZM3.22,274.53l24.61-8.96c.95-.34,1.58-1.24,1.58-2.25h0c0-1.66-1.65-2.82-3.22-2.25l-24.61,8.96C.63,270.37,0,271.27,0,272.28H0c0,1.66,1.65,2.82,3.22,2.25ZM3.22,288.66l24.61-8.96c.95-.34,1.58-1.24,1.58-2.25h0c0-1.66-1.65-2.82-3.22-2.25l-24.61,8.96C.63,284.5,0,285.4,0,286.41h0c0,1.66,1.65,2.82,3.22,2.25Z"/>
+              </g>
+            </g>
+          </g>
+          <g>
+            <path class="cls-23" d="M91.59,325.05l-4.91,20.59c-.49,2.07-2.35,3.53-4.47,3.53h-28.17c-2.13,0-3.98-1.46-4.47-3.53l-4.91-20.59h46.93Z"/>
+            <path class="cls-2" d="M91.59,325.05l-4.91,20.59c-.49,2.07-2.35,3.53-4.47,3.53h-28.17c-2.13,0-3.98-1.46-4.47-3.53l-4.91-20.59h46.93Z"/>
+          </g>
+          <path class="cls-17" d="M118.37,320.69c-32.17,13.32-68.31,13.32-100.48,0v-154.53c32.17-13.32,68.31-13.32,100.48,0v154.53Z"/>
+          <path class="cls-23" d="M110.26,314.64c-26.98,11.17-57.29,11.17-84.26,0v-142.44c26.98-11.17,57.29-11.17,84.26,0v142.44Z"/>
+          <g>
+            <path class="cls-23" d="M110.26,172.2v43.84c-26.97-5.59-57.29-5.59-84.26,0v-43.84c26.97-11.17,57.29-11.17,84.26,0Z"/>
+            <path class="cls-9" d="M110.26,172.2v43.84c-26.97-5.59-57.29-5.59-84.26,0v-43.84c26.97-11.17,57.29-11.17,84.26,0Z"/>
+          </g>
+          <path class="cls-3" d="M110.26,218v50.74c-26.97,5.6-57.29,5.6-84.26,0v-50.74h84.26Z"/>
+          <path class="cls-4" d="M110.26,271.75v42.89c-26.97,11.17-57.29,11.17-84.26,0v-42.89c26.97,5.6,57.29,5.6,84.26,0Z"/>
+          <rect class="cls-17" x="36.35" y="67.4" width="63.55" height="82.88" rx="28.75" ry="28.75"/>
+          <g>
+            <rect x="24.27" y="50.6" width="12.73" height="4.96" rx="2.48" ry="2.48" transform="translate(61.28 106.15) rotate(-180)"/>
+            <polyline class="cls-16" points="45.66 71.36 45.66 46.6 30.66 46.6 30.66 51.58"/>
+          </g>
+          <g class="cls-25">
+            <g class="cls-7">
+              <g>
+                <line class="cls-13" x1="45.52" y1="72.67" x2="45.52" y2="145.01"/>
+                <line class="cls-13" x1="53.06" y1="72.67" x2="53.06" y2="145.01"/>
+                <line class="cls-13" x1="60.59" y1="72.67" x2="60.59" y2="145.01"/>
+                <line class="cls-13" x1="68.13" y1="72.67" x2="68.13" y2="145.01"/>
+                <line class="cls-13" x1="75.67" y1="72.67" x2="75.67" y2="145.01"/>
+                <line class="cls-13" x1="83.2" y1="72.67" x2="83.2" y2="145.01"/>
+                <line class="cls-13" x1="90.74" y1="72.67" x2="90.74" y2="145.01"/>
+              </g>
+            </g>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>
