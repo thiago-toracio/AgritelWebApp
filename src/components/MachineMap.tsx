@@ -12,8 +12,7 @@ const MAP_STYLES: Record<MapStyle, string> = {
   satellite: 'mapbox://styles/mapbox/satellite-streets-v12',
   streets: 'mapbox://styles/mapbox/streets-v12',
   outdoors: 'mapbox://styles/mapbox/outdoors-v12',
-  dark: 'mapbox://styles/mapbox/dark-v11',
-  light: 'mapbox://styles/mapbox/light-v11'
+  dark: 'mapbox://styles/mapbox/dark-v11'
 };
 
 interface MachineMapProps {

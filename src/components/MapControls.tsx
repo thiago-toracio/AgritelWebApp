@@ -14,7 +14,7 @@ import {
 import ThemeToggle from './ThemeToggle';
 import { MachineData, MachineAlert } from '@/types/machine';
 
-export type MapStyle = 'satellite' | 'streets' | 'outdoors' | 'dark' | 'light';
+export type MapStyle = 'satellite' | 'streets' | 'outdoors' | 'dark';
 
 interface MapControlsProps {
   machines: MachineData[];
@@ -40,8 +40,7 @@ const MapControls = ({
     { value: 'satellite', label: 'Satélite' },
     { value: 'streets', label: 'Ruas' },
     { value: 'outdoors', label: 'Outdoor' },
-    { value: 'dark', label: 'Escuro' },
-    { value: 'light', label: 'Claro' }
+    { value: 'dark', label: 'Escuro' }
   ];
 
   // Categorização das máquinas
