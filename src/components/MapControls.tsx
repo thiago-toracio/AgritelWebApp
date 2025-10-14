@@ -119,7 +119,7 @@ const MapControls = ({
               <div className="flex items-center space-x-1.5">
                 <RefreshCw className="w-4 h-4 text-muted-foreground" />
                 <span className="text-xs text-muted-foreground whitespace-nowrap">
-                  {countdown}s para atualizar
+                  {countdown}s
                 </span>
               </div>
             </div>
