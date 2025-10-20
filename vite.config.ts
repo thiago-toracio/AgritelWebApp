@@ -28,10 +28,10 @@ export default defineConfig(({ mode, command }) => {
   };
 
   if (command === 'serve') {
-    // Development configuration
+    // Development configuration - usa / para funcionar no Lovable
     return {
       ...defaultConfig,
-      base: '/reactapp/',
+      base: '/',
       server: {
         host: "::",  // Required for Lovable
         port: 8080,  // Required for Lovable
@@ -45,7 +45,7 @@ export default defineConfig(({ mode, command }) => {
       },
     };
   } else {
-    // Build configuration
+    // Build configuration - usa /reactapp/ para produção
     return {
       ...defaultConfig,
       base: env.VITE_BUILD_BASE || '/reactapp/',
