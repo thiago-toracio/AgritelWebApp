@@ -10,6 +10,10 @@ import { apiClient } from './apiClient';
 
 const isMockEnabled = import.meta.env.VITE_MOCK_ENABLED === 'true';
 
+console.log('🔍 VITE_MOCK_ENABLED value:', import.meta.env.VITE_MOCK_ENABLED);
+console.log('🔍 isMockEnabled:', isMockEnabled);
+console.log('🔍 Mode:', import.meta.env.MODE);
+
 export class MachineService {
   /**
    * Fetch all machines
