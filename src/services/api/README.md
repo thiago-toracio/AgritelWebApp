@@ -30,10 +30,10 @@ Crie um arquivo `.env` na raiz:
 
 ```env
 # Usar mock em desenvolvimento
-VITE_MOCK_ENABLED=true
+VITE_MOCK_DISABLED=false
 
 # Ou usar API real em desenvolvimento
-VITE_MOCK_ENABLED=false
+VITE_MOCK_DISABLED=true
 ```
 
 ## 📝 Como Usar

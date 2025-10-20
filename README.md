@@ -50,7 +50,7 @@ VITE_API_TARGET=https://localhost:44348
 
 # Mock Mode (true = use mock data, false = use real API)
 # Default: true in dev, false in build
-VITE_MOCK_ENABLED=true
+VITE_MOCK_DISABLED=false
 
 # Build Configuration  
 VITE_BUILD_BASE=/reactappview/
@@ -60,9 +60,9 @@ COPY_DESTINATION_PATH=../3sat.web/WebApp/ReactAppView
 ```
 
 **Mock Mode:**
-- `npm run dev` → Automatically uses mock data (`VITE_MOCK_ENABLED=true`)
-- `npm run build` → Automatically uses real API (`VITE_MOCK_ENABLED=false`)
-- Override by setting `VITE_MOCK_ENABLED=true/false` in your `.env` file
+- `npm run dev` → Automatically uses mock data (`VITE_MOCK_DISABLED=false`)
+- `npm run build` → Automatically uses real API (`VITE_MOCK_DISABLED=true`)
+- Override by setting `VITE_MOCK_DISABLED=true/false` in your `.env` file
 
 See `src/services/api/README.md` for detailed API architecture documentation.
 

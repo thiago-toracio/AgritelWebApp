@@ -8,21 +8,15 @@ import { apiClient } from './apiClient';
  * based on VITE_MOCK_ENABLED environment variable
  */
 
-const isMockEnabled = import.meta.env.VITE_MOCK_ENABLED === 'true';
+const isMockEnabled = import.meta.env.VITE_MOCK_DISABLED !== 'false';
 
-console.log('🔍 VITE_MOCK_ENABLED value:', import.meta.env.VITE_MOCK_ENABLED);
+console.log('🔍 VITE_MOCK_DISABLED value:', import.meta.env.VITE_MOCK_DISABLED);
 console.log('🔍 isMockEnabled:', isMockEnabled);
 console.log('🔍 Mode:', import.meta.env.MODE);
 
 export class MachineService {
-  /**
-   * Fetch all machines
-   * Returns mock data if VITE_MOCK_ENABLED=true, otherwise calls real API
-   */
   async getMachines(): Promise<MachineData[]> {
     if (isMockEnabled) {
-      console.log('🔧 Using MOCK data for machines');
-      // Simulate API delay
       await new Promise(resolve => setTimeout(resolve, 300));
       return mockMachines;
     }
