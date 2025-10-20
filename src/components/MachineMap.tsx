@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import mapboxgl from 'mapbox-gl';
-import 'mapbox-gl/dist/mapbox-gl.css';
 import { MachineData } from '@/types/machine';
 import MachineMarker from './MachineMarker';
 import FallbackMachineMarker from './FallbackMachineMarker';
