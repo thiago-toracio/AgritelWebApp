@@ -31,6 +31,7 @@ export default defineConfig(({ mode, command }) => {
     // Development configuration
     return {
       ...defaultConfig,
+      base: '/reactapp/',
       server: {
         host: "::",  // Required for Lovable
         port: 8080,  // Required for Lovable
@@ -47,7 +48,7 @@ export default defineConfig(({ mode, command }) => {
     // Build configuration
     return {
       ...defaultConfig,
-      base: env.VITE_BUILD_BASE || '/',
+      base: env.VITE_BUILD_BASE || '/reactapp/',
     };
   }
 });
