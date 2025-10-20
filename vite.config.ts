@@ -13,6 +13,7 @@ export default defineConfig(({ mode, command }) => {
   const mockDisabled = command === 'build' ? 'true' : (env.VITE_MOCK_DISABLED ?? 'false');
   
   const defaultConfig = {
+    base: '/reactapp',
     plugins: [
       react(),
       mode === 'development' && componentTagger(),
@@ -34,6 +35,7 @@ export default defineConfig(({ mode, command }) => {
       server: {
         host: "::",  // Required for Lovable
         port: 8080,  // Required for Lovable
+        open: '/reactapp',
         proxy: {
           '/api': {
             target: env.VITE_API_TARGET || 'https://localhost:44348',
@@ -47,7 +49,7 @@ export default defineConfig(({ mode, command }) => {
     // Build configuration
     return {
       ...defaultConfig,
-      base: env.VITE_BUILD_BASE || '/',
+      base: env.VITE_BUILD_BASE || '/reactapp',
     };
   }
 });
