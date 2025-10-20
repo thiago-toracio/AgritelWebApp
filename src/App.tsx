@@ -8,8 +8,8 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
-// Use /reactapp apenas em produção, / em desenvolvimento
-const basename = import.meta.env.PROD ? '/reactapp' : '/';
+// Use /reactapp apenas em produção (build)
+const basename = import.meta.env.MODE === 'production' ? '/reactapp' : undefined;
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
