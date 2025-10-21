@@ -5,37 +5,42 @@ import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode, command }) => {
-  // Load environment variables
+  // Load environment variables based on the current mode (e.g., 'production' loads .env.production)
   const env = loadEnv(mode, process.cwd(), '');
   
-  // Set VITE_MOCK_DISABLED based on command
-  // build: ALWAYS true (real API), dev: use .env or default false (mock)
-  const mockDisabled = command === 'build' ? 'true' : (env.VITE_MOCK_DISABLED ?? 'false');
+  // Set VITE_MOCK_DISABLED based on the mode.
+  // It's ALWAYS 'true' (mock disabled/real API used) if mode is NOT 'development'.
+  // Otherwise, it relies on the value defined in the .env file (defaults to 'false' if missing).
+  const mockDisabled = mode === 'production' ? 'true' :  (env.VITE_MOCK_DISABLED ?? 'false');
   
   const defaultConfig = {
     base: '/reactapp',
     plugins: [
       react(),
+      // The componentTagger plugin runs only in development mode.
       mode === 'development' && componentTagger(),
     ].filter(Boolean),
     resolve: {
       alias: {
+        // Alias '@' to the './src' directory for cleaner imports
         "@": path.resolve(__dirname, "./src"),
       },
     },
     define: {
+      // Injects the resolved string value into the client-side code (import.meta.env)
       'import.meta.env.VITE_MOCK_DISABLED': JSON.stringify(mockDisabled),
     },
   };
 
   if (command === 'serve') {
-    // Development configuration
+    // Configuration specific for the Development Server (npm run dev)
     return {
       ...defaultConfig,
       server: {
-        host: "::",  // Required for Lovable
-        port: 8080,  // Required for Lovable
+        host: "::",
+        port: 8080,
         open: '/reactapp',
+        // Proxy is only needed in development to forward /api calls to the backend (to avoid CORS)
         proxy: {
           '/api': {
             target: env.VITE_API_TARGET || 'https://localhost:44348',
@@ -46,9 +51,10 @@ export default defineConfig(({ mode, command }) => {
       },
     };
   } else {
-    // Build configuration
+    // Configuration specific for the Build Process (npm run build, build:production, build:development)
     return {
       ...defaultConfig,
+      // Uses VITE_BUILD_BASE from the environment file (e.g., .env.production)
       base: env.VITE_BUILD_BASE || '/reactapp',
     };
   }

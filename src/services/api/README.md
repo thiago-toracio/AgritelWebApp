@@ -11,7 +11,7 @@ src/services/api/
 
 ## 🔧 Modo Mock vs API Real
 
-A aplicação suporta dois modos de operação controlados pela variável de ambiente `VITE_MOCK_ENABLED`:
+A aplicação suporta dois modos de operação controlados pela variável de ambiente `VITE_MOCK_DISABLED`:
 
 ### **Desenvolvimento (default: MOCK)**
 ```bash
@@ -64,9 +64,9 @@ const updated = await machineService.updateMachine('COL-001', {
 ```typescript
 import { MachineAlert } from '@/types/machine';
 import { apiClient } from './apiClient';
-import { mockAlerts } from '@/data/mockAlerts'; // criar mock data
+import { mockAlerts } from '@/data/mockAlerts';
 
-const isMockEnabled = import.meta.env.VITE_MOCK_ENABLED === 'true';
+const isMockEnabled = import.meta.env.VITE_MOCK_DISABLED === 'false';
 
 export class AlertService {
   async getAlerts(): Promise<MachineAlert[]> {

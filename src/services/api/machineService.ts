@@ -5,13 +5,12 @@ import { apiClient } from './apiClient';
 /**
  * Machine Service
  * Handles fetching machine data from either mock or real API
- * based on VITE_MOCK_ENABLED environment variable
+ * based on VITE_MOCK_DISABLED environment variable
  */
 
-const isMockEnabled = import.meta.env.VITE_MOCK_DISABLED !== 'false';
+const isMockEnabled = import.meta.env.VITE_MOCK_DISABLED == 'false';
 
 console.log('🔍 VITE_MOCK_DISABLED value:', import.meta.env.VITE_MOCK_DISABLED);
-console.log('🔍 isMockEnabled:', isMockEnabled);
 console.log('🔍 Mode:', import.meta.env.MODE);
 
 export class MachineService {

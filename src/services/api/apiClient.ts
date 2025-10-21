@@ -3,7 +3,7 @@
  * Handles HTTP requests with credentials and error handling
  */
 
-const BASE_URL = '/reactapp/api';
+const BASE_URL = '/api/reactapp';
 
 export class ApiClient {
   private baseUrl: string;
