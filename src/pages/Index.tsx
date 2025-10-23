@@ -123,8 +123,15 @@ const Index = () => {
   };
 
   const handleToggleStatus = (filter?: string) => {
-    setStatusPanelFilter(filter);
-    setIsStatusPanelOpen(!isStatusPanelOpen);
+    // Se o painel está aberto e clicamos no mesmo filtro, fecha
+    if (isStatusPanelOpen && statusPanelFilter === filter) {
+      setIsStatusPanelOpen(false);
+      setStatusPanelFilter(undefined);
+    } else {
+      // Caso contrário, abre o painel (ou mantém aberto) e atualiza o filtro
+      setStatusPanelFilter(filter);
+      setIsStatusPanelOpen(true);
+    }
   };
 
   const handleCloseStatus = () => {
