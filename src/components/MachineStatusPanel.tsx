@@ -128,7 +128,7 @@ const MachineStatusPanel = ({
                 {machine.type.replace(/-/g, ' ')}
               </p>
             </div>
-            <Badge className={getStatusColor(status.color)}>
+            <Badge variant="secondary" className={`bg-muted ${getStatusColor(status.color)}`}>
               {status.label}
             </Badge>
           </div>
