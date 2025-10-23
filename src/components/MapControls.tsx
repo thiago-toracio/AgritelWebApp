@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 import { MachineData, MachineAlert } from '@/types/machine';
+import { getMachineStatus } from '@/utils/machineStatus';
 
 export type MapStyle = 'satellite' | 'streets' | 'outdoors' | 'dark';
 
@@ -22,7 +23,7 @@ interface MapControlsProps {
   alerts: MachineAlert[];
   onToggleGrid: () => void;
   onToggleAlerts: () => void;
-  onToggleStatus: () => void;
+  onToggleStatus: (filter?: string) => void;
   onMapStyleChange: (style: MapStyle) => void;
   currentMapStyle: MapStyle;
   onRefresh: () => void;
@@ -64,11 +65,19 @@ const MapControls = ({
     { value: 'dark', label: 'Escuro' }
   ];
 
-  // Categorização das máquinas
-  const trabalhando = machines.filter(m => m.status === 'active' && m.speed > 5).length;
-  const manobrando = machines.filter(m => m.status === 'active' && m.speed > 0 && m.speed <= 5).length;
-  const parada = machines.filter(m => m.status === 'idle' || m.speed === 0).length;
-  const deslocando = machines.filter(m => m.status === 'active' && m.speed > 10 && (m.task?.includes('Deslocamento') || m.area === 'Sede')).length;
+  // Categorização das máquinas usando getMachineStatus
+  const statusCounts = useMemo(() => {
+    return machines.reduce((acc, machine) => {
+      const status = getMachineStatus(machine);
+      acc[status.color] = (acc[status.color] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
+  }, [machines]);
+
+  const trabalhando = statusCounts.green || 0;
+  const manobrando = statusCounts.yellow || 0;
+  const parada = statusCounts.red || 0;
+  const deslocando = statusCounts.blue || 0;
 
   return (
     <>
@@ -85,42 +94,54 @@ const MapControls = ({
               </div>
               
               <button
-                onClick={onToggleStatus}
+                onClick={() => onToggleStatus('green')}
                 className="flex items-center space-x-1.5 hover:bg-muted/50 px-2 py-1 rounded transition-colors cursor-pointer"
               >
-                <Settings className="w-5 h-5 text-green-500" />
+                <Settings className="w-5 h-5 text-muted-foreground" />
+                <Badge variant="secondary" className="bg-muted text-green-500 font-semibold hover:bg-muted/80">
+                  {trabalhando}
+                </Badge>
                 <span className="text-sm text-card-foreground whitespace-nowrap">
-                  <span className="font-medium text-green-500">{trabalhando}</span> trabalhando
+                  trabalhando
                 </span>
               </button>
               
               <button
-                onClick={onToggleStatus}
+                onClick={() => onToggleStatus('yellow')}
                 className="flex items-center space-x-1.5 hover:bg-muted/50 px-2 py-1 rounded transition-colors cursor-pointer"
               >
-                <CornerDownRight className="w-5 h-5 text-yellow-500" />
+                <CornerDownRight className="w-5 h-5 text-muted-foreground" />
+                <Badge variant="secondary" className="bg-muted text-yellow-500 font-semibold hover:bg-muted/80">
+                  {manobrando}
+                </Badge>
                 <span className="text-sm text-card-foreground whitespace-nowrap">
-                  <span className="font-medium text-yellow-500">{manobrando}</span> manobrando
+                  manobrando
                 </span>
               </button>
               
               <button
-                onClick={onToggleStatus}
+                onClick={() => onToggleStatus('red')}
                 className="flex items-center space-x-1.5 hover:bg-muted/50 px-2 py-1 rounded transition-colors cursor-pointer"
               >
-                <StopCircle className="w-5 h-5 text-red-500" />
+                <StopCircle className="w-5 h-5 text-muted-foreground" />
+                <Badge variant="secondary" className="bg-muted text-red-500 font-semibold hover:bg-muted/80">
+                  {parada}
+                </Badge>
                 <span className="text-sm text-card-foreground whitespace-nowrap">
-                  <span className="font-medium text-red-500">{parada}</span> parada
+                  parada
                 </span>
               </button>
               
               <button
-                onClick={onToggleStatus}
+                onClick={() => onToggleStatus('blue')}
                 className="flex items-center space-x-1.5 hover:bg-muted/50 px-2 py-1 rounded transition-colors cursor-pointer"
               >
-                <ArrowRightLeft className="w-5 h-5 text-blue-500" />
+                <ArrowRightLeft className="w-5 h-5 text-muted-foreground" />
+                <Badge variant="secondary" className="bg-muted text-blue-500 font-semibold hover:bg-muted/80">
+                  {deslocando}
+                </Badge>
                 <span className="text-sm text-card-foreground whitespace-nowrap">
-                  <span className="font-medium text-blue-500">{deslocando}</span> deslocando
+                  deslocando
                 </span>
               </button>
               

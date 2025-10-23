@@ -16,6 +16,7 @@ const Index = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isAlertsPanelOpen, setIsAlertsPanelOpen] = useState(false);
   const [isStatusPanelOpen, setIsStatusPanelOpen] = useState(false);
+  const [statusPanelFilter, setStatusPanelFilter] = useState<string | undefined>();
   const [alerts, setAlerts] = useState<MachineAlert[]>([]);
   const [focusOnMachine, setFocusOnMachine] = useState<string | undefined>();
   const [mapStyle, setMapStyle] = useState<MapStyle>('satellite');
@@ -121,12 +122,14 @@ const Index = () => {
     setIsAlertsPanelOpen(false);
   };
 
-  const handleToggleStatus = () => {
+  const handleToggleStatus = (filter?: string) => {
+    setStatusPanelFilter(filter);
     setIsStatusPanelOpen(!isStatusPanelOpen);
   };
 
   const handleCloseStatus = () => {
     setIsStatusPanelOpen(false);
+    setStatusPanelFilter(undefined);
   };
 
   const handleMarkAsRead = (alertId: string) => {
@@ -215,6 +218,7 @@ const Index = () => {
         isOpen={isStatusPanelOpen}
         onClose={handleCloseStatus}
         onViewMachine={handleViewMachineFromAlert}
+        initialFilter={statusPanelFilter}
       />
 
       {/* Machine Details Sidebar */}

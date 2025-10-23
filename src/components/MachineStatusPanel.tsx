@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { X, Search, MapPin, Gauge, Fuel, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -13,15 +13,27 @@ interface MachineStatusPanelProps {
   isOpen: boolean;
   onClose: () => void;
   onViewMachine: (machineId: string) => void;
+  initialFilter?: string;
 }
 
 const MachineStatusPanel = ({ 
   machines, 
   isOpen, 
   onClose,
-  onViewMachine
+  onViewMachine,
+  initialFilter
 }: MachineStatusPanelProps) => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState<string | null>(null);
+
+  // Update filter when initialFilter changes
+  useEffect(() => {
+    if (isOpen && initialFilter) {
+      setStatusFilter(initialFilter);
+    } else if (!isOpen) {
+      setStatusFilter(null);
+    }
+  }, [isOpen, initialFilter]);
 
   // Filtrar máquinas por busca
   const filteredMachines = useMemo(() => {
@@ -48,11 +60,17 @@ const MachineStatusPanel = ({
 
     filteredMachines.forEach(machine => {
       const status = getMachineStatus(machine);
+      
+      // Apply status filter if set
+      if (statusFilter && status.color !== statusFilter) {
+        return;
+      }
+      
       categories[status.color].push(machine);
     });
 
     return categories;
-  }, [filteredMachines]);
+  }, [filteredMachines, statusFilter]);
 
   const getStatusLabel = (color: string) => {
     const labels: Record<string, string> = {
@@ -201,8 +219,8 @@ const MachineStatusPanel = ({
           </Button>
         </div>
 
-        {/* Search Bar */}
-        <div className="p-4 border-b border-border bg-card">
+        {/* Search Bar and Filters */}
+        <div className="p-4 border-b border-border bg-card space-y-3">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input
@@ -213,6 +231,27 @@ const MachineStatusPanel = ({
               className="pl-10"
             />
           </div>
+          
+          {/* Status Filter Buttons */}
+          {statusFilter && (
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-sm text-muted-foreground">Filtro:</span>
+              <Badge 
+                variant="secondary"
+                className={`cursor-pointer ${getStatusColor(statusFilter)}`}
+              >
+                {getStatusLabel(statusFilter)}
+              </Badge>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setStatusFilter(null)}
+                className="h-6 px-2 text-xs"
+              >
+                Limpar filtro
+              </Button>
+            </div>
+          )}
         </div>
 
         {/* Content */}
