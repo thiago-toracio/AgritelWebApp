@@ -97,10 +97,10 @@ const MapControls = ({
                 onClick={() => onToggleStatus('green')}
                 className="flex items-center space-x-1.5 hover:bg-muted/50 px-2 py-1 rounded transition-colors cursor-pointer"
               >
-                <Settings className="w-5 h-5 text-muted-foreground" />
-                <Badge variant="secondary" className="bg-green-500/20 text-green-500 font-semibold hover:bg-green-500/30">
+                <Settings className="w-5 h-5 text-green-500" />
+                <span className="text-sm font-semibold text-card-foreground whitespace-nowrap">
                   {trabalhando}
-                </Badge>
+                </span>
                 <span className="text-sm text-card-foreground whitespace-nowrap">
                   trabalhando
                 </span>
@@ -110,10 +110,10 @@ const MapControls = ({
                 onClick={() => onToggleStatus('yellow')}
                 className="flex items-center space-x-1.5 hover:bg-muted/50 px-2 py-1 rounded transition-colors cursor-pointer"
               >
-                <CornerDownRight className="w-5 h-5 text-muted-foreground" />
-                <Badge variant="secondary" className="bg-yellow-500/20 text-yellow-500 font-semibold hover:bg-yellow-500/30">
+                <CornerDownRight className="w-5 h-5 text-yellow-500" />
+                <span className="text-sm font-semibold text-card-foreground whitespace-nowrap">
                   {manobrando}
-                </Badge>
+                </span>
                 <span className="text-sm text-card-foreground whitespace-nowrap">
                   manobrando
                 </span>
@@ -123,10 +123,10 @@ const MapControls = ({
                 onClick={() => onToggleStatus('red')}
                 className="flex items-center space-x-1.5 hover:bg-muted/50 px-2 py-1 rounded transition-colors cursor-pointer"
               >
-                <StopCircle className="w-5 h-5 text-muted-foreground" />
-                <Badge variant="secondary" className="bg-red-500/20 text-red-500 font-semibold hover:bg-red-500/30">
+                <StopCircle className="w-5 h-5 text-red-500" />
+                <span className="text-sm font-semibold text-card-foreground whitespace-nowrap">
                   {parada}
-                </Badge>
+                </span>
                 <span className="text-sm text-card-foreground whitespace-nowrap">
                   parada
                 </span>
@@ -136,10 +136,10 @@ const MapControls = ({
                 onClick={() => onToggleStatus('blue')}
                 className="flex items-center space-x-1.5 hover:bg-muted/50 px-2 py-1 rounded transition-colors cursor-pointer"
               >
-                <ArrowRightLeft className="w-5 h-5 text-muted-foreground" />
-                <Badge variant="secondary" className="bg-blue-500/20 text-blue-500 font-semibold hover:bg-blue-500/30">
+                <ArrowRightLeft className="w-5 h-5 text-blue-500" />
+                <span className="text-sm font-semibold text-card-foreground whitespace-nowrap">
                   {deslocando}
-                </Badge>
+                </span>
                 <span className="text-sm text-card-foreground whitespace-nowrap">
                   deslocando
                 </span>
