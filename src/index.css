@@ -11,21 +11,21 @@ All colors MUST be HSL - Agricultural theme with modern tech aesthetics
     --background: 220 15% 96%;
     --foreground: 220 15% 15%;
 
-    --card: 25 35% 28%;
-    --card-foreground: 0 0% 100%;
+    --card: 220 15% 98%;
+    --card-foreground: 220 15% 15%;
 
-    --popover: 25 35% 28%;
-    --popover-foreground: 0 0% 100%;
+    --popover: 220 15% 98%;
+    --popover-foreground: 220 15% 15%;
 
     --primary: 142 85% 45%;
     --primary-foreground: 220 15% 96%;
     --primary-glow: 142 85% 65%;
 
-    --secondary: 25 35% 35%;
-    --secondary-foreground: 0 0% 100%;
+    --secondary: 220 15% 92%;
+    --secondary-foreground: 220 15% 25%;
 
-    --muted: 25 35% 32%;
-    --muted-foreground: 0 0% 85%;
+    --muted: 220 15% 94%;
+    --muted-foreground: 120 10% 45%;
 
     --accent: 200 85% 55%;
     --accent-foreground: 220 15% 96%;
@@ -37,15 +37,15 @@ All colors MUST be HSL - Agricultural theme with modern tech aesthetics
     --destructive: 0 85% 55%;
     --destructive-foreground: 220 15% 96%;
 
-    --border: 25 35% 40%;
-    --input: 25 35% 32%;
+    --border: 220 15% 88%;
+    --input: 220 15% 96%;
     --ring: 142 85% 45%;
 
     /* Agricultural specific colors */
     --agriculture-green: 142 85% 45%;
     --agriculture-green-dark: 142 85% 35%;
     --agriculture-blue: 200 85% 55%;
-    --agriculture-soil: 25 35% 28%;
+    --agriculture-soil: 25 45% 35%;
     --agriculture-sun: 45 85% 55%;
     --grid-button: 103 65% 50%;
 
@@ -56,19 +56,19 @@ All colors MUST be HSL - Agricultural theme with modern tech aesthetics
     --status-offline: 0 45% 45%;
 
     /* Map overlay colors */
-    --overlay-bg: 25 35% 28% / 0.98;
-    --overlay-border: 25 35% 40% / 0.6;
+    --overlay-bg: 220 15% 98% / 0.95;
+    --overlay-border: 220 15% 85% / 0.6;
 
     /* Gradients */
     --gradient-primary: linear-gradient(135deg, hsl(142 85% 45%), hsl(142 85% 65%));
     --gradient-secondary: linear-gradient(135deg, hsl(200 85% 55%), hsl(220 85% 65%));
     --gradient-agricultural: linear-gradient(135deg, hsl(142 85% 45%), hsl(200 85% 55%));
-    --gradient-overlay: linear-gradient(180deg, hsl(25 35% 28% / 0.98), hsl(25 35% 30% / 0.98));
+    --gradient-overlay: linear-gradient(180deg, hsl(220 15% 98% / 0.95), hsl(220 15% 96% / 0.98));
 
     /* Shadows */
     --shadow-agricultural: 0 10px 30px -10px hsl(142 85% 45% / 0.3);
     --shadow-glow: 0 0 40px hsl(142 85% 65% / 0.4);
-    --shadow-overlay: 0 4px 20px hsl(25 35% 20% / 0.5);
+    --shadow-overlay: 0 4px 20px hsl(220 15% 90% / 0.5);
 
     /* Animations */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
