@@ -33,6 +33,20 @@ const AlertsPanel = ({
 }: AlertsPanelProps) => {
   const [searchQuery, setSearchQuery] = useState('');
   
+  // Filtrar alertas por busca
+  const filteredAlerts = useMemo(() => {
+    if (!searchQuery.trim()) return alerts;
+    
+    const query = searchQuery.toLowerCase();
+    return alerts.filter(alert => 
+      alert.machineId.toLowerCase().includes(query) ||
+      alert.message.toLowerCase().includes(query)
+    );
+  }, [alerts, searchQuery]);
+
+  const unreadAlerts = filteredAlerts.filter(alert => !alert.resolved);
+  const readAlerts = filteredAlerts.filter(alert => alert.resolved);
+  
   if (!isOpen) return null;
 
   const getAlertIcon = (type: MachineAlert['type']) => {
@@ -73,20 +87,6 @@ const AlertsPanel = ({
         return 'text-yellow-500';
     }
   };
-
-  // Filtrar alertas por busca
-  const filteredAlerts = useMemo(() => {
-    if (!searchQuery.trim()) return alerts;
-    
-    const query = searchQuery.toLowerCase();
-    return alerts.filter(alert => 
-      alert.machineId.toLowerCase().includes(query) ||
-      alert.message.toLowerCase().includes(query)
-    );
-  }, [alerts, searchQuery]);
-
-  const unreadAlerts = filteredAlerts.filter(alert => !alert.resolved);
-  const readAlerts = filteredAlerts.filter(alert => alert.resolved);
 
   return (
     <div className="fixed top-0 left-0 h-full w-96 bg-gradient-overlay border-r border-border shadow-overlay backdrop-blur-sm z-50 animate-slide-left">
