@@ -98,7 +98,7 @@ const MapControls = ({
                 className="flex items-center space-x-1.5 hover:bg-muted/50 px-2 py-1 rounded transition-colors cursor-pointer"
               >
                 <Settings className="w-5 h-5 text-muted-foreground" />
-                <Badge variant="secondary" className="bg-muted text-green-500 font-semibold hover:bg-muted/80">
+                <Badge variant="secondary" className="bg-green-500/20 text-green-500 font-semibold hover:bg-green-500/30">
                   {trabalhando}
                 </Badge>
                 <span className="text-sm text-card-foreground whitespace-nowrap">
@@ -111,7 +111,7 @@ const MapControls = ({
                 className="flex items-center space-x-1.5 hover:bg-muted/50 px-2 py-1 rounded transition-colors cursor-pointer"
               >
                 <CornerDownRight className="w-5 h-5 text-muted-foreground" />
-                <Badge variant="secondary" className="bg-muted text-yellow-500 font-semibold hover:bg-muted/80">
+                <Badge variant="secondary" className="bg-yellow-500/20 text-yellow-500 font-semibold hover:bg-yellow-500/30">
                   {manobrando}
                 </Badge>
                 <span className="text-sm text-card-foreground whitespace-nowrap">
@@ -124,7 +124,7 @@ const MapControls = ({
                 className="flex items-center space-x-1.5 hover:bg-muted/50 px-2 py-1 rounded transition-colors cursor-pointer"
               >
                 <StopCircle className="w-5 h-5 text-muted-foreground" />
-                <Badge variant="secondary" className="bg-muted text-red-500 font-semibold hover:bg-muted/80">
+                <Badge variant="secondary" className="bg-red-500/20 text-red-500 font-semibold hover:bg-red-500/30">
                   {parada}
                 </Badge>
                 <span className="text-sm text-card-foreground whitespace-nowrap">
@@ -137,7 +137,7 @@ const MapControls = ({
                 className="flex items-center space-x-1.5 hover:bg-muted/50 px-2 py-1 rounded transition-colors cursor-pointer"
               >
                 <ArrowRightLeft className="w-5 h-5 text-muted-foreground" />
-                <Badge variant="secondary" className="bg-muted text-blue-500 font-semibold hover:bg-muted/80">
+                <Badge variant="secondary" className="bg-blue-500/20 text-blue-500 font-semibold hover:bg-blue-500/30">
                   {deslocando}
                 </Badge>
                 <span className="text-sm text-card-foreground whitespace-nowrap">
