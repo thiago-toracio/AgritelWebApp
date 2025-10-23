@@ -22,6 +22,7 @@ interface MapControlsProps {
   alerts: MachineAlert[];
   onToggleGrid: () => void;
   onToggleAlerts: () => void;
+  onToggleStatus: () => void;
   onMapStyleChange: (style: MapStyle) => void;
   currentMapStyle: MapStyle;
   onRefresh: () => void;
@@ -32,6 +33,7 @@ const MapControls = ({
   alerts,
   onToggleGrid,
   onToggleAlerts,
+  onToggleStatus,
   onMapStyleChange,
   currentMapStyle,
   onRefresh
@@ -82,33 +84,45 @@ const MapControls = ({
                 </span>
               </div>
               
-              <div className="flex items-center space-x-1.5">
+              <button
+                onClick={onToggleStatus}
+                className="flex items-center space-x-1.5 hover:bg-muted/50 px-2 py-1 rounded transition-colors cursor-pointer"
+              >
                 <Settings className="w-5 h-5 text-green-500" />
                 <span className="text-sm text-card-foreground whitespace-nowrap">
                   <span className="font-medium text-green-500">{trabalhando}</span> trabalhando
                 </span>
-              </div>
+              </button>
               
-              <div className="flex items-center space-x-1.5">
+              <button
+                onClick={onToggleStatus}
+                className="flex items-center space-x-1.5 hover:bg-muted/50 px-2 py-1 rounded transition-colors cursor-pointer"
+              >
                 <CornerDownRight className="w-5 h-5 text-yellow-500" />
                 <span className="text-sm text-card-foreground whitespace-nowrap">
                   <span className="font-medium text-yellow-500">{manobrando}</span> manobrando
                 </span>
-              </div>
+              </button>
               
-              <div className="flex items-center space-x-1.5">
+              <button
+                onClick={onToggleStatus}
+                className="flex items-center space-x-1.5 hover:bg-muted/50 px-2 py-1 rounded transition-colors cursor-pointer"
+              >
                 <StopCircle className="w-5 h-5 text-red-500" />
                 <span className="text-sm text-card-foreground whitespace-nowrap">
                   <span className="font-medium text-red-500">{parada}</span> parada
                 </span>
-              </div>
+              </button>
               
-              <div className="flex items-center space-x-1.5">
+              <button
+                onClick={onToggleStatus}
+                className="flex items-center space-x-1.5 hover:bg-muted/50 px-2 py-1 rounded transition-colors cursor-pointer"
+              >
                 <ArrowRightLeft className="w-5 h-5 text-blue-500" />
                 <span className="text-sm text-card-foreground whitespace-nowrap">
                   <span className="font-medium text-blue-500">{deslocando}</span> deslocando
                 </span>
-              </div>
+              </button>
               
               {alertsCount > 0 && (
                 <div className="flex items-center space-x-1.5">

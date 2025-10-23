@@ -6,6 +6,7 @@ import MachineGrid from '@/components/MachineGrid';
 import MachineSidebar from '@/components/MachineSidebar';
 import MapControls, { MapStyle } from '@/components/MapControls';
 import AlertsPanel from '@/components/AlertsPanel';
+import MachineStatusPanel from '@/components/MachineStatusPanel';
 
 const Index = () => {
   const [machines, setMachines] = useState<MachineData[]>([]);
@@ -14,6 +15,7 @@ const Index = () => {
   const [isGridOpen, setIsGridOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isAlertsPanelOpen, setIsAlertsPanelOpen] = useState(false);
+  const [isStatusPanelOpen, setIsStatusPanelOpen] = useState(false);
   const [alerts, setAlerts] = useState<MachineAlert[]>([]);
   const [focusOnMachine, setFocusOnMachine] = useState<string | undefined>();
   const [mapStyle, setMapStyle] = useState<MapStyle>('satellite');
@@ -119,6 +121,14 @@ const Index = () => {
     setIsAlertsPanelOpen(false);
   };
 
+  const handleToggleStatus = () => {
+    setIsStatusPanelOpen(!isStatusPanelOpen);
+  };
+
+  const handleCloseStatus = () => {
+    setIsStatusPanelOpen(false);
+  };
+
   const handleMarkAsRead = (alertId: string) => {
     setAlerts(prev => prev.map(alert => 
       alert.id === alertId ? { ...alert, resolved: true } : alert
@@ -175,6 +185,7 @@ const Index = () => {
         alerts={alerts}
         onToggleGrid={handleToggleGrid}
         onToggleAlerts={handleToggleAlerts}
+        onToggleStatus={handleToggleStatus}
         onMapStyleChange={handleMapStyleChange}
         currentMapStyle={mapStyle}
         onRefresh={loadMachines}
@@ -195,6 +206,14 @@ const Index = () => {
         isOpen={isAlertsPanelOpen}
         onClose={handleCloseAlerts}
         onMarkAsRead={handleMarkAsRead}
+        onViewMachine={handleViewMachineFromAlert}
+      />
+
+      {/* Machine Status Panel */}
+      <MachineStatusPanel
+        machines={machines}
+        isOpen={isStatusPanelOpen}
+        onClose={handleCloseStatus}
         onViewMachine={handleViewMachineFromAlert}
       />
 
