@@ -92,7 +92,7 @@ The project includes these build scripts in `package.json`:
 npm run build:dev
 
 # Production build (automatically copies to Visual Studio)
-npm run build
+npm run build:production
 ```
 
 **Edit a file directly in GitHub**
