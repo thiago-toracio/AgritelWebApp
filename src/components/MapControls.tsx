@@ -214,7 +214,7 @@ const MapControls = ({
       <div className="absolute bottom-4 left-4 z-40">
         <Button
           onClick={onToggleGrid}
-          className="hover:opacity-90 shadow-agricultural bg-[#00b359] hover:bg-[#00a04f]"
+          className="hover:opacity-90 shadow-agricultural bg-[#00b359] hover:bg-[#00a04f] text-white"
           size="lg"
         >
           <Grid2X2 className="w-6 h-6 mr-2" />
