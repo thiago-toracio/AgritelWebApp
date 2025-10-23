@@ -8,6 +8,7 @@
     "build": "vite build",
     "build:production": "vite build --mode production && npm run deploy:copy",
     "build:development": "vite build --mode development",
+    "build:dev": "vite build --mode development",
     "preview": "vite preview --mode production", 
     "deploy:copy": "dotenv -e .env.production -- npx cross-env-shell \"npx shx rm -rf '$COPY_DESTINATION_PATH' && npx copyfiles -u 1 dist/**/* '$COPY_DESTINATION_PATH'\"", 
     "test:env": "dotenv -- npx cross-env-shell \"echo O caminho é: '$COPY_DESTINATION_PATH'\""
