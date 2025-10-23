@@ -98,7 +98,7 @@ const MapControls = ({
                 className="flex items-center space-x-1.5 hover:bg-muted/50 px-2 py-1 rounded transition-colors cursor-pointer"
               >
                 <Settings className="w-5 h-5 text-[#22c55e]" />
-                <span className="text-sm font-semibold text-white whitespace-nowrap">
+                <span className="text-sm font-semibold text-[#22c55e] whitespace-nowrap">
                   {trabalhando}
                 </span>
                 <span className="text-sm text-card-foreground whitespace-nowrap">
@@ -111,7 +111,7 @@ const MapControls = ({
                 className="flex items-center space-x-1.5 hover:bg-muted/50 px-2 py-1 rounded transition-colors cursor-pointer"
               >
                 <CornerDownRight className="w-5 h-5 text-[#eab308]" />
-                <span className="text-sm font-semibold text-white whitespace-nowrap">
+                <span className="text-sm font-semibold text-[#eab308] whitespace-nowrap">
                   {manobrando}
                 </span>
                 <span className="text-sm text-card-foreground whitespace-nowrap">
@@ -124,7 +124,7 @@ const MapControls = ({
                 className="flex items-center space-x-1.5 hover:bg-muted/50 px-2 py-1 rounded transition-colors cursor-pointer"
               >
                 <StopCircle className="w-5 h-5 text-[#ef4444]" />
-                <span className="text-sm font-semibold text-white whitespace-nowrap">
+                <span className="text-sm font-semibold text-[#ef4444] whitespace-nowrap">
                   {parada}
                 </span>
                 <span className="text-sm text-card-foreground whitespace-nowrap">
@@ -137,7 +137,7 @@ const MapControls = ({
                 className="flex items-center space-x-1.5 hover:bg-muted/50 px-2 py-1 rounded transition-colors cursor-pointer"
               >
                 <ArrowRightLeft className="w-5 h-5 text-[#3b82f6]" />
-                <span className="text-sm font-semibold text-white whitespace-nowrap">
+                <span className="text-sm font-semibold text-[#3b82f6] whitespace-nowrap">
                   {deslocando}
                 </span>
                 <span className="text-sm text-card-foreground whitespace-nowrap">
