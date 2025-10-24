@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import { MachineData, MachineAlert } from '@/types/machine';
 import { machineService } from '@/services/api/machineService';
+import { machineDataAdapter } from '@/utils/machineDataAdapter';
 import MachineMap from '@/components/MachineMap';
 import MachineGrid from '@/components/MachineGrid';
 import MachineSidebar from '@/components/MachineSidebar';
@@ -61,19 +62,20 @@ const Index = () => {
       }
       
       // Alerta de combustível baixo
-      if (machine.fuel < 20) {
+      const fuelLevel = machineDataAdapter.getFuel(machine);
+      if (fuelLevel < 20) {
         newAlerts.push({
           id: `fuel-${machine.id}`,
           machineId: machine.id,
           type: 'warning',
-          message: `Combustível baixo em ${machine.name} (${machine.fuel}%)`,
+          message: `Combustível baixo em ${machine.name} (${fuelLevel}%)`,
           timestamp: new Date(Date.now() - Math.random() * 1800000),
           resolved: Math.random() > 0.8
         });
       }
       
       // Alertas de telemetria
-      if (machine.telemetry.engineTemp > 90) {
+      if (machine.telemetry && machine.telemetry.engineTemp && machine.telemetry.engineTemp > 90) {
         newAlerts.push({
           id: `temp-${machine.id}`,
           machineId: machine.id,

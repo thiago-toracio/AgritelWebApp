@@ -126,7 +126,7 @@ const MachineStatusPanel = ({
             <div>
               <h4 className="font-semibold text-base">{machine.name}</h4>
               <p className="text-sm text-muted-foreground capitalize">
-                {machine.type.replace(/-/g, ' ')}
+                {machineDataAdapter.getType(machine).replace(/-/g, ' ')}
               </p>
             </div>
             <Badge variant="secondary" className={`bg-muted ${getStatusColor(status.color)}`}>
@@ -137,12 +137,12 @@ const MachineStatusPanel = ({
           <div className="grid grid-cols-2 gap-3 text-sm mb-3">
             <div className="flex items-center space-x-2">
               <Gauge className="w-4 h-4 text-muted-foreground" />
-              <span>{machine.speed.toFixed(1)} km/h</span>
+              <span>{machineDataAdapter.getSpeed(machine).toFixed(1)} km/h</span>
             </div>
             
             <div className="flex items-center space-x-2">
               <Fuel className="w-4 h-4 text-muted-foreground" />
-              <span>{machine.fuel}%</span>
+              <span>{machineDataAdapter.getFuel(machine)}%</span>
             </div>
 
             {machine.operator && (

@@ -21,6 +21,7 @@ import {
 import { cn } from '@/lib/utils';
 import { formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { machineDataAdapter } from '@/utils/machineDataAdapter';
 
 interface MachineSidebarProps {
   machine: MachineData | null;
@@ -72,7 +73,7 @@ const MachineSidebar = ({ machine, isOpen, onClose }: MachineSidebarProps) => {
         <div className="flex items-center justify-between mb-6">
           <div>
             <h2 className="text-xl font-semibold text-card-foreground">{machine.name}</h2>
-            <p className="text-sm text-muted-foreground capitalize">{machine.type}</p>
+            <p className="text-sm text-muted-foreground capitalize">{machineDataAdapter.getType(machine)}</p>
           </div>
           <Button variant="ghost" size="sm" onClick={onClose}>
             <X className="w-4 h-4" />
@@ -97,7 +98,7 @@ const MachineSidebar = ({ machine, isOpen, onClose }: MachineSidebarProps) => {
                   <span className="text-sm text-muted-foreground">Velocidade</span>
                 </div>
                 <span className={cn("font-medium", getStatusColor(machine.status))}>
-                  {machine.speed} km/h
+                  {machineDataAdapter.getSpeed(machine)} km/h
                 </span>
               </div>
 
@@ -170,16 +171,16 @@ const MachineSidebar = ({ machine, isOpen, onClose }: MachineSidebarProps) => {
                 </div>
                 <span className={cn(
                   "text-sm font-medium",
-                  machine.fuel < 20 ? "text-warning" : "text-card-foreground"
+                  machineDataAdapter.getFuel(machine) < 20 ? "text-warning" : "text-card-foreground"
                 )}>
-                  {machine.fuel}%
+                  {machineDataAdapter.getFuel(machine)}%
                 </span>
               </div>
               <Progress 
-                value={machine.fuel} 
+                value={machineDataAdapter.getFuel(machine)} 
                 className="h-2"
               />
-              {machine.fuel < 20 && (
+              {machineDataAdapter.getFuel(machine) < 20 && (
                 <div className="flex items-center space-x-1 mt-1">
                   <AlertTriangle className="w-3 h-3 text-warning" />
                   <span className="text-xs text-warning">Nível baixo de combustível</span>
@@ -195,7 +196,7 @@ const MachineSidebar = ({ machine, isOpen, onClose }: MachineSidebarProps) => {
                 <span className="text-sm text-muted-foreground">Horas de operação</span>
               </div>
               <span className="text-sm text-card-foreground font-medium">
-                {machine.operationHours.toLocaleString()}h
+                {machineDataAdapter.getOperationHours(machine).toLocaleString()}h
               </span>
             </div>
           </CardContent>
@@ -216,87 +217,29 @@ const MachineSidebar = ({ machine, isOpen, onClose }: MachineSidebarProps) => {
                 <div className="flex items-center space-x-2">
                   <span className={cn(
                     "text-sm font-medium",
+                    machine.telemetry && machine.telemetry.engineTemp
+                    ? (
                     getTelemetryStatus(machine.telemetry.engineTemp, 60, 100, [80, 95]) === 'error' 
                       ? "text-error" 
                       : getTelemetryStatus(machine.telemetry.engineTemp, 60, 100, [80, 95]) === 'warning'
                       ? "text-warning"
                       : "text-success"
-                  )}>
-                    {machine.telemetry.engineTemp}°C
+                  ) : "text-card-foreground")}>
+                    {machine.telemetry?.engineTemp || 0}°C
                   </span>
                 </div>
               </div>
 
               <div className="space-y-1">
                 <div className="flex items-center space-x-1">
-                  <Gauge className="w-3 h-3 text-muted-foreground" />
-                  <span className="text-xs text-muted-foreground">Press. Óleo</span>
+                  <Activity className="w-3 h-3 text-muted-foreground" />
+                  <span className="text-xs text-muted-foreground">Odômetro</span>
                 </div>
                 <span className="text-sm font-medium text-card-foreground">
-                  {machine.telemetry.oilPressure} bar
-                </span>
-              </div>
-
-              <div className="space-y-1">
-                <div className="flex items-center space-x-1">
-                  <Droplets className="w-3 h-3 text-muted-foreground" />
-                  <span className="text-xs text-muted-foreground">Press. Hidráulica</span>
-                </div>
-                <span className="text-sm font-medium text-card-foreground">
-                  {machine.telemetry.hydraulicPressure} bar
-                </span>
-              </div>
-
-              <div className="space-y-1">
-                <div className="flex items-center space-x-1">
-                  <Battery className="w-3 h-3 text-muted-foreground" />
-                  <span className="text-xs text-muted-foreground">Bateria</span>
-                </div>
-                <span className="text-sm font-medium text-card-foreground">
-                  {machine.telemetry.batteryVoltage}V
+                  {machine.telemetry?.odometer?.toLocaleString() || 0} km
                 </span>
               </div>
             </div>
-
-            {(machine.telemetry.workingWidth || machine.telemetry.seedLevel || machine.telemetry.fertilizerLevel) && (
-              <>
-                <Separator />
-                <div className="space-y-3">
-                  {machine.telemetry.workingWidth && (
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-muted-foreground">Largura de trabalho</span>
-                      <span className="text-sm text-card-foreground font-medium">
-                        {machine.telemetry.workingWidth}m
-                      </span>
-                    </div>
-                  )}
-                  
-                  {machine.telemetry.seedLevel && (
-                    <div>
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="text-sm text-muted-foreground">Nível de sementes</span>
-                        <span className="text-sm text-card-foreground font-medium">
-                          {machine.telemetry.seedLevel}%
-                        </span>
-                      </div>
-                      <Progress value={machine.telemetry.seedLevel} className="h-2" />
-                    </div>
-                  )}
-                  
-                  {machine.telemetry.fertilizerLevel && (
-                    <div>
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="text-sm text-muted-foreground">Nível de fertilizante</span>
-                        <span className="text-sm text-card-foreground font-medium">
-                          {machine.telemetry.fertilizerLevel}%
-                        </span>
-                      </div>
-                      <Progress value={machine.telemetry.fertilizerLevel} className="h-2" />
-                    </div>
-                  )}
-                </div>
-              </>
-            )}
           </CardContent>
         </Card>
       </div>
