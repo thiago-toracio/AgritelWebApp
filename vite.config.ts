@@ -14,7 +14,7 @@ export default defineConfig(({ mode, command }) => {
   const mockDisabled = mode === 'production' ? 'true' :  (env.VITE_MOCK_DISABLED ?? 'false');
   
   const defaultConfig = {
-    base: '/reactapp',
+    base: '/reactapp/monitoramento-online',
     plugins: [
       react(),
       // The componentTagger plugin runs only in development mode.
@@ -39,7 +39,7 @@ export default defineConfig(({ mode, command }) => {
       server: {
         host: "::",
         port: 8080,
-        open: '/reactapp',
+        open: '/reactapp/monitoramento-online',
         // Proxy is only needed in development to forward /api calls to the backend (to avoid CORS)
         proxy: {
           '/api': {
@@ -55,7 +55,7 @@ export default defineConfig(({ mode, command }) => {
     return {
       ...defaultConfig,
       // Uses VITE_BUILD_BASE from the environment file (e.g., .env.production)
-      base: env.VITE_BUILD_BASE || '/reactapp',
+      base: env.VITE_BUILD_BASE || '/reactapp/monitoramento-online',
     };
   }
 });

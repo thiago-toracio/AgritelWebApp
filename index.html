@@ -21,15 +21,14 @@
     <!-- Mapbox GL CSS -->
     <link href="https://api.mapbox.com/mapbox-gl-js/v3.7.0/mapbox-gl.css" rel="stylesheet" />
     
-    <link rel="canonical" href="/reactapp" />
+    <link rel="canonical" href="/reactapp/monitoramento-online" />
   </head>
 
   <body>
     <div id="root"></div>
     <script>
-      // Redirecionar automaticamente para /reactapp se estiver na raiz
       if (window.location.pathname === '/') {
-        window.location.replace('/reactapp');
+        window.location.replace('/reactapp/monitoramento-online');
       }
     </script>
     <script type="module" src="/src/main.tsx"></script>
