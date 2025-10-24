@@ -42,10 +42,10 @@ const MachineStatusPanel = ({
     
     const query = searchQuery.toLowerCase();
     return machines.filter(machine => 
-      machine.name.toLowerCase().includes(query) ||
+      machine.vehicleInfo.name.toLowerCase().includes(query) ||
       machineDataAdapter.getType(machine).toLowerCase().includes(query) ||
-      machine.operator?.toLowerCase().includes(query) ||
-      machine.area?.toLowerCase().includes(query)
+      machine.deviceMessage.operator?.toLowerCase().includes(query) ||
+      machine.deviceMessage.area?.toLowerCase().includes(query)
     );
   }, [machines, searchQuery]);
 
@@ -106,7 +106,7 @@ const MachineStatusPanel = ({
     return colors[color] || 'bg-gray-500/10 border-gray-500/20';
   };
 
-  const formatTime = (date: Date) => {
+  const formatTime = (date: Date | string) => {
     return new Date(date).toLocaleTimeString('pt-BR', {
       hour: '2-digit',
       minute: '2-digit'
@@ -118,13 +118,13 @@ const MachineStatusPanel = ({
     
     return (
       <Card 
-        key={machine.id}
+        key={machine.vehicleInfo.id}
         className={`mb-3 border ${getStatusBgColor(status.color)} hover:shadow-md transition-shadow`}
       >
         <CardContent className="p-4">
           <div className="flex justify-between items-start mb-3">
             <div>
-              <h4 className="font-semibold text-base">{machine.name}</h4>
+              <h4 className="font-semibold text-base">{machine.vehicleInfo.name}</h4>
               <p className="text-sm text-muted-foreground capitalize">
                 {machineDataAdapter.getType(machine).replace(/-/g, ' ')}
               </p>
@@ -145,24 +145,24 @@ const MachineStatusPanel = ({
               <span>{machineDataAdapter.getFuel(machine)}%</span>
             </div>
 
-            {machine.operator && (
+            {machine.deviceMessage.operator && (
               <div className="flex items-center space-x-2 col-span-2">
                 <span className="text-muted-foreground">Operador:</span>
-                <span className="font-medium">{machine.operator}</span>
+                <span className="font-medium">{machine.deviceMessage.operator}</span>
               </div>
             )}
 
-            {machine.area && (
+            {machine.deviceMessage.area && (
               <div className="flex items-center space-x-2 col-span-2">
                 <MapPin className="w-4 h-4 text-muted-foreground" />
-                <span>{machine.area}</span>
+                <span>{machine.deviceMessage.area}</span>
               </div>
             )}
 
             <div className="flex items-center space-x-2 col-span-2">
               <Clock className="w-4 h-4 text-muted-foreground" />
               <span className="text-muted-foreground">
-                Atualizado: {formatTime(machine.lastUpdate)}
+                Atualizado: {formatTime(machine.deviceMessage.lastUpdate)}
               </span>
             </div>
           </div>
@@ -171,7 +171,7 @@ const MachineStatusPanel = ({
             variant="outline"
             size="sm"
             className="w-full"
-            onClick={() => onViewMachine(machine.id)}
+            onClick={() => onViewMachine(machine.vehicleInfo.id)}
           >
             Ver no Mapa
           </Button>

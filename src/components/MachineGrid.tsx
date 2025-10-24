@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { MachineData } from '@/types/machine';
+import { MachineData, DeviceState } from '@/types/machine';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
@@ -18,18 +18,18 @@ interface MachineGridProps {
 
 const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachine }: MachineGridProps) => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState<MachineData['status'] | 'all'>('all');
+  const [statusFilter, setStatusFilter] = useState<DeviceState['status'] | 'all'>('all');
 
   const filteredMachines = machines.filter(machine => {
-    const matchesSearch = machine.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         machineDataAdapter.getType(machine).toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = statusFilter === 'all' || machine.status === statusFilter;
+    const matchesSearch = machine.vehicleInfo.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          machineDataAdapter.getType(machine).toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus = statusFilter === 'all' || machine.deviceState.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
 
   // Agrupar máquinas por frente de colheita
   const groupedMachines = filteredMachines.reduce((groups, machine) => {
-    const area = machine.area || 'Sem Frente';
+    const area = machine.deviceMessage.area || 'Sem Frente';
     if (!groups[area]) {
       groups[area] = [];
     }
@@ -40,8 +40,8 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
   // Calcular estatísticas por grupo
   const getGroupStats = (machines: MachineData[]) => {
     const total = machines.length;
-    const productiveMachines = machines.filter(m => m.status === 'active');
-    const nonproductiveMachines = machines.filter(m => m.status !== 'active');
+    const productiveMachines = machines.filter(m => m.deviceState.status === 'active');
+    const nonproductiveMachines = machines.filter(m => m.deviceState.status !== 'active');
     
     const avgProductiveHours = productiveMachines.length > 0 
       ? Math.round(productiveMachines.reduce((sum, m) => sum + machineDataAdapter.getOperationHours(m), 0) / productiveMachines.length)
@@ -62,7 +62,7 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
     return area;
   };
 
-  const getStatusBadgeVariant = (status: MachineData['status']) => {
+  const getStatusBadgeVariant = (status: DeviceState['status']) => {
     switch (status) {
       case 'active':
         return 'default';
@@ -77,7 +77,7 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
     }
   };
 
-  const getStatusColor = (status: MachineData['status']) => {
+  const getStatusColor = (status: DeviceState['status']) => {
     switch (status) {
       case 'active':
         return 'text-status-active';
@@ -126,7 +126,7 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
               <Filter className="w-4 h-4 text-muted-foreground" />
               <select
                 value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value as MachineData['status'] | 'all')}
+                onChange={(e) => setStatusFilter(e.target.value as DeviceState['status'] | 'all')}
                 className="bg-input border border-border rounded-md px-3 py-2 text-sm text-foreground"
               >
                 <option value="all">Todos os Status</option>
@@ -170,21 +170,21 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                     {groupMachines.map((machine) => (
                       <Card
-                        key={machine.id}
+                        key={machine.vehicleInfo.id}
                         className={cn(
                           "cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-[1.02]",
-                          selectedMachine === machine.id && "ring-2 ring-primary shadow-glow"
+                          selectedMachine === machine.vehicleInfo.id && "ring-2 ring-primary shadow-glow"
                         )}
-                        onClick={() => onMachineSelect(machine.id)}
+                        onClick={() => onMachineSelect(machine.vehicleInfo.id)}
                       >
                         <CardContent className="p-4">
                           <div className="flex items-start justify-between mb-3">
                             <div>
-                              <h3 className="font-medium text-sm text-card-foreground">{machine.name}</h3>
+                              <h3 className="font-medium text-sm text-card-foreground">{machine.vehicleInfo.name}</h3>
                               <p className="text-xs text-muted-foreground capitalize">{machineDataAdapter.getType(machine)}</p>
                             </div>
-                            <Badge variant={getStatusBadgeVariant(machine.status)} className="text-xs">
-                              {machine.status}
+                            <Badge variant={getStatusBadgeVariant(machine.deviceState.status)} className="text-xs">
+                              {machine.deviceState.status}
                             </Badge>
                           </div>
 
@@ -195,7 +195,7 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                                 <span className="text-muted-foreground">Localização</span>
                               </div>
                               <span className="text-card-foreground">
-                                {machine.location.latitude.toFixed(4)}, {machine.location.longitude.toFixed(4)}
+                                {machine.deviceMessage.gps.latitude.toFixed(4)}, {machine.deviceMessage.gps.longitude.toFixed(4)}
                               </span>
                             </div>
 
@@ -217,16 +217,16 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                                 <Clock className="w-3 h-3 text-muted-foreground" />
                                 <span className="text-muted-foreground">Velocidade</span>
                               </div>
-                              <span className={cn("font-medium", getStatusColor(machine.status))}>
+                              <span className={cn("font-medium", getStatusColor(machine.deviceState.status))}>
                                 {machineDataAdapter.getSpeed(machine)} km/h
                               </span>
                             </div>
                           </div>
 
-                          {machine.operator && (
+                          {machine.deviceMessage.operator && (
                             <div className="mt-3 pt-3 border-t border-border">
                               <p className="text-xs text-muted-foreground">
-                                Operador: <span className="text-card-foreground">{machine.operator}</span>
+                                Operador: <span className="text-card-foreground">{machine.deviceMessage.operator}</span>
                               </p>
                             </div>
                           )}

@@ -14,7 +14,7 @@ interface MachineMarkerProps {
 
 const MachineMarker: React.FC<MachineMarkerProps> = ({ machine, isSelected, onClick }) => {
   const status = getMachineStatus(machine);
-  const hasAlert = machine.status === 'maintenance' || machineDataAdapter.getFuel(machine) < 20;
+  const hasAlert = machine.deviceState.status === 'maintenance' || machineDataAdapter.getFuel(machine) < 20;
   const heading = machineDataAdapter.getHeading(machine);
 
   return (
@@ -36,8 +36,7 @@ const MachineMarker: React.FC<MachineMarkerProps> = ({ machine, isSelected, onCl
         )}
       >
         <MachineIcon 
-          type={machineDataAdapter.getType(machine)} 
-          color={status.color}
+          icon={machine.icon}
           heading={heading}
           size={48}
         />
@@ -53,7 +52,7 @@ const MachineMarker: React.FC<MachineMarkerProps> = ({ machine, isSelected, onCl
       {/* Hover tooltip with machine details */}
       <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
         <div className="bg-card border border-border rounded-lg px-3 py-2 shadow-overlay whitespace-nowrap">
-          <div className="text-sm font-medium text-card-foreground">{machine.name}</div>
+          <div className="text-sm font-medium text-card-foreground">{machine.vehicleInfo.name}</div>
           <div className="text-xs text-muted-foreground">{status.label}</div>
           <div className="text-xs text-muted-foreground">{machineDataAdapter.getSpeed(machine)} km/h</div>
         </div>

@@ -112,7 +112,7 @@ const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine
 
     // Remove old markers that no longer exist
     Object.keys(markers.current).forEach(id => {
-      if (!machines.find(m => m.id === id)) {
+      if (!machines.find(m => m.vehicleInfo.id === id)) {
         const { marker, root } = markers.current[id];
         root.unmount();
         marker.remove();
@@ -122,16 +122,16 @@ const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine
 
     // Add or update markers
     machines.forEach(machine => {
-      const existing = markers.current[machine.id];
+      const existing = markers.current[machine.vehicleInfo.id];
       
       if (existing) {
         // Update existing marker position and content
-        existing.marker.setLngLat([machine.location.longitude, machine.location.latitude]);
+        existing.marker.setLngLat([machine.deviceMessage.gps.longitude, machine.deviceMessage.gps.latitude]);
         existing.root.render(
           <MachineMarker
             machine={machine}
-            isSelected={selectedMachine === machine.id}
-            onClick={() => onMachineSelect(machine.id)}
+            isSelected={selectedMachine === machine.vehicleInfo.id}
+            onClick={() => onMachineSelect(machine.vehicleInfo.id)}
           />
         );
       } else {
@@ -142,16 +142,16 @@ const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine
         root.render(
           <MachineMarker
             machine={machine}
-            isSelected={selectedMachine === machine.id}
-            onClick={() => onMachineSelect(machine.id)}
+            isSelected={selectedMachine === machine.vehicleInfo.id}
+            onClick={() => onMachineSelect(machine.vehicleInfo.id)}
           />
         );
 
         const marker = new mapboxgl.Marker({ element: el, anchor: 'center' })
-          .setLngLat([machine.location.longitude, machine.location.latitude])
+          .setLngLat([machine.deviceMessage.gps.longitude, machine.deviceMessage.gps.latitude])
           .addTo(map.current);
 
-        markers.current[machine.id] = { marker, root };
+        markers.current[machine.vehicleInfo.id] = { marker, root };
       }
     });
   }, [machines, mapLoaded, mapboxError, selectedMachine, onMachineSelect]);
@@ -164,7 +164,7 @@ const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine
       const bounds = new mapboxgl.LngLatBounds();
       
       machines.forEach(machine => {
-        bounds.extend([machine.location.longitude, machine.location.latitude]);
+        bounds.extend([machine.deviceMessage.gps.longitude, machine.deviceMessage.gps.latitude]);
       });
       
       // Ajustar mapa para mostrar todas as máquinas
@@ -181,10 +181,10 @@ const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine
   // Focus on machine when focusOnMachine changes
   useEffect(() => {
     if (focusOnMachine && map.current && mapLoaded && !mapboxError) {
-      const machine = machines.find(m => m.id === focusOnMachine);
+      const machine = machines.find(m => m.vehicleInfo.id === focusOnMachine);
       if (machine) {
         map.current.flyTo({
-          center: [machine.location.longitude, machine.location.latitude],
+          center: [machine.deviceMessage.gps.longitude, machine.deviceMessage.gps.latitude],
           zoom: 16,
           duration: 1500,
           essential: true // Garante que a animação acontece mesmo se o usuário está interagindo
@@ -235,11 +235,11 @@ const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine
       {mapboxError && mapLoaded && (
         <div className="absolute inset-0 z-20 pointer-events-none">
           {machines.map((machine) => (
-            <div key={machine.id} className="pointer-events-auto">
+            <div key={machine.vehicleInfo.id} className="pointer-events-auto">
               <FallbackMachineMarker
                 machine={machine}
-                isSelected={selectedMachine === machine.id}
-                onClick={() => onMachineSelect(machine.id)}
+                isSelected={selectedMachine === machine.vehicleInfo.id}
+                onClick={() => onMachineSelect(machine.vehicleInfo.id)}
               />
             </div>
           ))}

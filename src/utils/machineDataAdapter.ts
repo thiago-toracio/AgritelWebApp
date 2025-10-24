@@ -8,7 +8,7 @@ export const machineDataAdapter = {
    * Obtém o tipo de veículo
    */
   getType: (machine: MachineData): string => {
-    return machine.vehicleType || 'truck';
+    return machine.vehicleInfo?.vehicleType ?? 'truck';
   },
 
   /**
@@ -43,14 +43,14 @@ export const machineDataAdapter = {
    * Obtém a latitude
    */
   getLatitude: (machine: MachineData): number => {
-    return machine.location?.latitude ?? 0;
+    return machine.deviceMessage?.gps?.latitude ?? 0;
   },
 
   /**
    * Obtém a longitude
    */
   getLongitude: (machine: MachineData): number => {
-    return machine.location?.longitude ?? 0;
+    return machine.deviceMessage?.gps?.longitude ?? 0;
   },
 
   /**
@@ -65,5 +65,12 @@ export const machineDataAdapter = {
    */
   getStatusTooltip: (machine: MachineData): string => {
     return machine.deviceState?.tooltip ?? 'Estado desconhecido';
+  },
+
+  /**
+   * Verifica se a ignição está ligada
+   */
+  getIgnition: (machine: MachineData): boolean => {
+    return machine.deviceMessage?.flag?.ignition ?? false;
   }
 };

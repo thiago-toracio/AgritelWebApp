@@ -50,12 +50,12 @@ const Index = () => {
     
     machines.forEach(machine => {
       // Alerta de manutenção
-      if (machine.status === 'maintenance') {
+      if (machine.deviceState.status === 'maintenance') {
         newAlerts.push({
-          id: `maintenance-${machine.id}`,
-          machineId: machine.id,
+          id: `maintenance-${machine.vehicleInfo.id}`,
+          machineId: machine.vehicleInfo.id,
           type: 'maintenance',
-          message: `${machine.name} requer manutenção programada`,
+          message: `${machine.vehicleInfo.name} requer manutenção programada`,
           timestamp: new Date(Date.now() - Math.random() * 3600000),
           resolved: Math.random() > 0.7
         });
@@ -65,10 +65,10 @@ const Index = () => {
       const fuelLevel = machineDataAdapter.getFuel(machine);
       if (fuelLevel < 20) {
         newAlerts.push({
-          id: `fuel-${machine.id}`,
-          machineId: machine.id,
+          id: `fuel-${machine.vehicleInfo.id}`,
+          machineId: machine.vehicleInfo.id,
           type: 'warning',
-          message: `Combustível baixo em ${machine.name} (${fuelLevel}%)`,
+          message: `Combustível baixo em ${machine.vehicleInfo.name} (${fuelLevel}%)`,
           timestamp: new Date(Date.now() - Math.random() * 1800000),
           resolved: Math.random() > 0.8
         });
@@ -77,10 +77,10 @@ const Index = () => {
       // Alertas de telemetria
       if (machine.telemetry && machine.telemetry.engineTemp && machine.telemetry.engineTemp > 90) {
         newAlerts.push({
-          id: `temp-${machine.id}`,
-          machineId: machine.id,
+          id: `temp-${machine.vehicleInfo.id}`,
+          machineId: machine.vehicleInfo.id,
           type: 'error',
-          message: `Temperatura do motor alta em ${machine.name} (${machine.telemetry.engineTemp}°C)`,
+          message: `Temperatura do motor alta em ${machine.vehicleInfo.name} (${machine.telemetry.engineTemp}°C)`,
           timestamp: new Date(Date.now() - Math.random() * 900000),
           resolved: Math.random() > 0.9
         });
@@ -160,7 +160,7 @@ const Index = () => {
   };
 
   const selectedMachineData = selectedMachine 
-    ? machines.find(m => m.id === selectedMachine) 
+    ? machines.find(m => m.vehicleInfo.id === selectedMachine) 
     : null;
 
   const handleMapStyleChange = (style: MapStyle) => {

@@ -11,61 +11,59 @@ export interface DeviceFlags {
   ignition: boolean;
 }
 
+export interface DeviceState {
+  color: string;
+  tooltip: string;
+  status: string;
+}
+
+export interface TelemetryData {
+  speed?: number;
+  odometer?: number;
+  fuelLevel?: number;
+  engineTemp?: number;
+  operationHours?: number;
+  operationHoursUpdatedTime?: Date | string;
+}
+
+export interface VehicleInfoView {
+  id: string;
+  name: string;
+  brand: string;
+  model: string;
+  yearModel?: number
+  plate: string;
+  color: string;
+  vehicleType: string;
+}
+
 export interface GpsData {
-  heading: number; // degrees (0-360)
+  heading: number;
   latitude: number;
   longitude: number;
   direction: number;
+  locationData: LocationData;
 }
 
 export interface DeviceMessage {
+  lastUpdate: Date | string;
   hasLostConnection: boolean;
   transmissionReason: string;
   flag: DeviceFlags;
   gps: GpsData;
-}
-
-export interface TelemetryData {
-  speed?: number; // km/h
-  odometer?: number;
-  fuelLevel?: number; // percentage
-  engineTemp?: number;
-  operationHours?: number;
-  operationHoursUpdatedTime?: Date;
-}
-
-export interface DeviceState {
-  color: string; // "gray" | "green" | "blue" | "yellow" | "red"
-  tooltip: string;
-}
-
-export interface VehicleInfoView {
-  id?: string;
-  brand?: string;
-  model?: string;
-  yearModel?: number;
-  plate?: string;
-  color?: string;
-  vehicleType?: string;
+  operator: string; 
+  area: string; 
+  task: string;
 }
 
 export interface MachineData {
-  id: string;
-  name: string;
-  vehicleType: string; // e.g., "sugar-cane-harvester", "loader-sugar-cane", "truck"
-  status: string;
-  location: LocationData | null;
-  lastUpdate: Date;
-  operator: string;
-  area: string;
-  task: string;
-  telemetry: TelemetryData | null;
-  deviceMessage: DeviceMessage | null;
-  deviceState: DeviceState | null;
-  vehicleInfo: VehicleInfoView | null;
+  vehicleInfo: VehicleInfoView;
+  telemetry: TelemetryData;
+  deviceMessage: DeviceMessage;
+  deviceState: DeviceState;
+  icon: string;
 }
 
-// Keep legacy interface name for backward compatibility
 export interface MachineLocation extends LocationData {}
 
 export interface MachineAlert {

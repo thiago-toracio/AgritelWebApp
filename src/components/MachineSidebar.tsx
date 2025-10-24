@@ -1,4 +1,5 @@
-import { MachineData } from '@/types/machine';
+import { useState } from 'react';
+import { MachineData, DeviceState } from '@/types/machine';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -32,7 +33,7 @@ interface MachineSidebarProps {
 const MachineSidebar = ({ machine, isOpen, onClose }: MachineSidebarProps) => {
   if (!isOpen || !machine) return null;
 
-  const getStatusColor = (status: MachineData['status']) => {
+  const getStatusColor = (status: DeviceState['status']) => {
     switch (status) {
       case 'active':
         return 'text-status-active';
@@ -47,7 +48,7 @@ const MachineSidebar = ({ machine, isOpen, onClose }: MachineSidebarProps) => {
     }
   };
 
-  const getStatusBadgeVariant = (status: MachineData['status']) => {
+  const getStatusBadgeVariant = (status: DeviceState['status']) => {
     switch (status) {
       case 'active':
         return 'default';
@@ -72,7 +73,7 @@ const MachineSidebar = ({ machine, isOpen, onClose }: MachineSidebarProps) => {
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h2 className="text-xl font-semibold text-card-foreground">{machine.name}</h2>
+            <h2 className="text-xl font-semibold text-card-foreground">{machine.vehicleInfo.name}</h2>
             <p className="text-sm text-muted-foreground capitalize">{machineDataAdapter.getType(machine)}</p>
           </div>
           <Button variant="ghost" size="sm" onClick={onClose}>
@@ -85,8 +86,8 @@ const MachineSidebar = ({ machine, isOpen, onClose }: MachineSidebarProps) => {
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium flex items-center justify-between">
               Status Atual
-              <Badge variant={getStatusBadgeVariant(machine.status)}>
-                {machine.status}
+              <Badge variant={getStatusBadgeVariant(machine.deviceState.status)}>
+                {machine.deviceState.status}
               </Badge>
             </CardTitle>
           </CardHeader>
@@ -97,7 +98,7 @@ const MachineSidebar = ({ machine, isOpen, onClose }: MachineSidebarProps) => {
                   <Activity className="w-4 h-4 text-muted-foreground" />
                   <span className="text-sm text-muted-foreground">Velocidade</span>
                 </div>
-                <span className={cn("font-medium", getStatusColor(machine.status))}>
+                <span className={cn("font-medium", getStatusColor(machine.deviceState.status))}>
                   {machineDataAdapter.getSpeed(machine)} km/h
                 </span>
               </div>
@@ -108,7 +109,7 @@ const MachineSidebar = ({ machine, isOpen, onClose }: MachineSidebarProps) => {
                   <span className="text-sm text-muted-foreground">Última atualização</span>
                 </div>
                 <span className="text-sm text-card-foreground">
-                  {formatDistanceToNow(machine.lastUpdate, { addSuffix: true, locale: ptBR })}
+                  {formatDistanceToNow(new Date(machine.deviceMessage.lastUpdate), { addSuffix: true, locale: ptBR })}
                 </span>
               </div>
 
@@ -118,7 +119,7 @@ const MachineSidebar = ({ machine, isOpen, onClose }: MachineSidebarProps) => {
                   <span className="text-sm text-muted-foreground">Coordenadas</span>
                 </div>
                 <span className="text-sm text-card-foreground font-mono">
-                  {machine.location.latitude.toFixed(6)}, {machine.location.longitude.toFixed(6)}
+                  {machine.deviceMessage.gps.latitude.toFixed(6)}, {machine.deviceMessage.gps.longitude.toFixed(6)}
                 </span>
               </div>
             </div>
@@ -126,31 +127,31 @@ const MachineSidebar = ({ machine, isOpen, onClose }: MachineSidebarProps) => {
         </Card>
 
         {/* Operator & Task */}
-        {(machine.operator || machine.task || machine.area) && (
+        {(machine.deviceMessage.operator || machine.deviceMessage.task || machine.deviceMessage.area) && (
           <Card className="mb-6">
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-medium">Operação</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
-              {machine.operator && (
+              {machine.deviceMessage.operator && (
                 <div className="flex items-center space-x-2">
                   <User className="w-4 h-4 text-muted-foreground" />
                   <span className="text-sm text-muted-foreground">Operador:</span>
-                  <span className="text-sm text-card-foreground font-medium">{machine.operator}</span>
+                  <span className="text-sm text-card-foreground font-medium">{machine.deviceMessage.operator}</span>
                 </div>
               )}
-              {machine.task && (
+              {machine.deviceMessage.task && (
                 <div className="flex items-center space-x-2">
                   <Settings className="w-4 h-4 text-muted-foreground" />
                   <span className="text-sm text-muted-foreground">Tarefa:</span>
-                  <span className="text-sm text-card-foreground">{machine.task}</span>
+                  <span className="text-sm text-card-foreground">{machine.deviceMessage.task}</span>
                 </div>
               )}
-              {machine.area && (
+              {machine.deviceMessage.area && (
                 <div className="flex items-center space-x-2">
                   <MapPin className="w-4 h-4 text-muted-foreground" />
                   <span className="text-sm text-muted-foreground">Área:</span>
-                  <span className="text-sm text-card-foreground">{machine.area}</span>
+                  <span className="text-sm text-card-foreground">{machine.deviceMessage.area}</span>
                 </div>
               )}
             </CardContent>
@@ -219,12 +220,12 @@ const MachineSidebar = ({ machine, isOpen, onClose }: MachineSidebarProps) => {
                     "text-sm font-medium",
                     machine.telemetry && machine.telemetry.engineTemp
                     ? (
-                    getTelemetryStatus(machine.telemetry.engineTemp, 60, 100, [80, 95]) === 'error' 
-                      ? "text-error" 
-                      : getTelemetryStatus(machine.telemetry.engineTemp, 60, 100, [80, 95]) === 'warning'
-                      ? "text-warning"
-                      : "text-success"
-                  ) : "text-card-foreground")}>
+                      getTelemetryStatus(machine.telemetry.engineTemp, 60, 100, [80, 95]) === 'error' 
+                        ? "text-error" 
+                        : getTelemetryStatus(machine.telemetry.engineTemp, 60, 100, [80, 95]) === 'warning'
+                        ? "text-warning"
+                        : "text-success"
+                    ) : "text-card-foreground")}>
                     {machine.telemetry?.engineTemp || 0}°C
                   </span>
                 </div>

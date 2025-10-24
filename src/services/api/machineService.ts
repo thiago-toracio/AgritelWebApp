@@ -31,7 +31,7 @@ export class MachineService {
     if (isMockEnabled) {
       console.log(`🔧 Using MOCK data for machine ${id}`);
       await new Promise(resolve => setTimeout(resolve, 200));
-      return mockMachines.find(m => m.id === id) || null;
+      return mockMachines.find(m => m.vehicleInfo.id === id) || null;
     }
 
     console.log(`🌐 Fetching machine ${id} from REAL API`);
@@ -45,7 +45,7 @@ export class MachineService {
     if (isMockEnabled) {
       console.log(`🔧 MOCK: Would update machine ${id}`, data);
       await new Promise(resolve => setTimeout(resolve, 300));
-      const machine = mockMachines.find(m => m.id === id);
+      const machine = mockMachines.find(m => m.vehicleInfo.id === id);
       if (!machine) {
         throw new Error(`Machine ${id} not found`);
       }
