@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { MachineData } from '@/types/machine';
 import { getMachineStatus } from '@/utils/machineStatus';
+import { machineDataAdapter } from '@/utils/machineDataAdapter';
 
 interface MachineStatusPanelProps {
   machines: MachineData[];
@@ -42,7 +43,7 @@ const MachineStatusPanel = ({
     const query = searchQuery.toLowerCase();
     return machines.filter(machine => 
       machine.name.toLowerCase().includes(query) ||
-      machine.type.toLowerCase().includes(query) ||
+      machineDataAdapter.getType(machine).toLowerCase().includes(query) ||
       machine.operator?.toLowerCase().includes(query) ||
       machine.area?.toLowerCase().includes(query)
     );

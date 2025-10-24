@@ -6,6 +6,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Search, Filter, Grid, X, Fuel, Clock, MapPin } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { machineDataAdapter } from '@/utils/machineDataAdapter';
 
 interface MachineGridProps {
   machines: MachineData[];
@@ -21,7 +22,7 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
 
   const filteredMachines = machines.filter(machine => {
     const matchesSearch = machine.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         machine.type.toLowerCase().includes(searchTerm.toLowerCase());
+                         machineDataAdapter.getType(machine).toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === 'all' || machine.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
@@ -43,11 +44,11 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
     const nonproductiveMachines = machines.filter(m => m.status !== 'active');
     
     const avgProductiveHours = productiveMachines.length > 0 
-      ? Math.round(productiveMachines.reduce((sum, m) => sum + m.operationHours, 0) / productiveMachines.length)
+      ? Math.round(productiveMachines.reduce((sum, m) => sum + machineDataAdapter.getOperationHours(m), 0) / productiveMachines.length)
       : 0;
     
     const avgNonproductiveHours = nonproductiveMachines.length > 0
-      ? Math.round(nonproductiveMachines.reduce((sum, m) => sum + m.operationHours, 0) / nonproductiveMachines.length)
+      ? Math.round(nonproductiveMachines.reduce((sum, m) => sum + machineDataAdapter.getOperationHours(m), 0) / nonproductiveMachines.length)
       : 0;
     
     return {
@@ -180,7 +181,7 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                           <div className="flex items-start justify-between mb-3">
                             <div>
                               <h3 className="font-medium text-sm text-card-foreground">{machine.name}</h3>
-                              <p className="text-xs text-muted-foreground capitalize">{machine.type}</p>
+                              <p className="text-xs text-muted-foreground capitalize">{machineDataAdapter.getType(machine)}</p>
                             </div>
                             <Badge variant={getStatusBadgeVariant(machine.status)} className="text-xs">
                               {machine.status}
@@ -205,9 +206,9 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                               </div>
                               <span className={cn(
                                 "font-medium",
-                                machine.fuel < 20 ? "text-warning" : "text-card-foreground"
+                                machineDataAdapter.getFuel(machine) < 20 ? "text-warning" : "text-card-foreground"
                               )}>
-                                {machine.fuel}%
+                                {machineDataAdapter.getFuel(machine)}%
                               </span>
                             </div>
 
@@ -217,7 +218,7 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                                 <span className="text-muted-foreground">Velocidade</span>
                               </div>
                               <span className={cn("font-medium", getStatusColor(machine.status))}>
-                                {machine.speed} km/h
+                                {machineDataAdapter.getSpeed(machine)} km/h
                               </span>
                             </div>
                           </div>

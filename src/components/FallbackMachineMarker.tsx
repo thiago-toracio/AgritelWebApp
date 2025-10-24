@@ -4,6 +4,7 @@ import { AlertTriangle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import MachineIcon from './MachineIcons';
 import { getMachineStatus } from '@/utils/machineStatus';
+import { machineDataAdapter } from '@/utils/machineDataAdapter';
 
 interface FallbackMachineMarkerProps {
   machine: MachineData;
@@ -19,8 +20,8 @@ const FallbackMachineMarker: React.FC<FallbackMachineMarkerProps> = ({ machine, 
   };
 
   const status = getMachineStatus(machine);
-  const hasAlert = machine.status === 'maintenance' || machine.fuel < 20;
-  const heading = machine.deviceMessage?.gps?.heading || 0;
+  const hasAlert = machine.status === 'maintenance' || machineDataAdapter.getFuel(machine) < 20;
+  const heading = machineDataAdapter.getHeading(machine);
 
   return (
     <div
@@ -42,7 +43,7 @@ const FallbackMachineMarker: React.FC<FallbackMachineMarkerProps> = ({ machine, 
         )}
       >
         <MachineIcon 
-          type={machine.type} 
+          type={machineDataAdapter.getType(machine)} 
           color={status.color}
           heading={heading}
           size={48}
@@ -61,7 +62,7 @@ const FallbackMachineMarker: React.FC<FallbackMachineMarkerProps> = ({ machine, 
         <div className="bg-card border border-border rounded-lg px-3 py-2 shadow-overlay whitespace-nowrap">
           <div className="text-sm font-medium text-card-foreground">{machine.name}</div>
           <div className="text-xs text-muted-foreground">{status.label}</div>
-          <div className="text-xs text-muted-foreground">{machine.speed} km/h</div>
+          <div className="text-xs text-muted-foreground">{machineDataAdapter.getSpeed(machine)} km/h</div>
         </div>
       </div>
     </div>
