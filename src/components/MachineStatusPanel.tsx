@@ -6,7 +6,6 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { MachineData } from '@/types/machine';
-import { getMachineStatus } from '@/utils/machineStatus';
 import { machineDataAdapter } from '@/utils/machineDataAdapter';
 
 interface MachineStatusPanelProps {
@@ -42,10 +41,10 @@ const MachineStatusPanel = ({
     
     const query = searchQuery.toLowerCase();
     return machines.filter(machine => 
-      machine.vehicleInfo.name.toLowerCase().includes(query) ||
+      machineDataAdapter.getName(machine).toLowerCase().includes(query) ||
       machineDataAdapter.getType(machine).toLowerCase().includes(query) ||
-      machine.deviceMessage.operator?.toLowerCase().includes(query) ||
-      machine.deviceMessage.area?.toLowerCase().includes(query)
+      machineDataAdapter.getOperator(machine).toLowerCase().includes(query) ||
+      machineDataAdapter.getArea(machine).toLowerCase().includes(query)
     );
   }, [machines, searchQuery]);
 
@@ -60,14 +59,14 @@ const MachineStatusPanel = ({
     };
 
     filteredMachines.forEach(machine => {
-      const status = getMachineStatus(machine);
+      const statusColor = machineDataAdapter.getStatusColor(machine);
       
       // Apply status filter if set
-      if (statusFilter && status.color !== statusFilter) {
+      if (statusFilter && statusColor !== statusFilter) {
         return;
       }
       
-      categories[status.color].push(machine);
+      categories[statusColor as keyof typeof categories].push(machine);
     });
 
     return categories;
@@ -114,23 +113,29 @@ const MachineStatusPanel = ({
   };
 
   const renderMachineCard = (machine: MachineData) => {
-    const status = getMachineStatus(machine);
+    const statusColor = machineDataAdapter.getStatusColor(machine);
+    const statusTooltip = machineDataAdapter.getStatusTooltip(machine);
+    const machineId = machineDataAdapter.getId(machine);
+    const machineName = machineDataAdapter.getName(machine);
+    const operator = machineDataAdapter.getOperator(machine);
+    const area = machineDataAdapter.getArea(machine);
+    const lastUpdate = machineDataAdapter.getLastUpdate(machine);
     
     return (
       <Card 
-        key={machine.vehicleInfo.id}
-        className={`mb-3 border ${getStatusBgColor(status.color)} hover:shadow-md transition-shadow`}
+        key={machineId}
+        className={`mb-3 border ${getStatusBgColor(statusColor)} hover:shadow-md transition-shadow`}
       >
         <CardContent className="p-4">
           <div className="flex justify-between items-start mb-3">
             <div>
-              <h4 className="font-semibold text-base">{machine.vehicleInfo.name}</h4>
+              <h4 className="font-semibold text-base">{machineName}</h4>
               <p className="text-sm text-muted-foreground capitalize">
                 {machineDataAdapter.getType(machine).replace(/-/g, ' ')}
               </p>
             </div>
-            <Badge variant="secondary" className={`bg-muted ${getStatusColor(status.color)}`}>
-              {status.label}
+            <Badge variant="secondary" className={`bg-muted ${getStatusColor(statusColor)}`}>
+              {statusTooltip}
             </Badge>
           </div>
 
@@ -145,24 +150,24 @@ const MachineStatusPanel = ({
               <span>{machineDataAdapter.getFuel(machine)}%</span>
             </div>
 
-            {machine.deviceMessage.operator && (
+            {operator && (
               <div className="flex items-center space-x-2 col-span-2">
                 <span className="text-muted-foreground">Operador:</span>
-                <span className="font-medium">{machine.deviceMessage.operator}</span>
+                <span className="font-medium">{operator}</span>
               </div>
             )}
 
-            {machine.deviceMessage.area && (
+            {area && (
               <div className="flex items-center space-x-2 col-span-2">
                 <MapPin className="w-4 h-4 text-muted-foreground" />
-                <span>{machine.deviceMessage.area}</span>
+                <span>{area}</span>
               </div>
             )}
 
             <div className="flex items-center space-x-2 col-span-2">
               <Clock className="w-4 h-4 text-muted-foreground" />
               <span className="text-muted-foreground">
-                Atualizado: {formatTime(machine.deviceMessage.lastUpdate)}
+                Atualizado: {formatTime(lastUpdate)}
               </span>
             </div>
           </div>
@@ -171,7 +176,7 @@ const MachineStatusPanel = ({
             variant="outline"
             size="sm"
             className="w-full"
-            onClick={() => onViewMachine(machine.vehicleInfo.id)}
+            onClick={() => onViewMachine(machineId)}
           >
             Ver no Mapa
           </Button>

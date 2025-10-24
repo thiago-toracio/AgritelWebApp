@@ -3,7 +3,6 @@ import { MachineData } from '@/types/machine';
 import { AlertTriangle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import MachineIcon from './MachineIcons';
-import { getMachineStatus } from '@/utils/machineStatus';
 import { machineDataAdapter } from '@/utils/machineDataAdapter';
 
 interface FallbackMachineMarkerProps {
@@ -13,14 +12,18 @@ interface FallbackMachineMarkerProps {
 }
 
 const FallbackMachineMarker: React.FC<FallbackMachineMarkerProps> = ({ machine, isSelected, onClick }) => {
+  const machineId = machineDataAdapter.getId(machine);
   const demoPosition = {
-    left: `${Math.abs(machine.vehicleInfo.id.charCodeAt(0) % 80) + 10}%`,
-    top: `${Math.abs(machine.vehicleInfo.id.charCodeAt(1) % 70) + 15}%`
+    left: `${Math.abs(machineId.charCodeAt(0) % 80) + 10}%`,
+    top: `${Math.abs(machineId.charCodeAt(1) % 70) + 15}%`
   };
 
-  const status = getMachineStatus(machine);
+  const statusColor = machineDataAdapter.getStatusColor(machine);
+  const statusTooltip = machineDataAdapter.getStatusTooltip(machine);
   const hasAlert = machine.deviceState.status === 'maintenance' || machineDataAdapter.getFuel(machine) < 20;
   const heading = machineDataAdapter.getHeading(machine);
+  const icon = machineDataAdapter.getIcon(machine);
+  const name = machineDataAdapter.getName(machine);
 
   return (
     <div
@@ -28,7 +31,7 @@ const FallbackMachineMarker: React.FC<FallbackMachineMarkerProps> = ({ machine, 
       style={demoPosition}
       onClick={onClick}
     >
-      {status.color === 'green' && (
+      {statusColor === 'green' && (
         <div className="absolute inset-0 rounded-full animate-pulse-green" />
       )}
       
@@ -40,7 +43,7 @@ const FallbackMachineMarker: React.FC<FallbackMachineMarkerProps> = ({ machine, 
         )}
       >
         <MachineIcon 
-          icon={machine.icon}
+          icon={icon}
           heading={heading}
           size={48}
         />
@@ -56,8 +59,8 @@ const FallbackMachineMarker: React.FC<FallbackMachineMarkerProps> = ({ machine, 
       {/* Hover tooltip with machine details */}
       <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
         <div className="bg-card border border-border rounded-lg px-3 py-2 shadow-overlay whitespace-nowrap">
-          <div className="text-sm font-medium text-card-foreground">{machine.vehicleInfo.name}</div>
-          <div className="text-xs text-muted-foreground">{status.label}</div>
+          <div className="text-sm font-medium text-card-foreground">{name}</div>
+          <div className="text-xs text-muted-foreground">{statusTooltip}</div>
           <div className="text-xs text-muted-foreground">{machineDataAdapter.getSpeed(machine)} km/h</div>
         </div>
       </div>

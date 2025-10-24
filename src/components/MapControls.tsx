@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 import { MachineData, MachineAlert } from '@/types/machine';
-import { getMachineStatus } from '@/utils/machineStatus';
+import { machineDataAdapter } from '@/utils/machineDataAdapter';
 
 export type MapStyle = 'satellite' | 'streets' | 'outdoors' | 'dark';
 
@@ -65,11 +65,11 @@ const MapControls = ({
     { value: 'dark', label: 'Escuro' }
   ];
 
-  // Categorização das máquinas usando getMachineStatus
+  // Categorização das máquinas usando machineDataAdapter
   const statusCounts = useMemo(() => {
     return machines.reduce((acc, machine) => {
-      const status = getMachineStatus(machine);
-      acc[status.color] = (acc[status.color] || 0) + 1;
+      const statusColor = machineDataAdapter.getStatusColor(machine);
+      acc[statusColor] = (acc[statusColor] || 0) + 1;
       return acc;
     }, {} as Record<string, number>);
   }, [machines]);

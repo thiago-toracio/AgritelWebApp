@@ -1,5 +1,4 @@
 import React from 'react';
-import { MachineStatusColor } from '@/utils/machineStatus';
 
 interface MachineIconProps {
   icon: string
