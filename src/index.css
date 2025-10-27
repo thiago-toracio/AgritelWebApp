@@ -50,10 +50,12 @@ All colors MUST be HSL - Agricultural theme with modern tech aesthetics
     --grid-button: 103 65% 50%;
 
     /* Status colors for machines */
-    --status-active: 142 85% 45%;
-    --status-idle: 45 85% 55%;
-    --status-maintenance: 25 85% 55%;
-    --status-offline: 0 45% 45%;
+    --status-active: 142 85% 45%;        /* Green - Trabalhando */
+    --status-moving: 200 85% 55%;        /* Blue - Deslocando */
+    --status-maneuvering: 45 85% 55%;    /* Yellow - Manobrando */
+    --status-idle: 0 85% 55%;            /* Red - Parado */
+    --status-offline: 0 0% 50%;          /* Gray - Offline */
+    --status-maintenance: 25 85% 55%;    /* Orange - Manutenção */
 
     /* Map overlay colors */
     --overlay-bg: 220 15% 98% / 0.95;

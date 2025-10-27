@@ -64,9 +64,11 @@ export default {
 				// Machine status colors
 				status: {
 					active: 'hsl(var(--status-active))',
+					moving: 'hsl(var(--status-moving))',
+					maneuvering: 'hsl(var(--status-maneuvering))',
 					idle: 'hsl(var(--status-idle))',
-					maintenance: 'hsl(var(--status-maintenance))',
-					offline: 'hsl(var(--status-offline))'
+					offline: 'hsl(var(--status-offline))',
+					maintenance: 'hsl(var(--status-maintenance))'
 				},
 				// Additional semantic colors
 				success: 'hsl(var(--success))',

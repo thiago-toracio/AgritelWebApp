@@ -62,33 +62,54 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
     return area;
   };
 
-  const getStatusBadgeVariant = (status: DeviceState['status']) => {
-    switch (status) {
-      case 'active':
+  const getStatusBadgeVariant = (color: string) => {
+    switch (color) {
+      case 'green':
         return 'default';
-      case 'idle':
+      case 'blue':
         return 'secondary';
-      case 'maintenance':
+      case 'yellow':
+        return 'secondary';
+      case 'red':
         return 'destructive';
-      case 'offline':
+      case 'gray':
         return 'outline';
       default:
         return 'secondary';
     }
   };
 
-  const getStatusColor = (status: DeviceState['status']) => {
-    switch (status) {
-      case 'active':
+  const getStatusColor = (color: string) => {
+    switch (color) {
+      case 'green':
         return 'text-status-active';
-      case 'idle':
+      case 'blue':
+        return 'text-status-moving';
+      case 'yellow':
+        return 'text-status-maneuvering';
+      case 'red':
         return 'text-status-idle';
-      case 'maintenance':
-        return 'text-status-maintenance';
-      case 'offline':
+      case 'gray':
         return 'text-status-offline';
       default:
         return 'text-muted-foreground';
+    }
+  };
+
+  const getStatusBgClass = (color: string) => {
+    switch (color) {
+      case 'green':
+        return 'bg-status-active/10 border-status-active/30';
+      case 'blue':
+        return 'bg-status-moving/10 border-status-moving/30';
+      case 'yellow':
+        return 'bg-status-maneuvering/10 border-status-maneuvering/30';
+      case 'red':
+        return 'bg-status-idle/10 border-status-idle/30';
+      case 'gray':
+        return 'bg-status-offline/10 border-status-offline/30';
+      default:
+        return '';
     }
   };
 
@@ -169,10 +190,11 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                   {/* Group Machines Grid */}
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                     {groupMachines.map((machine) => (
-                      <Card
+                  <Card
                         key={machine.vehicleInfo.id}
                         className={cn(
-                          "cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-[1.02]",
+                          "cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-[1.02] border-2",
+                          getStatusBgClass(machine.deviceState.color),
                           selectedMachine === machine.vehicleInfo.id && "ring-2 ring-primary shadow-glow"
                         )}
                         onClick={() => onMachineSelect(machine.vehicleInfo.id)}
@@ -183,8 +205,8 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                               <h3 className="font-medium text-sm text-card-foreground">{machine.vehicleInfo.name}</h3>
                               <p className="text-xs text-muted-foreground capitalize">{machineDataAdapter.getType(machine)}</p>
                             </div>
-                            <Badge variant={getStatusBadgeVariant(machine.deviceState.status)} className="text-xs">
-                              {machine.deviceState.status}
+                            <Badge variant={getStatusBadgeVariant(machine.deviceState.color)} className="text-xs">
+                              {machine.deviceState.tooltip}
                             </Badge>
                           </div>
 
@@ -217,7 +239,7 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                                 <Clock className="w-3 h-3 text-muted-foreground" />
                                 <span className="text-muted-foreground">Velocidade</span>
                               </div>
-                              <span className={cn("font-medium", getStatusColor(machine.deviceState.status))}>
+                              <span className={cn("font-medium", getStatusColor(machine.deviceState.color))}>
                                 {machineDataAdapter.getSpeed(machine)} km/h
                               </span>
                             </div>
