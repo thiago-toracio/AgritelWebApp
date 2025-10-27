@@ -213,14 +213,18 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
 
                   {/* Group Machines Grid */}
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                    {groupMachines.map((machine) => (
+                    {groupMachines.map((machine, index) => (
                   <Card
                         key={machine.vehicleInfo.id}
                         className={cn(
-                          "cursor-pointer transition-all duration-200 hover:shadow-lg border-2",
+                          "cursor-pointer transition-all duration-200 hover:shadow-lg border-2 animate-fade-in opacity-0",
                           getStatusBgClass(machine.deviceState.color),
                           selectedMachine === machine.vehicleInfo.id && "ring-2 ring-primary shadow-glow"
                         )}
+                        style={{ 
+                          animationDelay: `${index * 50}ms`,
+                          animationFillMode: 'forwards'
+                        }}
                         onClick={() => onMachineSelect(machine.vehicleInfo.id)}
                       >
                         <CardContent className="p-4">
