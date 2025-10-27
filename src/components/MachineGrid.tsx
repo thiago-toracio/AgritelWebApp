@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { MachineData, DeviceState } from '@/types/machine';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -19,6 +19,14 @@ interface MachineGridProps {
 const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachine }: MachineGridProps) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [animationKey, setAnimationKey] = useState(0);
+
+  // Reset animation when grid opens
+  useEffect(() => {
+    if (isOpen) {
+      setAnimationKey(prev => prev + 1);
+    }
+  }, [isOpen]);
 
   const filteredMachines = machines.filter(machine => {
     const matchesSearch = machine.vehicleInfo.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -215,15 +223,14 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                     {groupMachines.map((machine, index) => (
                   <Card
-                        key={machine.vehicleInfo.id}
+                        key={`${machine.vehicleInfo.id}-${animationKey}`}
                         className={cn(
-                          "cursor-pointer transition-all duration-200 hover:shadow-lg border-2 animate-fade-in opacity-0",
+                          "cursor-pointer transition-all duration-200 hover:shadow-lg border-2 animate-fade-in",
                           getStatusBgClass(machine.deviceState.color),
                           selectedMachine === machine.vehicleInfo.id && "ring-2 ring-primary shadow-glow"
                         )}
                         style={{ 
-                          animationDelay: `${index * 50}ms`,
-                          animationFillMode: 'forwards'
+                          animationDelay: `${index * 50}ms`
                         }}
                         onClick={() => onMachineSelect(machine.vehicleInfo.id)}
                       >
