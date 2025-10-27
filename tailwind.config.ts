@@ -107,16 +107,6 @@ export default {
 						height: '0'
 					}
 				},
-				'fade-in': {
-					'0%': {
-						opacity: '0',
-						transform: 'translateY(10px)'
-					},
-					'100%': {
-						opacity: '1',
-						transform: 'translateY(0)'
-					}
-				},
 				'pulse-green': {
 					'0%, 100%': {
 						boxShadow: '0 0 0 0 hsl(var(--agriculture-green) / 0.7)'
@@ -149,7 +139,6 @@ export default {
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
-				'fade-in': 'fade-in 1s ease-out',
 				'pulse-green': 'pulse-green 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
 				'slide-up': 'slide-up 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
 				'slide-right': 'slide-right 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
