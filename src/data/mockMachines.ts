@@ -134,7 +134,7 @@ export const mockMachines: MachineData[] = [
         locationData: { latitude: -22.9255, longitude: -47.0836 },
       },
       operator: 'Pedro Costa',
-      area: 'Talhão C2',
+      area: 'Talhão A1',
       task: 'Escavação',
     },
     deviceState: {
@@ -182,7 +182,7 @@ export const mockMachines: MachineData[] = [
         locationData: { latitude: -22.9050, longitude: -47.0650 },
       },
       operator: 'Carlos Lima',
-      area: 'Talhão A2',
+      area: 'Talhão B3',
       task: 'Transporte',
     },
     deviceState: {
@@ -228,7 +228,7 @@ export const mockMachines: MachineData[] = [
         locationData: { latitude: -22.9120, longitude: -47.0700 },
       },
       operator: 'Ana Paula',
-      area: 'Talhão B1',
+      area: 'Talhão A1',
       task: 'Deslocamento',
     },
     deviceState: {
@@ -274,7 +274,7 @@ export const mockMachines: MachineData[] = [
         locationData: { latitude: -22.9200, longitude: -47.0800 },
       },
       operator: 'Roberto Alves',
-      area: 'Talhão C1',
+      area: 'Talhão B3',
       task: 'Deslocamento',
     },
     deviceState: {

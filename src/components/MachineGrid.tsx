@@ -18,12 +18,35 @@ interface MachineGridProps {
 
 const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachine }: MachineGridProps) => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState<DeviceState['status'] | 'all'>('all');
+  const [statusFilter, setStatusFilter] = useState<string>('all');
 
   const filteredMachines = machines.filter(machine => {
     const matchesSearch = machine.vehicleInfo.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                           machineDataAdapter.getType(machine).toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = statusFilter === 'all' || machine.deviceState.status === statusFilter;
+    
+    // Map status filter to device state status
+    let matchesStatus = true;
+    if (statusFilter !== 'all') {
+      const statusMap: Record<string, string> = {
+        'active': 'active',
+        'moving': 'active',
+        'maneuvering': 'active',
+        'idle': 'idle',
+        'offline': 'offline'
+      };
+      
+      // Filter by tooltip instead of status
+      const tooltipMap: Record<string, string> = {
+        'active': 'Trabalhando',
+        'moving': 'Deslocando',
+        'maneuvering': 'Manobrando',
+        'idle': 'Parado',
+        'offline': 'Sem Sinal'
+      };
+      
+      matchesStatus = machine.deviceState.tooltip === tooltipMap[statusFilter];
+    }
+    
     return matchesSearch && matchesStatus;
   });
 
@@ -151,10 +174,11 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                 className="bg-input border border-border rounded-md px-3 py-2 text-sm text-foreground"
               >
                 <option value="all">Todos os Status</option>
-                <option value="active">Ativo</option>
+                <option value="active">Trabalhando</option>
+                <option value="moving">Deslocando</option>
+                <option value="maneuvering">Manobrando</option>
                 <option value="idle">Parado</option>
-                <option value="maintenance">Manutenção</option>
-                <option value="offline">Offline</option>
+                <option value="offline">Sem Sinal</option>
               </select>
             </div>
           </div>
