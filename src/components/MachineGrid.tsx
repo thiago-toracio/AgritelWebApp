@@ -4,9 +4,12 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { HoverCard, HoverCardTrigger, HoverCardContent } from '@/components/ui/hover-card';
 import { Search, Filter, Grid, X, Fuel, Clock, MapPin } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { machineDataAdapter } from '@/utils/machineDataAdapter';
+import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 
 interface MachineGridProps {
   machines: MachineData[];
@@ -214,15 +217,16 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                   {/* Group Machines Grid */}
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                     {groupMachines.map((machine) => (
-                  <Card
-                        key={machine.vehicleInfo.id}
-                        className={cn(
-                          "cursor-pointer transition-all duration-200 hover:shadow-lg border-2",
-                          getStatusBgClass(machine.deviceState.color),
-                          selectedMachine === machine.vehicleInfo.id && "ring-2 ring-primary shadow-glow"
-                        )}
-                        onClick={() => onMachineSelect(machine.vehicleInfo.id)}
-                      >
+                      <HoverCard key={machine.vehicleInfo.id}>
+                        <HoverCardTrigger asChild>
+                          <Card
+                            className={cn(
+                              "cursor-pointer transition-all duration-200 hover:shadow-lg border-2",
+                              getStatusBgClass(machine.deviceState.color),
+                              selectedMachine === machine.vehicleInfo.id && "ring-2 ring-primary shadow-glow"
+                            )}
+                            onClick={() => onMachineSelect(machine.vehicleInfo.id)}
+                          >
                         <CardContent className="p-4">
                           <div className="flex items-start justify-between mb-3">
                             <div>
@@ -278,6 +282,25 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                           )}
                         </CardContent>
                       </Card>
+                        </HoverCardTrigger>
+                        <HoverCardContent className="w-80">
+                          <div className="space-y-2">
+                            <h4 className="text-sm font-semibold">{machine.vehicleInfo.name}</h4>
+                            <div className="text-xs space-y-1">
+                              <div className="flex justify-between">
+                                <span className="text-muted-foreground">Status:</span>
+                                <span className={getStatusColor(machine.deviceState.color)}>{machine.deviceState.tooltip}</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-muted-foreground">Atualizado em:</span>
+                                <span className="text-card-foreground">
+                                  {format(new Date(machine.deviceMessage.lastUpdate), "dd/MM/yyyy HH:mm:ss", { locale: ptBR })}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </HoverCardContent>
+                      </HoverCard>
                     ))}
                   </div>
                 </div>
