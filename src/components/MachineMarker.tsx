@@ -1,5 +1,5 @@
 import React from 'react';
-import { MachineData } from '@/types/machine';
+import { MachineData, MachineAlert } from '@/types/machine';
 import { AlertTriangle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import MachineIcon from './MachineIcons';
@@ -11,12 +11,13 @@ interface MachineMarkerProps {
   machine: MachineData;
   isSelected: boolean;
   onClick: () => void;
+  alerts: MachineAlert[];
 }
 
-const MachineMarker: React.FC<MachineMarkerProps> = ({ machine, isSelected, onClick }) => {
+const MachineMarker: React.FC<MachineMarkerProps> = ({ machine, isSelected, onClick, alerts }) => {
   const statusColor = machineDataAdapter.getStatusColor(machine);
   const statusTooltip = machineDataAdapter.getStatusTooltip(machine);
-  const hasAlert = machine.deviceState.status === 'maintenance' || machineDataAdapter.getFuel(machine) < 20;
+  const hasAlert = alerts.length > 0;
   const heading = machineDataAdapter.getHeading(machine);
   const icon = machineDataAdapter.getIcon(machine);
   const name = machineDataAdapter.getName(machine);

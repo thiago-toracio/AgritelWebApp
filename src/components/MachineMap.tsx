@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import mapboxgl from 'mapbox-gl';
-import { MachineData } from '@/types/machine';
+import { MachineData, MachineAlert } from '@/types/machine';
 import MachineMarker from './MachineMarker';
 import FallbackMachineMarker from './FallbackMachineMarker';
 import { getMapboxToken, PARANA_BOUNDS } from '@/lib/mapbox';
@@ -20,9 +20,10 @@ interface MachineMapProps {
   onMachineSelect: (machineId: string) => void;
   focusOnMachine?: string;
   mapStyle: MapStyle;
+  alerts: MachineAlert[];
 }
 
-const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine, mapStyle }: MachineMapProps) => {
+const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine, mapStyle, alerts }: MachineMapProps) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const markers = useRef<{ [key: string]: { marker: mapboxgl.Marker; root: ReactDOM.Root } }>({});
@@ -123,6 +124,7 @@ const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine
     // Add or update markers
     machines.forEach(machine => {
       const existing = markers.current[machine.vehicleInfo.id];
+      const machineAlerts = alerts.filter(alert => alert.machineId === machine.vehicleInfo.id && !alert.resolved);
       
       if (existing) {
         // Update existing marker position and content
@@ -132,6 +134,7 @@ const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine
             machine={machine}
             isSelected={selectedMachine === machine.vehicleInfo.id}
             onClick={() => onMachineSelect(machine.vehicleInfo.id)}
+            alerts={machineAlerts}
           />
         );
       } else {
@@ -144,6 +147,7 @@ const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine
             machine={machine}
             isSelected={selectedMachine === machine.vehicleInfo.id}
             onClick={() => onMachineSelect(machine.vehicleInfo.id)}
+            alerts={machineAlerts}
           />
         );
 
@@ -154,7 +158,7 @@ const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine
         markers.current[machine.vehicleInfo.id] = { marker, root };
       }
     });
-  }, [machines, mapLoaded, mapboxError, selectedMachine, onMachineSelect]);
+  }, [machines, mapLoaded, mapboxError, selectedMachine, onMachineSelect, alerts]);
 
   // Ajustar bounds para mostrar todas as máquinas na primeira carga
   useEffect(() => {

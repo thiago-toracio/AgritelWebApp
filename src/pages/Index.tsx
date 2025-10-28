@@ -189,6 +189,7 @@ const Index = () => {
         onMachineSelect={handleMachineSelect}
         focusOnMachine={focusOnMachine}
         mapStyle={mapStyle}
+        alerts={alerts}
       />
 
       {/* Map Controls */}
