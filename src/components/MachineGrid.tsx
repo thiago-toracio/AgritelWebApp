@@ -4,9 +4,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Search, Filter, Grid, X, Fuel, Clock, MapPin } from 'lucide-react';
+import { Search, Filter, Grid, X, Fuel, Clock, MapPin, Calendar } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { machineDataAdapter } from '@/utils/machineDataAdapter';
+import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 
 interface MachineGridProps {
   machines: MachineData[];
@@ -214,7 +216,7 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                   {/* Group Machines Grid */}
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                     {groupMachines.map((machine) => (
-                  <Card
+                      <Card
                         key={machine.vehicleInfo.id}
                         className={cn(
                           "cursor-pointer transition-all duration-200 hover:shadow-lg border-2",
@@ -269,13 +271,22 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                             </div>
                           </div>
 
-                          {machine.deviceMessage.operator && (
-                            <div className="mt-3 pt-3 border-t border-border">
+                          <div className="mt-3 pt-3 border-t border-border space-y-2">
+                            {machine.deviceMessage.operator && (
                               <p className="text-xs text-muted-foreground">
                                 Operador: <span className="text-card-foreground">{machine.deviceMessage.operator}</span>
                               </p>
+                            )}
+                            <div className="flex items-center justify-between text-xs">
+                              <div className="flex items-center space-x-1">
+                                <Calendar className="w-3 h-3 text-muted-foreground" />
+                                <span className="text-muted-foreground">Atualizado em:</span>
+                              </div>
+                              <span className="text-card-foreground">
+                                {format(new Date(machine.deviceMessage.lastUpdate), "dd/MM/yyyy HH:mm:ss", { locale: ptBR })}
+                              </span>
                             </div>
-                          )}
+                          </div>
                         </CardContent>
                       </Card>
                     ))}

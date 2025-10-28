@@ -145,18 +145,16 @@ const MapControls = ({
                 </span>
               </button>
               
-              {alertsCount > 0 && (
-                <div className="flex items-center space-x-1.5">
-                  <AlertTriangle className="w-5 h-5 text-warning" />
-                  <Badge 
-                    variant="destructive" 
-                    className="text-xs cursor-pointer hover:opacity-80 transition-opacity"
-                    onClick={onToggleAlerts}
-                  >
-                    {alertsCount} alertas
-                  </Badge>
-                </div>
-              )}
+              <div className="flex items-center space-x-1.5">
+                <AlertTriangle className="w-5 h-5 text-warning" />
+                <Badge 
+                  variant={alertsCount > 0 ? "destructive" : "secondary"}
+                  className="text-xs cursor-pointer hover:opacity-80 transition-opacity"
+                  onClick={onToggleAlerts}
+                >
+                  {alertsCount} {alertsCount === 1 ? 'alerta' : 'alertas'}
+                </Badge>
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -218,7 +216,7 @@ const MapControls = ({
           size="lg"
         >
           <Grid2X2 className="w-6 h-6 mr-2" />
-          Ver Grid
+          Agrupado por Áreas
         </Button>
       </div>
     </>
