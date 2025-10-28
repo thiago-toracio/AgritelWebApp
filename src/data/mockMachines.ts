@@ -660,7 +660,7 @@ export const mockMachines: MachineData[] = [
     },
   },
   {
-    icon: 'tractor-furrower-gray.svg',
+    icon: 'truck-cane-hauler-gray.svg',
     vehicleInfo: {
       id: '15',
       name: 'Tractor Furrower 01',
@@ -669,7 +669,7 @@ export const mockMachines: MachineData[] = [
       yearModel: 2020,
       plate: 'ABC0015',
       color: 'Azul',
-      vehicleType: 'tractor-furrower',
+      vehicleType: 'truck-cane-hauler',
     },
     telemetry: {
       speed: 0,
