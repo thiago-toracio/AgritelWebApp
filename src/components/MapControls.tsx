@@ -40,8 +40,23 @@ const MapControls = ({
   onRefresh
 }: MapControlsProps) => {
   const [showMapStyles, setShowMapStyles] = useState(false);
-  const [countdown, setCountdown] = useState(60);
+  const [showRefreshIntervals, setShowRefreshIntervals] = useState(false);
+  
+  // Load refresh interval from localStorage or default to 30s
+  const [refreshInterval, setRefreshInterval] = useState<number>(() => {
+    const saved = localStorage.getItem('refreshInterval');
+    return saved ? parseInt(saved) : 30;
+  });
+  
+  const [countdown, setCountdown] = useState(refreshInterval);
   const alertsCount = alerts.filter(alert => !alert.resolved).length;
+
+  const refreshIntervals = [
+    { value: 15, label: '15s' },
+    { value: 30, label: '30s' },
+    { value: 60, label: '60s' },
+    { value: 180, label: '180s' }
+  ];
 
   // Timer de atualização automática
   useEffect(() => {
@@ -49,14 +64,22 @@ const MapControls = ({
       setCountdown((prev) => {
         if (prev <= 1) {
           onRefresh();
-          return 60;
+          return refreshInterval;
         }
         return prev - 1;
       });
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [onRefresh]);
+  }, [onRefresh, refreshInterval]);
+
+  // Handle refresh interval change
+  const handleRefreshIntervalChange = (interval: number) => {
+    setRefreshInterval(interval);
+    setCountdown(interval);
+    localStorage.setItem('refreshInterval', interval.toString());
+    setShowRefreshIntervals(false);
+  };
 
   const mapStyles: { value: MapStyle; label: string }[] = [
     { value: 'satellite', label: 'Satélite' },
@@ -86,11 +109,36 @@ const MapControls = ({
         <Card className="bg-gradient-overlay border-border/50 shadow-overlay backdrop-blur-sm">
           <CardContent className="p-3">
             <div className="flex items-center space-x-3 md:space-x-4 overflow-x-auto scrollbar-hide whitespace-nowrap justify-center px-2">
-              <div className="flex items-center space-x-1.5">
-                <RefreshCw className="w-4 h-4 text-muted-foreground" />
-                <span className="text-xs text-muted-foreground whitespace-nowrap">
-                  {countdown}s
-                </span>
+              <div className="relative flex items-center space-x-1.5">
+                <button
+                  onClick={() => setShowRefreshIntervals(!showRefreshIntervals)}
+                  className="flex items-center space-x-1.5 hover:bg-muted/50 px-2 py-1 rounded transition-colors cursor-pointer"
+                >
+                  <RefreshCw className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-xs text-muted-foreground whitespace-nowrap">
+                    {countdown}s
+                  </span>
+                </button>
+                
+                {showRefreshIntervals && (
+                  <Card className="absolute top-10 left-0 min-w-[100px] bg-gradient-overlay border-border/50 shadow-overlay backdrop-blur-sm z-50">
+                    <CardContent className="p-2">
+                      <div className="flex flex-col space-y-1">
+                        {refreshIntervals.map((interval) => (
+                          <Button
+                            key={interval.value}
+                            variant={refreshInterval === interval.value ? "default" : "ghost"}
+                            size="sm"
+                            onClick={() => handleRefreshIntervalChange(interval.value)}
+                            className="w-full justify-start text-sm"
+                          >
+                            {interval.label}
+                          </Button>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
               </div>
               
               <button
