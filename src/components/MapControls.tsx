@@ -32,6 +32,7 @@ interface MapControlsProps {
   onMapStyleChange: (style: MapStyle) => void;
   currentMapStyle: MapStyle;
   onRefresh: () => void;
+  onJourneyStartChange?: (startDate: string) => void;
 }
 
 const MapControls = ({ 
@@ -42,7 +43,8 @@ const MapControls = ({
   onToggleStatus,
   onMapStyleChange,
   currentMapStyle,
-  onRefresh
+  onRefresh,
+  onJourneyStartChange
 }: MapControlsProps) => {
   const [showMapStyles, setShowMapStyles] = useState(false);
   const [openRefreshPopover, setOpenRefreshPopover] = useState(false);
@@ -109,6 +111,11 @@ const MapControls = ({
   };
 
   const [selectedJourneyStart, setSelectedJourneyStart] = useState(getDefaultJourneyStart());
+
+  const handleJourneyStartChange = (value: string) => {
+    setSelectedJourneyStart(value);
+    onJourneyStartChange?.(value);
+  };
 
   // Timer de atualização automática
   useEffect(() => {
@@ -262,7 +269,7 @@ const MapControls = ({
                     <p>Início da Jornada</p>
                   </TooltipContent>
                 </Tooltip>
-                <Select value={selectedJourneyStart} onValueChange={setSelectedJourneyStart}>
+                <Select value={selectedJourneyStart} onValueChange={handleJourneyStartChange}>
                   <SelectTrigger className="w-[200px] h-7 text-xs bg-[#00b359] text-white border-[#00b359] hover:bg-[#00a04f]">
                     <SelectValue />
                   </SelectTrigger>
