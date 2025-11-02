@@ -4,6 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { 
   Grid2X2, 
   Map,
@@ -12,7 +13,8 @@ import {
   CornerDownRight,
   StopCircle,
   ArrowRightLeft,
-  RefreshCw
+  RefreshCw,
+  Calendar
 } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 import { MachineData, MachineAlert } from '@/types/machine';
@@ -126,11 +128,12 @@ const MapControls = ({
 
   return (
     <>
-      {/* Status Bar */}
-      <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-40 max-w-5xl">
+      <TooltipProvider>
+        {/* Status Bar */}
+        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-40 max-w-5xl">
         <Card className="bg-gradient-overlay border-border/50 shadow-overlay backdrop-blur-sm">
           <CardContent className="p-3">
-            <div className="flex items-center space-x-3 md:space-x-4 overflow-x-auto scrollbar-hide whitespace-nowrap justify-center px-2">
+            <div className="flex items-center space-x-2 md:space-x-3 overflow-x-auto scrollbar-hide whitespace-nowrap justify-center px-2">
               <Popover open={openRefreshPopover} onOpenChange={setOpenRefreshPopover}>
                 <PopoverTrigger asChild>
                   <button className="flex items-center space-x-1.5 hover:bg-muted/50 px-2 py-1 rounded transition-colors cursor-pointer">
@@ -209,7 +212,7 @@ const MapControls = ({
                 </span>
               </button>
               
-              <div className="flex items-center space-x-1.5">
+              <div className="flex items-center space-x-1">
                 <AlertTriangle className="w-5 h-5 text-warning" />
                 <Badge 
                   variant={alertsCount > 0 ? "destructive" : "secondary"}
@@ -220,12 +223,19 @@ const MapControls = ({
                 </Badge>
               </div>
 
-              <div className="flex items-center space-x-2">
-                <span className="text-sm text-muted-foreground whitespace-nowrap">
-                  Início da Jornada
-                </span>
+              <div className="flex items-center space-x-1.5">
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div className="flex items-center">
+                      <Calendar className="w-4 h-4 text-muted-foreground" />
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Início da Jornada</p>
+                  </TooltipContent>
+                </Tooltip>
                 <Select value={selectedJourneyStart} onValueChange={setSelectedJourneyStart}>
-                  <SelectTrigger className="w-[220px] h-8 text-xs">
+                  <SelectTrigger className="w-[200px] h-7 text-xs">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="max-h-[300px]">
@@ -241,6 +251,7 @@ const MapControls = ({
           </CardContent>
         </Card>
       </div>
+      </TooltipProvider>
 
       {/* Map Controls */}
       <div className="absolute left-4 top-1/2 transform -translate-y-1/2 z-40">
