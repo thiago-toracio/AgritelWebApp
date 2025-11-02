@@ -11,7 +11,6 @@ const createTripJourney = (hourmeterIgnition: number) => ({
   applicationTotal: 0,
   area: Math.random() * 20 + 5,
   odometer: hourmeterIgnition * 8 + Math.random() * 1000,
-  hourmeterControl: null,
   journeyStartsAt: new Date(Date.now() - Math.random() * 12 * 3600000).toISOString(),
 });
 

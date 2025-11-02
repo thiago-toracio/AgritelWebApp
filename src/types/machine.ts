@@ -63,7 +63,6 @@ export interface TripJourneyData {
   applicationTotal: number;
   area: number;
   odometer: number;
-  hourmeterControl: string | null;
   journeyStartsAt: string | null;
 }
 
