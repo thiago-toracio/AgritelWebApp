@@ -46,7 +46,18 @@ const Index = () => {
         setIsInitialLoading(true);
       }
       const data = await machineService.getMachines(journeyStartDate);
-      setMachines(data);
+      
+      // Aplicar estado de leitura dos cookies aos alertas
+      const readAlertIds = cookieManager.getReadAlerts();
+      const machinesWithReadState = data.map(machine => ({
+        ...machine,
+        alerts: machine.alerts.map(alert => ({
+          ...alert,
+          isRead: alert.isRead || readAlertIds.includes(alert.id)
+        }))
+      }));
+      
+      setMachines(machinesWithReadState);
       console.log('✅ Máquinas carregadas:', data.length, journeyStartDate ? `(desde ${journeyStartDate})` : '');
     } catch (error) {
       console.error('Failed to load machines:', error);

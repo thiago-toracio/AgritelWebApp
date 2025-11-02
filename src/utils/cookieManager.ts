@@ -3,7 +3,7 @@
  */
 
 const COOKIE_NAME = 'readAlerts';
-const COOKIE_DURATION_HOURS = 48;
+const COOKIE_DURATION_HOURS = 50;
 
 export const cookieManager = {
   /**
