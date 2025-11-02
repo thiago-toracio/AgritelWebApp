@@ -59,8 +59,7 @@ const MapControls = ({
   const refreshIntervals = [
     { value: 15, label: '15s' },
     { value: 30, label: '30s' },
-    { value: 60, label: '60s' },
-    { value: 180, label: '180s' }
+    { value: 60, label: '60s' }
   ];
 
   // Generate hourly options for the last 48 hours
@@ -149,7 +148,7 @@ const MapControls = ({
                   <button className="flex items-center space-x-1.5 hover:bg-muted/50 px-2 py-1 rounded transition-colors cursor-pointer">
                     <RefreshCw className="w-4 h-4 text-muted-foreground" />
                     <span className="text-xs text-muted-foreground whitespace-nowrap">
-                      {countdown}s
+                      {countdown.toString().padStart(2, '0')}s
                     </span>
                   </button>
                 </PopoverTrigger>
