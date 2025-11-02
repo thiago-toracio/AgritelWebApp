@@ -80,7 +80,17 @@ const MapControls = ({
     return options;
   }, []);
 
-  const [selectedJourneyStart, setSelectedJourneyStart] = useState(journeyStartOptions[0].value);
+  // Find the start of today (00:00) as default
+  const getDefaultJourneyStart = () => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return journeyStartOptions.find(option => {
+      const optionDate = new Date(option.value);
+      return optionDate.getTime() === today.getTime();
+    })?.value || journeyStartOptions[0].value;
+  };
+
+  const [selectedJourneyStart, setSelectedJourneyStart] = useState(getDefaultJourneyStart());
 
   // Timer de atualização automática
   useEffect(() => {
