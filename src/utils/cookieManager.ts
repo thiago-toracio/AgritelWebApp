@@ -11,12 +11,18 @@ export const cookieManager = {
    */
   saveReadAlert: (alertId: string): void => {
     const readAlerts = cookieManager.getReadAlerts();
+    console.log('🔵 Salvando alerta como lido:', alertId);
+    console.log('🔵 Alertas já lidos:', readAlerts);
+    
     if (!readAlerts.includes(alertId)) {
       readAlerts.push(alertId);
       const expiryDate = new Date();
       expiryDate.setHours(expiryDate.getHours() + COOKIE_DURATION_HOURS);
       
       document.cookie = `${COOKIE_NAME}=${JSON.stringify(readAlerts)}; expires=${expiryDate.toUTCString()}; path=/; SameSite=Strict`;
+      console.log('✅ Cookie salvo. Novos alertas lidos:', readAlerts);
+    } else {
+      console.log('⚠️ Alerta já estava marcado como lido');
     }
   },
 
@@ -30,14 +36,17 @@ export const cookieManager = {
     );
 
     if (!readAlertsCookie) {
+      console.log('🔍 Nenhum cookie de alertas encontrado');
       return [];
     }
 
     try {
       const value = readAlertsCookie.split('=')[1];
-      return JSON.parse(decodeURIComponent(value));
+      const readAlerts = JSON.parse(decodeURIComponent(value));
+      console.log('🔍 Alertas lidos do cookie:', readAlerts);
+      return readAlerts;
     } catch (error) {
-      console.error('Erro ao ler cookie de alertas:', error);
+      console.error('❌ Erro ao ler cookie de alertas:', error);
       return [];
     }
   },

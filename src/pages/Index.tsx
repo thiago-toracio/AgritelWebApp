@@ -49,12 +49,18 @@ const Index = () => {
       
       // Aplicar estado de leitura dos cookies aos alertas
       const readAlertIds = cookieManager.getReadAlerts();
+      console.log('🔍 IDs de alertas lidos do cookie ao carregar:', readAlertIds);
+      
       const machinesWithReadState = data.map(machine => ({
         ...machine,
-        alerts: machine.alerts.map(alert => ({
-          ...alert,
-          isRead: alert.isRead || readAlertIds.includes(alert.id)
-        }))
+        alerts: machine.alerts.map(alert => {
+          const isRead = alert.isRead || readAlertIds.includes(alert.id);
+          console.log(`🔍 Alerta ${alert.id} - isRead original: ${alert.isRead}, no cookie: ${readAlertIds.includes(alert.id)}, final: ${isRead}`);
+          return {
+            ...alert,
+            isRead
+          };
+        })
       }));
       
       setMachines(machinesWithReadState);
@@ -138,7 +144,9 @@ const Index = () => {
   };
 
   const handleMarkAsRead = (alertId: string) => {
-    // Salvar no cookie (48h)
+    console.log('📝 Marcando alerta como lido:', alertId);
+    
+    // Salvar no cookie (50h)
     cookieManager.saveReadAlert(alertId);
     
     // Atualizar estado local
