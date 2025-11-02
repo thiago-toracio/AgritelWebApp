@@ -17,7 +17,7 @@ import {
   Calendar
 } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
-import { MachineData, MachineAlert } from '@/types/machine';
+import { MachineData, MachineAlertData } from '@/types/machine';
 import { machineDataAdapter } from '@/utils/machineDataAdapter';
 import { format, subHours, startOfHour } from 'date-fns';
 
@@ -25,7 +25,7 @@ export type MapStyle = 'satellite' | 'streets' | 'outdoors' | 'dark';
 
 interface MapControlsProps {
   machines: MachineData[];
-  alerts: MachineAlert[];
+  alerts: MachineAlertData[];
   onToggleGrid: () => void;
   onToggleAlerts: () => void;
   onToggleStatus: (filter?: string) => void;
@@ -54,7 +54,7 @@ const MapControls = ({
   });
   
   const [countdown, setCountdown] = useState(refreshInterval);
-  const alertsCount = alerts.filter(alert => !alert.resolved).length;
+  const alertsCount = alerts.filter(alert => !alert.isRead).length;
 
   const refreshIntervals = [
     { value: 15, label: '15s' },

@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
-import { MachineData, MachineAlert } from '@/types/machine';
+import { MachineData, MachineAlertData } from '@/types/machine';
 import { machineService } from '@/services/api/machineService';
 import { machineDataAdapter } from '@/utils/machineDataAdapter';
 import MachineMap from '@/components/MachineMap';
@@ -18,7 +18,7 @@ const Index = () => {
   const [isAlertsPanelOpen, setIsAlertsPanelOpen] = useState(false);
   const [isStatusPanelOpen, setIsStatusPanelOpen] = useState(false);
   const [statusPanelFilter, setStatusPanelFilter] = useState<string | undefined>();
-  const [alerts, setAlerts] = useState<MachineAlert[]>([]);
+  const [alerts, setAlerts] = useState<MachineAlertData[]>([]);
   const [focusOnMachine, setFocusOnMachine] = useState<string | undefined>();
   
   // Load map style from localStorage or default to 'satellite'
@@ -51,7 +51,7 @@ const Index = () => {
 
   // Gerar alertas com base nas máquinas
   const generatedAlerts = useMemo(() => {
-    const newAlerts: MachineAlert[] = [];
+    const newAlerts: MachineAlertData[] = [];
     
     machines.forEach(machine => {
       // Alerta de manutenção

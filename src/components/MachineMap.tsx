@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import mapboxgl from 'mapbox-gl';
-import { MachineData, MachineAlert } from '@/types/machine';
+import { MachineData, MachineAlertData } from '@/types/machine';
 import MachineMarker from './MachineMarker';
 import FallbackMachineMarker from './FallbackMachineMarker';
 import { getMapboxToken, PARANA_BOUNDS } from '@/lib/mapbox';
@@ -20,7 +20,7 @@ interface MachineMapProps {
   onMachineSelect: (machineId: string) => void;
   focusOnMachine?: string;
   mapStyle: MapStyle;
-  alerts: MachineAlert[];
+  alerts: MachineAlertData[];
 }
 
 const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine, mapStyle, alerts }: MachineMapProps) => {
@@ -124,7 +124,7 @@ const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine
     // Add or update markers
     machines.forEach(machine => {
       const existing = markers.current[machine.vehicleInfo.id];
-      const machineAlerts = alerts.filter(alert => alert.machineId === machine.vehicleInfo.id && !alert.resolved);
+      const machineAlerts = alerts.filter(alert => alert.machineId === machine.vehicleInfo.id && !alert.isRead);
       
       if (existing) {
         // Update existing marker position and content
