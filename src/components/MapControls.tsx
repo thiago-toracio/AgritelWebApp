@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { 
   Grid2X2, 
   Map,
@@ -16,6 +17,7 @@ import {
 import ThemeToggle from './ThemeToggle';
 import { MachineData, MachineAlert } from '@/types/machine';
 import { machineDataAdapter } from '@/utils/machineDataAdapter';
+import { format, subHours, startOfHour } from 'date-fns';
 
 export type MapStyle = 'satellite' | 'streets' | 'outdoors' | 'dark';
 
@@ -58,6 +60,25 @@ const MapControls = ({
     { value: 60, label: '60s' },
     { value: 180, label: '180s' }
   ];
+
+  // Generate hourly options for the last 24 hours
+  const journeyStartOptions = useMemo(() => {
+    const now = new Date();
+    const currentHour = startOfHour(now);
+    const options = [];
+    
+    for (let i = 0; i <= 24; i++) {
+      const hourDate = subHours(currentHour, i);
+      options.push({
+        value: hourDate.toISOString(),
+        label: `A partir das ${format(hourDate, 'dd/MM/yyyy HH:00')}`
+      });
+    }
+    
+    return options;
+  }, []);
+
+  const [selectedJourneyStart, setSelectedJourneyStart] = useState(journeyStartOptions[0].value);
 
   // Timer de atualização automática
   useEffect(() => {
@@ -197,6 +218,24 @@ const MapControls = ({
                 >
                   {alertsCount} {alertsCount === 1 ? 'alerta' : 'alertas'}
                 </Badge>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <span className="text-sm text-muted-foreground whitespace-nowrap">
+                  Início da Jornada
+                </span>
+                <Select value={selectedJourneyStart} onValueChange={setSelectedJourneyStart}>
+                  <SelectTrigger className="w-[220px] h-8 text-xs">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="max-h-[300px]">
+                    {journeyStartOptions.map((option) => (
+                      <SelectItem key={option.value} value={option.value} className="text-xs">
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
             </div>
           </CardContent>
