@@ -20,7 +20,12 @@ const Index = () => {
   const [statusPanelFilter, setStatusPanelFilter] = useState<string | undefined>();
   const [alerts, setAlerts] = useState<MachineAlert[]>([]);
   const [focusOnMachine, setFocusOnMachine] = useState<string | undefined>();
-  const [mapStyle, setMapStyle] = useState<MapStyle>('satellite');
+  
+  // Load map style from localStorage or default to 'satellite'
+  const [mapStyle, setMapStyle] = useState<MapStyle>(() => {
+    const saved = localStorage.getItem('mapStyle');
+    return (saved as MapStyle) || 'satellite';
+  });
 
   // Fetch machines on mount
   useEffect(() => {
@@ -165,6 +170,7 @@ const Index = () => {
 
   const handleMapStyleChange = (style: MapStyle) => {
     setMapStyle(style);
+    localStorage.setItem('mapStyle', style);
   };
 
   if (isInitialLoading) {
