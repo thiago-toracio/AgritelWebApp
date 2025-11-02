@@ -261,7 +261,7 @@ const MapControls = ({
               <div className="flex items-center space-x-1.5">
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <div className="flex items-center">
+                    <div className="flex items-center cursor-pointer">
                       <Calendar className="w-4 h-4 text-muted-foreground" />
                     </div>
                   </TooltipTrigger>
@@ -270,7 +270,7 @@ const MapControls = ({
                   </TooltipContent>
                 </Tooltip>
                 <Select value={selectedJourneyStart} onValueChange={handleJourneyStartChange}>
-                  <SelectTrigger className="w-[200px] h-7 text-xs bg-[#00b359] text-white border-[#00b359] hover:bg-[#00a04f]">
+                  <SelectTrigger className="w-[200px] h-7 text-xs bg-[#00b359] text-white border-[#00b359] hover:bg-[#00a04f] cursor-pointer">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="max-h-[300px]">
