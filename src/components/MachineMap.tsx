@@ -191,11 +191,11 @@ const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine
           center: [machine.deviceMessage.gps.longitude, machine.deviceMessage.gps.latitude],
           zoom: 16,
           duration: 1500,
-          essential: true // Garante que a animação acontece mesmo se o usuário está interagindo
+          essential: true
         });
       }
     }
-  }, [focusOnMachine, machines, mapLoaded, mapboxError]);
+  }, [focusOnMachine, mapLoaded, mapboxError]);
 
   return (
     <div className="relative w-full h-full bg-background">
