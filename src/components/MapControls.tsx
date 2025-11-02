@@ -63,13 +63,13 @@ const MapControls = ({
     { value: 180, label: '180s' }
   ];
 
-  // Generate hourly options for the last 24 hours
+  // Generate hourly options for the last 48 hours
   const journeyStartOptions = useMemo(() => {
     const now = new Date();
     const currentHour = startOfHour(now);
     const options = [];
     
-    for (let i = 0; i <= 24; i++) {
+    for (let i = 0; i <= 48; i++) {
       const hourDate = subHours(currentHour, i);
       options.push({
         value: hourDate.toISOString(),
@@ -235,7 +235,7 @@ const MapControls = ({
                   </TooltipContent>
                 </Tooltip>
                 <Select value={selectedJourneyStart} onValueChange={setSelectedJourneyStart}>
-                  <SelectTrigger className="w-[200px] h-7 text-xs">
+                  <SelectTrigger className="w-[200px] h-7 text-xs bg-[#00b359] text-white border-[#00b359] hover:bg-[#00a04f]">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="max-h-[300px]">
