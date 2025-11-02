@@ -266,7 +266,7 @@ const MapControls = ({
                     </div>
                   </TooltipTrigger>
                   <TooltipContent>
-                    <p>Início da Jornada</p>
+                    <p>Início da Jornada (Data ínicio atua sobre informações da jornada e alertas)</p>
                   </TooltipContent>
                 </Tooltip>
                 <Select value={selectedJourneyStart} onValueChange={handleJourneyStartChange}>
