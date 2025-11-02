@@ -160,10 +160,12 @@ const MachineSidebar = ({ machine, isOpen, onClose }: MachineSidebarProps) => {
             </CardHeader>
             <CardContent className="space-y-3">
               {machine.deviceMessage.operator && (
-                <div className="flex items-center space-x-2">
-                  <User className="w-4 h-4 text-muted-foreground" />
+                <div className="space-y-1">
                   <span className="text-sm text-muted-foreground">Operador:</span>
-                  <span className="text-sm text-card-foreground font-medium">{machine.deviceMessage.operator}</span>
+                  <div className="flex items-center space-x-2">
+                    <User className="w-4 h-4 text-muted-foreground" />
+                    <span className="text-sm text-card-foreground font-medium">{machine.deviceMessage.operator}</span>
+                  </div>
                 </div>
               )}
               {machine.deviceMessage.task && (
