@@ -1,13 +1,14 @@
 /**
- * Utilitário para gerenciar cookies de alertas lidos
+ * Utilitário para gerenciar alertas lidos usando localStorage
+ * (localStorage é mais confiável que cookies em contextos de preview/iframe)
  */
 
-const COOKIE_NAME = 'readAlerts';
-const COOKIE_DURATION_HOURS = 50;
+const STORAGE_KEY = 'readAlerts';
+const STORAGE_DURATION_HOURS = 50;
 
 export const cookieManager = {
   /**
-   * Salva IDs de alertas lidos no cookie
+   * Salva IDs de alertas lidos no localStorage
    */
   saveReadAlert: (alertId: string): void => {
     const readAlerts = cookieManager.getReadAlerts();
@@ -16,16 +17,20 @@ export const cookieManager = {
     
     if (!readAlerts.includes(alertId)) {
       readAlerts.push(alertId);
+      
       const expiryDate = new Date();
-      expiryDate.setHours(expiryDate.getHours() + COOKIE_DURATION_HOURS);
+      expiryDate.setHours(expiryDate.getHours() + STORAGE_DURATION_HOURS);
       
-      const cookieValue = encodeURIComponent(JSON.stringify(readAlerts));
-      document.cookie = `${COOKIE_NAME}=${cookieValue}; expires=${expiryDate.toUTCString()}; path=/; SameSite=Lax`;
+      const data = {
+        alerts: readAlerts,
+        expiry: expiryDate.getTime()
+      };
       
-      console.log('✅ Cookie salvo:', document.cookie);
-      console.log('✅ Novos alertas lidos:', readAlerts);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      console.log('✅ Storage salvo. Novos alertas lidos:', readAlerts);
+      console.log('✅ Expira em:', expiryDate.toLocaleString());
       
-      // Verificar se o cookie foi realmente salvo
+      // Verificar se foi realmente salvo
       const verification = cookieManager.getReadAlerts();
       console.log('🔍 Verificação imediata:', verification);
     } else {
@@ -34,27 +39,30 @@ export const cookieManager = {
   },
 
   /**
-   * Recupera todos os IDs de alertas lidos do cookie
+   * Recupera todos os IDs de alertas lidos do localStorage
    */
   getReadAlerts: (): string[] => {
-    console.log('🔍 Todos os cookies:', document.cookie);
-    const cookies = document.cookie.split(';');
-    const readAlertsCookie = cookies.find(cookie => 
-      cookie.trim().startsWith(`${COOKIE_NAME}=`)
-    );
-
-    if (!readAlertsCookie) {
-      console.log('🔍 Nenhum cookie de alertas encontrado');
-      return [];
-    }
-
     try {
-      const value = readAlertsCookie.split('=')[1];
-      const readAlerts = JSON.parse(decodeURIComponent(value));
-      console.log('🔍 Alertas lidos do cookie:', readAlerts);
-      return readAlerts;
+      const stored = localStorage.getItem(STORAGE_KEY);
+      
+      if (!stored) {
+        console.log('🔍 Nenhum alerta salvo encontrado');
+        return [];
+      }
+
+      const data = JSON.parse(stored);
+      
+      // Verificar se não expirou
+      if (data.expiry && new Date().getTime() > data.expiry) {
+        console.log('⏰ Alertas lidos expiraram, limpando...');
+        localStorage.removeItem(STORAGE_KEY);
+        return [];
+      }
+      
+      console.log('🔍 Alertas lidos do storage:', data.alerts);
+      return data.alerts || [];
     } catch (error) {
-      console.error('❌ Erro ao ler cookie de alertas:', error);
+      console.error('❌ Erro ao ler alertas:', error);
       return [];
     }
   },
@@ -75,16 +83,20 @@ export const cookieManager = {
     const updatedAlerts = readAlerts.filter(id => id !== alertId);
     
     const expiryDate = new Date();
-    expiryDate.setHours(expiryDate.getHours() + COOKIE_DURATION_HOURS);
+    expiryDate.setHours(expiryDate.getHours() + STORAGE_DURATION_HOURS);
     
-    const cookieValue = encodeURIComponent(JSON.stringify(updatedAlerts));
-    document.cookie = `${COOKIE_NAME}=${cookieValue}; expires=${expiryDate.toUTCString()}; path=/; SameSite=Lax`;
+    const data = {
+      alerts: updatedAlerts,
+      expiry: expiryDate.getTime()
+    };
+    
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
   },
 
   /**
-   * Limpa todos os alertas lidos do cookie
+   * Limpa todos os alertas lidos do localStorage
    */
   clearReadAlerts: (): void => {
-    document.cookie = `${COOKIE_NAME}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; SameSite=Lax`;
+    localStorage.removeItem(STORAGE_KEY);
   }
 };
