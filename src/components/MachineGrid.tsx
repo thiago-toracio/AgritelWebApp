@@ -197,19 +197,9 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                       <h3 className="text-lg font-semibold text-card-foreground">
                         {getAreaDisplayName(area)}
                       </h3>
-                      <div className="flex items-center gap-6 text-sm">
-                        <div className="text-center">
-                          <p className="text-status-active font-semibold text-base">{stats.avgProductiveHours}h</p>
-                          <p className="text-muted-foreground text-xs">Média Produtiva</p>
-                        </div>
-                        <div className="text-center">
-                          <p className="text-status-idle font-semibold text-base">{stats.avgNonproductiveHours}h</p>
-                          <p className="text-muted-foreground text-xs">Média Improdutiva</p>
-                        </div>
-                        <Badge variant="outline" className="text-xs">
-                          {stats.total} {stats.total === 1 ? 'máquina' : 'máquinas'}
-                        </Badge>
-                      </div>
+                      <Badge variant="outline" className="text-xs">
+                        {stats.total} {stats.total === 1 ? 'máquina' : 'máquinas'}
+                      </Badge>
                     </div>
                   </div>
 
