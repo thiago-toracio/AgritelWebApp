@@ -76,7 +76,7 @@ const MapControls = ({
 
   const trabalhando = statusCounts.green || 0;
   const manobrando = statusCounts.yellow || 0;
-  const parada = statusCounts.red || 0;
+  const parado = statusCounts.red || 0;
   const deslocando = statusCounts.blue || 0;
 
   return (
@@ -102,7 +102,7 @@ const MapControls = ({
                   {trabalhando}
                 </span>
                 <span className="text-sm text-card-foreground whitespace-nowrap">
-                  trabalhando
+                  Trabalhando
                 </span>
               </button>
               
@@ -115,7 +115,7 @@ const MapControls = ({
                   {manobrando}
                 </span>
                 <span className="text-sm text-card-foreground whitespace-nowrap">
-                  manobrando
+                  Manobrando
                 </span>
               </button>
               
@@ -125,10 +125,10 @@ const MapControls = ({
               >
                 <StopCircle className="w-5 h-5 text-[#ef4444]" />
                 <span className="text-sm font-semibold text-[#ef4444] whitespace-nowrap">
-                  {parada}
+                  {parado}
                 </span>
                 <span className="text-sm text-card-foreground whitespace-nowrap">
-                  parada
+                  Parado
                 </span>
               </button>
               
@@ -141,7 +141,7 @@ const MapControls = ({
                   {deslocando}
                 </span>
                 <span className="text-sm text-card-foreground whitespace-nowrap">
-                  deslocando
+                  Deslocando
                 </span>
               </button>
               
@@ -152,7 +152,7 @@ const MapControls = ({
                   className="text-xs cursor-pointer hover:opacity-80 transition-opacity"
                   onClick={onToggleAlerts}
                 >
-                  {alertsCount} {alertsCount === 1 ? 'alerta' : 'alertas'}
+                  {alertsCount} {alertsCount === 1 ? 'Alerta' : 'Alertas'}
                 </Badge>
               </div>
             </div>

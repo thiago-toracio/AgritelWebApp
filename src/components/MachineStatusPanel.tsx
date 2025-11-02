@@ -52,7 +52,7 @@ const MachineStatusPanel = ({
   const categorizedMachines = useMemo(() => {
     const categories = {
       green: [] as MachineData[],  // Trabalhando
-      yellow: [] as MachineData[], // Manobra
+      yellow: [] as MachineData[], // Manobrando
       blue: [] as MachineData[],   // Deslocando
       red: [] as MachineData[],    // Parado
       gray: [] as MachineData[]    // Sem sinal
@@ -75,7 +75,7 @@ const MachineStatusPanel = ({
   const getStatusLabel = (color: string) => {
     const labels: Record<string, string> = {
       green: 'Trabalhando',
-      yellow: 'Manobra',
+      yellow: 'Manobrando',
       blue: 'Deslocando',
       red: 'Parado',
       gray: 'Sem Sinal'
