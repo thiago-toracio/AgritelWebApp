@@ -14,10 +14,10 @@ import {
   MapPin,
   Search
 } from 'lucide-react';
-import { MachineAlert } from '@/types/machine';
+import { MachineAlertData } from '@/types/machine';
 
 interface AlertsPanelProps {
-  alerts: MachineAlert[];
+  alerts: MachineAlertData[];
   isOpen: boolean;
   onClose: () => void;
   onMarkAsRead: (alertId: string) => void;
@@ -40,16 +40,26 @@ const AlertsPanel = ({
     const query = searchQuery.toLowerCase();
     return alerts.filter(alert => 
       alert.machineId.toLowerCase().includes(query) ||
-      alert.message.toLowerCase().includes(query)
+      alert.messageReason.toLowerCase().includes(query) ||
+      (alert.messageDetails && alert.messageDetails.toLowerCase().includes(query))
     );
   }, [alerts, searchQuery]);
 
-  const unreadAlerts = filteredAlerts.filter(alert => !alert.resolved);
-  const readAlerts = filteredAlerts.filter(alert => alert.resolved);
+  const unreadAlerts = filteredAlerts.filter(alert => !alert.isRead);
+  const readAlerts = filteredAlerts.filter(alert => alert.isRead);
   
   if (!isOpen) return null;
 
-  const getAlertIcon = (type: MachineAlert['type']) => {
+  // Determinar tipo de alerta baseado no alertType
+  const getAlertType = (alertType: number): 'maintenance' | 'warning' | 'error' => {
+    // Mapeamento de alertType para tipo visual
+    if (alertType === 1) return 'maintenance';
+    if (alertType === 2 || alertType === 3) return 'warning';
+    return 'error';
+  };
+
+  const getAlertIcon = (alertType: number) => {
+    const type = getAlertType(alertType);
     switch (type) {
       case 'maintenance':
         return <Wrench className="w-4 h-4" />;
@@ -62,7 +72,8 @@ const AlertsPanel = ({
     }
   };
 
-  const getAlertVariant = (type: MachineAlert['type']) => {
+  const getAlertVariant = (alertType: number) => {
+    const type = getAlertType(alertType);
     switch (type) {
       case 'maintenance':
         return 'secondary';
@@ -75,7 +86,8 @@ const AlertsPanel = ({
     }
   };
 
-  const getAlertColor = (type: MachineAlert['type']) => {
+  const getAlertColor = (alertType: number) => {
+    const type = getAlertType(alertType);
     switch (type) {
       case 'maintenance':
         return 'text-blue-500';
@@ -140,23 +152,26 @@ const AlertsPanel = ({
                       className="p-3 bg-card/50 hover:bg-muted/50 transition-colors rounded-lg"
                     >
                       <div className="flex items-start gap-3">
-                        <div className={getAlertColor(alert.type)}>
-                          {getAlertIcon(alert.type)}
+                        <div className={getAlertColor(alert.alertType)}>
+                          {getAlertIcon(alert.alertType)}
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-2">
-                            <Badge variant={getAlertVariant(alert.type)} className="text-xs">
-                              {alert.type === 'maintenance' ? 'Manutenção' : 
-                               alert.type === 'warning' ? 'Aviso' : 'Erro'}
+                            <Badge variant={getAlertVariant(alert.alertType)} className="text-xs">
+                              {getAlertType(alert.alertType) === 'maintenance' ? 'Manutenção' : 
+                               getAlertType(alert.alertType) === 'warning' ? 'Aviso' : 'Erro'}
                             </Badge>
                             <span className="text-xs text-muted-foreground">
                               Máquina {alert.machineId}
                             </span>
                           </div>
-                          <p className="text-sm text-card-foreground mb-2">{alert.message}</p>
+                          <p className="text-sm text-card-foreground font-medium mb-1">{alert.messageReason}</p>
+                          {alert.messageDetails && (
+                            <p className="text-xs text-muted-foreground mb-2">{alert.messageDetails}</p>
+                          )}
                           <div className="flex items-center gap-1 mb-3 text-xs text-muted-foreground">
                             <Clock className="w-3 h-3" />
-                            {alert.timestamp.toLocaleString('pt-BR')}
+                            {new Date(alert.startDateTime).toLocaleString('pt-BR')}
                           </div>
                           <div className="flex items-center gap-2">
                             <Button
@@ -213,17 +228,20 @@ const AlertsPanel = ({
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-2">
                             <Badge variant="secondary" className="text-xs">
-                              {alert.type === 'maintenance' ? 'Manutenção' : 
-                               alert.type === 'warning' ? 'Aviso' : 'Erro'}
+                              {getAlertType(alert.alertType) === 'maintenance' ? 'Manutenção' : 
+                               getAlertType(alert.alertType) === 'warning' ? 'Aviso' : 'Erro'}
                             </Badge>
                             <span className="text-xs text-muted-foreground">
                               Máquina {alert.machineId}
                             </span>
                           </div>
-                          <p className="text-sm text-muted-foreground mb-2">{alert.message}</p>
+                          <p className="text-sm text-muted-foreground font-medium mb-1">{alert.messageReason}</p>
+                          {alert.messageDetails && (
+                            <p className="text-xs text-muted-foreground/70 mb-2">{alert.messageDetails}</p>
+                          )}
                           <div className="flex items-center gap-1 mb-3 text-xs text-muted-foreground">
                             <Clock className="w-3 h-3" />
-                            {alert.timestamp.toLocaleString('pt-BR')}
+                            {new Date(alert.startDateTime).toLocaleString('pt-BR')}
                           </div>
                           <Button
                             size="sm"

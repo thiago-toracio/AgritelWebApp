@@ -56,16 +56,52 @@ export interface DeviceMessage {
   task: string;
 }
 
+export interface TripJourneyData {
+  hourmeterIgnition: number;
+  hourmeterWorked: number;
+  fuelConsumption: number;
+  applicationTotal: number;
+  area: number;
+  odometer: number;
+  hourmeterControl: string | null;
+  journeyStartsAt: string | null;
+}
+
+export interface MachineAlertData {
+  id: string;
+  alertType: number;
+  reachedValue: number | null;
+  timeSpanExceeded: string | null;
+  configuredMaxValue: number | null;
+  configuredMinValue: number | null;
+  startDateTime: string;
+  endDateTime: string;
+  machineId: string;
+  usedMessagesIds: string[];
+  flagWhatsAppNotified: boolean;
+  flagAppNotified: boolean;
+  whatsAppNotificationCount: number | null;
+  isInvalid: boolean | null;
+  customAlertReason: string | null;
+  customAlertDetails: string | null;
+  messageReason: string;
+  messageDetails: string;
+  isRead: boolean;
+}
+
 export interface MachineData {
   vehicleInfo: VehicleInfoView;
   telemetry: TelemetryData;
   deviceMessage: DeviceMessage;
   deviceState: DeviceState;
+  tripJourney: TripJourneyData;
+  alerts: MachineAlertData[];
   icon: string;
 }
 
 export interface MachineLocation extends LocationData {}
 
+// Legacy alert interface for backwards compatibility
 export interface MachineAlert {
   id: string;
   machineId: string;
