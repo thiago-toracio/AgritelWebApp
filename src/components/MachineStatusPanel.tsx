@@ -212,7 +212,7 @@ const MachineStatusPanel = ({
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-border bg-card">
           <div className="flex items-center space-x-2">
-            <h2 className="text-xl font-bold">Status das Máquinas</h2>
+            <h2 className="text-xl font-bold">Status atual das Máquinas</h2>
             <Badge variant="secondary">{filteredMachines.length}</Badge>
           </div>
           <Button

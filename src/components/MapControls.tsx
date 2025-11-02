@@ -344,7 +344,7 @@ const MapControls = ({
           size="lg"
         >
           <Grid2X2 className="w-6 h-6 mr-2" />
-         Informações Gerais
+          Informações da Jornada
         </Button>
       </div>
     </>
