@@ -100,13 +100,3 @@ export interface MachineData {
 }
 
 export interface MachineLocation extends LocationData {}
-
-// Legacy alert interface for backwards compatibility
-export interface MachineAlert {
-  id: string;
-  machineId: string;
-  type: 'warning' | 'error' | 'maintenance';
-  message: string;
-  timestamp: Date;
-  resolved: boolean;
-}
