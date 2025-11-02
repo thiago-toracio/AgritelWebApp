@@ -139,32 +139,40 @@ const MachineStatusPanel = ({
             </Badge>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 text-sm mb-3">
-            <div className="flex items-center space-x-2">
-              <Gauge className="w-4 h-4 text-muted-foreground" />
-              <span>{machineDataAdapter.getSpeed(machine).toFixed(1)} km/h</span>
-            </div>
-            
-            <div className="flex items-center space-x-2">
-              <Fuel className="w-4 h-4 text-muted-foreground" />
-              <span>{machineDataAdapter.getFuel(machine)}%</span>
+          <div className="space-y-3 text-sm mb-3">
+            {/* Telemetry data in one line */}
+            <div className="flex items-center justify-between gap-3 py-2 px-3 bg-muted/30 rounded-md">
+              <div className="flex items-center space-x-2">
+                <Gauge className="w-4 h-4 text-muted-foreground" />
+                <span>{machineDataAdapter.getSpeed(machine).toFixed(1)} km/h</span>
+              </div>
+              
+              <div className="flex items-center space-x-2">
+                <Fuel className="w-4 h-4 text-muted-foreground" />
+                <span>{machineDataAdapter.getFuel(machine).toFixed(1)}L</span>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <Clock className="w-4 h-4 text-muted-foreground" />
+                <span>{machineDataAdapter.getOperationHours(machine).toFixed(1)}h</span>
+              </div>
             </div>
 
             {operator && (
-              <div className="flex items-center space-x-2 col-span-2">
+              <div className="flex items-center space-x-2">
                 <span className="text-muted-foreground">Operador:</span>
                 <span className="font-medium">{operator}</span>
               </div>
             )}
 
             {area && (
-              <div className="flex items-center space-x-2 col-span-2">
+              <div className="flex items-center space-x-2">
                 <MapPin className="w-4 h-4 text-muted-foreground" />
                 <span>{area}</span>
               </div>
             )}
 
-            <div className="flex items-center space-x-2 col-span-2">
+            <div className="flex items-center space-x-2">
               <Clock className="w-4 h-4 text-muted-foreground" />
               <span className="text-muted-foreground">
                 Atualizado: {formatTime(lastUpdate)}
