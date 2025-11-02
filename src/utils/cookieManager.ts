@@ -19,8 +19,15 @@ export const cookieManager = {
       const expiryDate = new Date();
       expiryDate.setHours(expiryDate.getHours() + COOKIE_DURATION_HOURS);
       
-      document.cookie = `${COOKIE_NAME}=${JSON.stringify(readAlerts)}; expires=${expiryDate.toUTCString()}; path=/; SameSite=Strict`;
-      console.log('✅ Cookie salvo. Novos alertas lidos:', readAlerts);
+      const cookieValue = encodeURIComponent(JSON.stringify(readAlerts));
+      document.cookie = `${COOKIE_NAME}=${cookieValue}; expires=${expiryDate.toUTCString()}; path=/; SameSite=Lax`;
+      
+      console.log('✅ Cookie salvo:', document.cookie);
+      console.log('✅ Novos alertas lidos:', readAlerts);
+      
+      // Verificar se o cookie foi realmente salvo
+      const verification = cookieManager.getReadAlerts();
+      console.log('🔍 Verificação imediata:', verification);
     } else {
       console.log('⚠️ Alerta já estava marcado como lido');
     }
@@ -30,6 +37,7 @@ export const cookieManager = {
    * Recupera todos os IDs de alertas lidos do cookie
    */
   getReadAlerts: (): string[] => {
+    console.log('🔍 Todos os cookies:', document.cookie);
     const cookies = document.cookie.split(';');
     const readAlertsCookie = cookies.find(cookie => 
       cookie.trim().startsWith(`${COOKIE_NAME}=`)
@@ -69,13 +77,14 @@ export const cookieManager = {
     const expiryDate = new Date();
     expiryDate.setHours(expiryDate.getHours() + COOKIE_DURATION_HOURS);
     
-    document.cookie = `${COOKIE_NAME}=${JSON.stringify(updatedAlerts)}; expires=${expiryDate.toUTCString()}; path=/; SameSite=Strict`;
+    const cookieValue = encodeURIComponent(JSON.stringify(updatedAlerts));
+    document.cookie = `${COOKIE_NAME}=${cookieValue}; expires=${expiryDate.toUTCString()}; path=/; SameSite=Lax`;
   },
 
   /**
    * Limpa todos os alertas lidos do cookie
    */
   clearReadAlerts: (): void => {
-    document.cookie = `${COOKIE_NAME}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; SameSite=Strict`;
+    document.cookie = `${COOKIE_NAME}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; SameSite=Lax`;
   }
 };
