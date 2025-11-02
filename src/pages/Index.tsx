@@ -97,6 +97,11 @@ const Index = () => {
     
     // Focar na máquina no mapa
     setFocusOnMachine(machineId);
+    
+    // Limpar o foco após um tempo para não ficar preso
+    setTimeout(() => {
+      setFocusOnMachine(undefined);
+    }, 2000);
   };
 
   const handleCloseSidebar = () => {
@@ -155,8 +160,10 @@ const Index = () => {
     // Focar na máquina no mapa
     setFocusOnMachine(machineId);
     
-    // TODO: Focar na máquina no mapa
-    console.log(`Focando na máquina ${machineId} no mapa`);
+    // Limpar o foco após um tempo para não ficar preso
+    setTimeout(() => {
+      setFocusOnMachine(undefined);
+    }, 2000);
   };
 
   const selectedMachineData = selectedMachine 
