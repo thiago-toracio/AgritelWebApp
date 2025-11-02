@@ -55,8 +55,8 @@ const MachineMarker: React.FC<MachineMarkerProps> = ({ machine, isSelected, onCl
       </div>
       
       {/* Hover tooltip with machine details */}
-      <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-[9999]">
-        <div className="bg-card border border-border rounded-lg px-3 py-2 shadow-overlay whitespace-nowrap">
+      <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-4 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-[10000]">
+        <div className="bg-card border border-border rounded-lg px-3 py-2 shadow-overlay whitespace-nowrap backdrop-blur-sm">
           <div className="text-sm font-medium text-card-foreground">{name}</div>
           <div className="text-xs text-muted-foreground">{statusTooltip}</div>
           <div className="text-xs text-muted-foreground">{machineDataAdapter.getSpeed(machine)} km/h</div>
