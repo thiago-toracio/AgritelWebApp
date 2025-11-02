@@ -260,9 +260,11 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
 
                             <div className="flex items-center justify-between text-xs pt-2">
                               <div className="flex items-center space-x-1">
-                                <Badge variant="outline" className="text-xs px-2 py-0">
-                                  {machine.deviceMessage.transmissionReason || 'GSM'}
-                                </Badge>
+                                {machine.deviceMessage.transmissionReason && (
+                                  <Badge variant="outline" className="text-xs px-2 py-0">
+                                    {machine.deviceMessage.transmissionReason}
+                                  </Badge>
+                                )}
                               </div>
                               <span className="text-muted-foreground">
                                 {format(new Date(machine.deviceMessage.lastUpdate), "dd/MM/yyyy HH:mm", { locale: ptBR })}
@@ -272,33 +274,41 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
 
                           <div className="mt-3 pt-3 border-t border-border">
                             <div className="grid grid-cols-4 gap-2">
-                              <div className="flex flex-col items-center">
-                                <Clock className="w-4 h-4 text-muted-foreground mb-1" />
-                                <span className="text-xs font-medium text-card-foreground">
-                                  {machine.tripJourney.hourmeterWorked.toFixed(1)}
-                                </span>
-                              </div>
-                              <div className="flex flex-col items-center">
-                                <GridIcon className="w-4 h-4 text-muted-foreground mb-1" />
-                                <span className="text-xs font-medium text-card-foreground">
-                                  {machine.tripJourney.area.toFixed(1)}
-                                </span>
-                              </div>
-                              <div className="flex flex-col items-center">
-                                <Droplets className="w-4 h-4 text-muted-foreground mb-1" />
-                                <span className="text-xs font-medium text-card-foreground">
-                                  {machine.tripJourney.applicationTotal.toFixed(1)}
-                                </span>
-                              </div>
-                              <div className="flex flex-col items-center">
-                                <Fuel className="w-4 h-4 text-muted-foreground mb-1" />
-                                <span className={cn(
-                                  "text-xs font-medium",
-                                  machineDataAdapter.getFuel(machine) < 20 ? "text-warning" : "text-card-foreground"
-                                )}>
-                                  {machineDataAdapter.getFuel(machine)}
-                                </span>
-                              </div>
+                              {machine.tripJourney.hourmeterWorked > 0 && (
+                                <div className="flex flex-col items-center">
+                                  <Clock className="w-4 h-4 text-muted-foreground mb-1" />
+                                  <span className="text-xs font-medium text-card-foreground">
+                                    {machine.tripJourney.hourmeterWorked.toFixed(1)}
+                                  </span>
+                                </div>
+                              )}
+                              {machine.tripJourney.area > 0 && (
+                                <div className="flex flex-col items-center">
+                                  <GridIcon className="w-4 h-4 text-muted-foreground mb-1" />
+                                  <span className="text-xs font-medium text-card-foreground">
+                                    {machine.tripJourney.area.toFixed(1)}
+                                  </span>
+                                </div>
+                              )}
+                              {machine.tripJourney.applicationTotal > 0 && (
+                                <div className="flex flex-col items-center">
+                                  <Droplets className="w-4 h-4 text-muted-foreground mb-1" />
+                                  <span className="text-xs font-medium text-card-foreground">
+                                    {machine.tripJourney.applicationTotal.toFixed(1)}
+                                  </span>
+                                </div>
+                              )}
+                              {machineDataAdapter.getFuel(machine) > 0 && (
+                                <div className="flex flex-col items-center">
+                                  <Fuel className="w-4 h-4 text-muted-foreground mb-1" />
+                                  <span className={cn(
+                                    "text-xs font-medium",
+                                    machineDataAdapter.getFuel(machine) < 20 ? "text-warning" : "text-card-foreground"
+                                  )}>
+                                    {machineDataAdapter.getFuel(machine)}
+                                  </span>
+                                </div>
+                              )}
                             </div>
                           </div>
                         </CardContent>
