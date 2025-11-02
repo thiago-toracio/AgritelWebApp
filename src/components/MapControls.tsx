@@ -62,13 +62,14 @@ const MapControls = ({
     { value: 60, label: '60s' }
   ];
 
-  // Generate hourly options for the last 48 hours
+  // Generate hourly options from +1 hour in future to 48 hours in past
   const journeyStartOptions = useMemo(() => {
     const now = new Date();
     const currentHour = startOfHour(now);
     const options = [];
     
-    for (let i = 0; i <= 48; i++) {
+    // Add 1 hour in the future
+    for (let i = -1; i <= 48; i++) {
       const hourDate = subHours(currentHour, i);
       options.push({
         value: hourDate.toISOString(),
