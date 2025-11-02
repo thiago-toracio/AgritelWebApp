@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Search, Filter, Grid, X, Fuel, Clock, MapPin, Calendar } from 'lucide-react';
+import { Search, Filter, Grid, X, Fuel, Clock, MapPin, Calendar, Gauge, Grid as GridIcon, Droplets } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { machineDataAdapter } from '@/utils/machineDataAdapter';
 import { format } from 'date-fns';
@@ -237,54 +237,68 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                           </div>
 
                           <div className="space-y-2">
-                            <div className="flex items-center justify-between text-xs">
-                              <div className="flex items-center space-x-1">
-                                <MapPin className="w-3 h-3 text-muted-foreground" />
-                                <span className="text-muted-foreground">Localização</span>
+                            {machine.tripJourney.journeyStartsAt && (
+                              <div className="text-xs">
+                                <span className="text-muted-foreground">Apontamento {machine.deviceMessage.area ? `${machine.deviceMessage.area} às ` : 'às '}</span>
+                                <span className="text-card-foreground font-medium">
+                                  {format(new Date(machine.tripJourney.journeyStartsAt), "dd/MM/yyyy HH:mm", { locale: ptBR })}
+                                </span>
                               </div>
-                              <span className="text-card-foreground">
-                                {machine.deviceMessage.gps.latitude.toFixed(4)}, {machine.deviceMessage.gps.longitude.toFixed(4)}
-                              </span>
-                            </div>
+                            )}
+                            
+                            {machine.deviceMessage.task && (
+                              <div className="text-xs">
+                                <span className="text-card-foreground">{machine.deviceMessage.task}</span>
+                              </div>
+                            )}
 
-                            <div className="flex items-center justify-between text-xs">
-                              <div className="flex items-center space-x-1">
-                                <Fuel className="w-3 h-3 text-muted-foreground" />
-                                <span className="text-muted-foreground">Combustível</span>
+                            {machine.deviceMessage.operator && (
+                              <div className="text-xs text-muted-foreground">
+                                <span className="text-card-foreground">{machine.deviceMessage.operator}</span>
                               </div>
-                              <span className={cn(
-                                "font-medium",
-                                machineDataAdapter.getFuel(machine) < 20 ? "text-warning" : "text-card-foreground"
-                              )}>
-                                {machineDataAdapter.getFuel(machine)}%
-                              </span>
-                            </div>
+                            )}
 
-                            <div className="flex items-center justify-between text-xs">
+                            <div className="flex items-center justify-between text-xs pt-2">
                               <div className="flex items-center space-x-1">
-                                <Clock className="w-3 h-3 text-muted-foreground" />
-                                <span className="text-muted-foreground">Velocidade</span>
+                                <Badge variant="outline" className="text-xs px-2 py-0">
+                                  {machine.deviceMessage.transmissionReason || 'GSM'}
+                                </Badge>
                               </div>
-                              <span className={cn("font-medium", getStatusColor(machine.deviceState.color))}>
-                                {machineDataAdapter.getSpeed(machine)} km/h
+                              <span className="text-muted-foreground">
+                                {format(new Date(machine.deviceMessage.lastUpdate), "dd/MM/yyyy HH:mm", { locale: ptBR })}
                               </span>
                             </div>
                           </div>
 
-                          <div className="mt-3 pt-3 border-t border-border space-y-2">
-                            {machine.deviceMessage.operator && (
-                              <p className="text-xs text-muted-foreground">
-                                Operador: <span className="text-card-foreground">{machine.deviceMessage.operator}</span>
-                              </p>
-                            )}
-                            <div className="flex items-center justify-between text-xs">
-                              <div className="flex items-center space-x-1">
-                                <Calendar className="w-3 h-3 text-muted-foreground" />
-                                <span className="text-muted-foreground">Atualizado em:</span>
+                          <div className="mt-3 pt-3 border-t border-border">
+                            <div className="grid grid-cols-4 gap-2">
+                              <div className="flex flex-col items-center">
+                                <Clock className="w-4 h-4 text-muted-foreground mb-1" />
+                                <span className="text-xs font-medium text-card-foreground">
+                                  {machine.tripJourney.hourmeterWorked.toFixed(1)}
+                                </span>
                               </div>
-                              <span className="text-card-foreground">
-                                {format(new Date(machine.deviceMessage.lastUpdate), "dd/MM/yyyy HH:mm:ss", { locale: ptBR })}
-                              </span>
+                              <div className="flex flex-col items-center">
+                                <GridIcon className="w-4 h-4 text-muted-foreground mb-1" />
+                                <span className="text-xs font-medium text-card-foreground">
+                                  {machine.tripJourney.area.toFixed(1)}
+                                </span>
+                              </div>
+                              <div className="flex flex-col items-center">
+                                <Droplets className="w-4 h-4 text-muted-foreground mb-1" />
+                                <span className="text-xs font-medium text-card-foreground">
+                                  {machine.tripJourney.applicationTotal.toFixed(1)}
+                                </span>
+                              </div>
+                              <div className="flex flex-col items-center">
+                                <Fuel className="w-4 h-4 text-muted-foreground mb-1" />
+                                <span className={cn(
+                                  "text-xs font-medium",
+                                  machineDataAdapter.getFuel(machine) < 20 ? "text-warning" : "text-card-foreground"
+                                )}>
+                                  {machineDataAdapter.getFuel(machine)}
+                                </span>
+                              </div>
                             </div>
                           </div>
                         </CardContent>
