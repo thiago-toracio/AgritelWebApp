@@ -8,6 +8,7 @@ import MachineSidebar from '@/components/MachineSidebar';
 import MapControls, { MapStyle } from '@/components/MapControls';
 import AlertsPanel from '@/components/AlertsPanel';
 import MachineStatusPanel from '@/components/MachineStatusPanel';
+import { cookieManager } from '@/utils/cookieManager';
 
 const Index = () => {
   const [machines, setMachines] = useState<MachineData[]>([]);
@@ -69,9 +70,14 @@ const Index = () => {
     return allAlerts;
   }, [machines]);
 
-  // Atualizar alertas quando as máquinas mudarem
+  // Atualizar alertas quando as máquinas mudarem e aplicar estado de leitura dos cookies
   useEffect(() => {
-    setAlerts(consolidatedAlerts);
+    const readAlertIds = cookieManager.getReadAlerts();
+    const alertsWithReadState = consolidatedAlerts.map(alert => ({
+      ...alert,
+      isRead: alert.isRead || readAlertIds.includes(alert.id)
+    }));
+    setAlerts(alertsWithReadState);
   }, [consolidatedAlerts]);
 
   const handleMachineSelect = (machineId: string) => {
@@ -121,6 +127,10 @@ const Index = () => {
   };
 
   const handleMarkAsRead = (alertId: string) => {
+    // Salvar no cookie (48h)
+    cookieManager.saveReadAlert(alertId);
+    
+    // Atualizar estado local
     setAlerts(prev => prev.map(alert => 
       alert.id === alertId ? { ...alert, isRead: true } : alert
     ));
