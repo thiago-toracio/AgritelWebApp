@@ -1,5 +1,5 @@
 import React from 'react';
-import { MachineData, MachineAlert } from '@/types/machine';
+import { MachineData, MachineAlertData } from '@/types/machine';
 import { AlertTriangle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import MachineIcon from './MachineIcons';
@@ -11,7 +11,7 @@ interface MachineMarkerProps {
   machine: MachineData;
   isSelected: boolean;
   onClick: () => void;
-  alerts: MachineAlert[];
+  alerts: MachineAlertData[];
 }
 
 const MachineMarker: React.FC<MachineMarkerProps> = ({ machine, isSelected, onClick, alerts }) => {

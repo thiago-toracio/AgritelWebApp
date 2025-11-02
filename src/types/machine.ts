@@ -67,18 +67,6 @@ export interface TripJourneyData {
   journeyStartsAt: string | null;
 }
 
-export interface MachineData {
-  vehicleInfo: VehicleInfoView;
-  telemetry: TelemetryData;
-  deviceMessage: DeviceMessage;
-  deviceState: DeviceState;
-  tripJourney: TripJourneyData;
-  alerts: MachineAlertData[]
-  icon: string;
-}
-
-export interface MachineLocation extends LocationData {}
-
 export interface MachineAlertData {
   id: string;
   alertType: number;
@@ -98,5 +86,27 @@ export interface MachineAlertData {
   customAlertDetails: string | null;
   messageReason: string;
   messageDetails: string;
-  isRead: boolean
+  isRead: boolean;
+}
+
+export interface MachineData {
+  vehicleInfo: VehicleInfoView;
+  telemetry: TelemetryData;
+  deviceMessage: DeviceMessage;
+  deviceState: DeviceState;
+  tripJourney: TripJourneyData;
+  alerts: MachineAlertData[];
+  icon: string;
+}
+
+export interface MachineLocation extends LocationData {}
+
+// Legacy alert interface for backwards compatibility
+export interface MachineAlert {
+  id: string;
+  machineId: string;
+  type: 'warning' | 'error' | 'maintenance';
+  message: string;
+  timestamp: Date;
+  resolved: boolean;
 }

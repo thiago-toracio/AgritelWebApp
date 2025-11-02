@@ -56,56 +56,23 @@ const Index = () => {
     }
   };
 
-  // Gerar alertas com base nas máquinas
-  const generatedAlerts = useMemo(() => {
-    const newAlerts: MachineAlertData[] = [];
+  // Consolidar alertas de todas as máquinas
+  const consolidatedAlerts = useMemo(() => {
+    const allAlerts: MachineAlertData[] = [];
     
     machines.forEach(machine => {
-      // Alerta de manutenção
-      if (machine.deviceState.status === 'maintenance') {
-        newAlerts.push({
-          id: `maintenance-${machine.vehicleInfo.id}`,
-          machineId: machine.vehicleInfo.id,
-          type: 'maintenance',
-          message: `${machine.vehicleInfo.name} requer manutenção programada`,
-          timestamp: new Date(Date.now() - Math.random() * 3600000),
-          resolved: Math.random() > 0.7
-        });
-      }
-      
-      // Alerta de combustível baixo
-      const fuelLevel = machineDataAdapter.getFuel(machine);
-      if (fuelLevel < 20) {
-        newAlerts.push({
-          id: `fuel-${machine.vehicleInfo.id}`,
-          machineId: machine.vehicleInfo.id,
-          type: 'warning',
-          message: `Combustível baixo em ${machine.vehicleInfo.name} (${fuelLevel}%)`,
-          timestamp: new Date(Date.now() - Math.random() * 1800000),
-          resolved: Math.random() > 0.8
-        });
-      }
-      
-      // Alertas de telemetria
-      if (machine.telemetry && machine.telemetry.engineTemp && machine.telemetry.engineTemp > 90) {
-        newAlerts.push({
-          id: `temp-${machine.vehicleInfo.id}`,
-          machineId: machine.vehicleInfo.id,
-          type: 'error',
-          message: `Temperatura do motor alta em ${machine.vehicleInfo.name} (${machine.telemetry.engineTemp}°C)`,
-          timestamp: new Date(Date.now() - Math.random() * 900000),
-          resolved: Math.random() > 0.9
-        });
+      if (machine.alerts && machine.alerts.length > 0) {
+        allAlerts.push(...machine.alerts);
       }
     });
     
-    return newAlerts;
+    return allAlerts;
   }, [machines]);
 
   // Atualizar alertas quando as máquinas mudarem
-  useMemo(() => {
-    setAlerts(generatedAlerts);
-  }, [generatedAlerts]);
+  useEffect(() => {
+    setAlerts(consolidatedAlerts);
+  }, [consolidatedAlerts]);
 
   const handleMachineSelect = (machineId: string) => {
     setSelectedMachine(machineId);
@@ -155,7 +122,7 @@ const Index = () => {
 
   const handleMarkAsRead = (alertId: string) => {
     setAlerts(prev => prev.map(alert => 
-      alert.id === alertId ? { ...alert, resolved: true } : alert
+      alert.id === alertId ? { ...alert, isRead: true } : alert
     ));
   };
 
