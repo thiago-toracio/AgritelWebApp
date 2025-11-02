@@ -184,7 +184,7 @@ const MachineSidebar = ({ machine, isOpen, onClose }: MachineSidebarProps) => {
         {/* General Information - Trip Journey */}
         <Card className="mb-6">
           <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium">Informações Gerais</CardTitle>
+            <CardTitle className="text-sm font-medium">Informações da Jornada</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="flex items-center justify-between">
