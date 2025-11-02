@@ -20,6 +20,7 @@ const Index = () => {
   const [statusPanelFilter, setStatusPanelFilter] = useState<string | undefined>();
   const [alerts, setAlerts] = useState<MachineAlert[]>([]);
   const [focusOnMachine, setFocusOnMachine] = useState<string | undefined>();
+  const [journeyStartDate, setJourneyStartDate] = useState<string | undefined>();
   
   // Load map style from localStorage or default to 'satellite'
   const [mapStyle, setMapStyle] = useState<MapStyle>(() => {
@@ -27,19 +28,25 @@ const Index = () => {
     return (saved as MapStyle) || 'satellite';
   });
 
-  // Fetch machines on mount
+  // Fetch machines on mount and when journey start date changes
   useEffect(() => {
     loadMachines(true);
   }, []);
+
+  useEffect(() => {
+    if (journeyStartDate !== undefined) {
+      loadMachines();
+    }
+  }, [journeyStartDate]);
 
   const loadMachines = async (isInitial = false) => {
     try {
       if (isInitial) {
         setIsInitialLoading(true);
       }
-      const data = await machineService.getMachines();
+      const data = await machineService.getMachines(journeyStartDate);
       setMachines(data);
-      console.log('✅ Máquinas carregadas:', data.length);
+      console.log('✅ Máquinas carregadas:', data.length, journeyStartDate ? `(desde ${journeyStartDate})` : '');
     } catch (error) {
       console.error('Failed to load machines:', error);
     } finally {
@@ -208,6 +215,7 @@ const Index = () => {
         onMapStyleChange={handleMapStyleChange}
         currentMapStyle={mapStyle}
         onRefresh={loadMachines}
+        onJourneyStartChange={setJourneyStartDate}
       />
 
       {/* Machine Grid Overlay */}
