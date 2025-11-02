@@ -62,6 +62,9 @@ const MapControls = ({
     { value: 60, label: '60s' }
   ];
 
+  // State to force regeneration of options when hour changes
+  const [currentHourKey, setCurrentHourKey] = useState(() => startOfHour(new Date()).getTime());
+
   // Generate hourly options from current hour to 47 hours in past
   const journeyStartOptions = useMemo(() => {
     const now = new Date();
@@ -78,7 +81,22 @@ const MapControls = ({
     }
     
     return options;
-  }, []);
+  }, [currentHourKey]);
+
+  // Update options when a new hour starts
+  useEffect(() => {
+    const checkHourChange = () => {
+      const currentHourTime = startOfHour(new Date()).getTime();
+      if (currentHourTime !== currentHourKey) {
+        setCurrentHourKey(currentHourTime);
+      }
+    };
+
+    // Check every minute if the hour has changed
+    const interval = setInterval(checkHourChange, 60000);
+    
+    return () => clearInterval(interval);
+  }, [currentHourKey]);
 
   // Find the start of today (00:00) as default
   const getDefaultJourneyStart = () => {
