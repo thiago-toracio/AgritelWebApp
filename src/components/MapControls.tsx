@@ -2,6 +2,9 @@ import { useState, useEffect, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { 
   Grid2X2, 
   Map,
@@ -10,11 +13,13 @@ import {
   CornerDownRight,
   StopCircle,
   ArrowRightLeft,
-  RefreshCw
+  RefreshCw,
+  Calendar
 } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 import { MachineData, MachineAlert } from '@/types/machine';
 import { machineDataAdapter } from '@/utils/machineDataAdapter';
+import { format, subHours, startOfHour } from 'date-fns';
 
 export type MapStyle = 'satellite' | 'streets' | 'outdoors' | 'dark';
 
@@ -40,8 +45,70 @@ const MapControls = ({
   onRefresh
 }: MapControlsProps) => {
   const [showMapStyles, setShowMapStyles] = useState(false);
-  const [countdown, setCountdown] = useState(60);
+  const [openRefreshPopover, setOpenRefreshPopover] = useState(false);
+  
+  // Load refresh interval from localStorage or default to 30s
+  const [refreshInterval, setRefreshInterval] = useState<number>(() => {
+    const saved = localStorage.getItem('refreshInterval');
+    return saved ? parseInt(saved) : 30;
+  });
+  
+  const [countdown, setCountdown] = useState(refreshInterval);
   const alertsCount = alerts.filter(alert => !alert.resolved).length;
+
+  const refreshIntervals = [
+    { value: 15, label: '15s' },
+    { value: 30, label: '30s' },
+    { value: 60, label: '60s' }
+  ];
+
+  // State to force regeneration of options when hour changes
+  const [currentHourKey, setCurrentHourKey] = useState(() => startOfHour(new Date()).getTime());
+
+  // Generate hourly options from current hour to 47 hours in past
+  const journeyStartOptions = useMemo(() => {
+    const now = new Date();
+    const currentHour = startOfHour(now);
+    const options = [];
+    
+    // From current hour (0) to 47 hours in the past
+    for (let i = 0; i <= 47; i++) {
+      const hourDate = subHours(currentHour, i);
+      options.push({
+        value: hourDate.toISOString(),
+        label: `A partir das ${format(hourDate, 'dd/MM/yyyy HH:00')}`
+      });
+    }
+    
+    return options;
+  }, [currentHourKey]);
+
+  // Update options when a new hour starts
+  useEffect(() => {
+    const checkHourChange = () => {
+      const currentHourTime = startOfHour(new Date()).getTime();
+      if (currentHourTime !== currentHourKey) {
+        setCurrentHourKey(currentHourTime);
+      }
+    };
+
+    // Check every minute if the hour has changed
+    const interval = setInterval(checkHourChange, 60000);
+    
+    return () => clearInterval(interval);
+  }, [currentHourKey]);
+
+  // Find the start of today (00:00) as default
+  const getDefaultJourneyStart = () => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return journeyStartOptions.find(option => {
+      const optionDate = new Date(option.value);
+      return optionDate.getTime() === today.getTime();
+    })?.value || journeyStartOptions[0].value;
+  };
+
+  const [selectedJourneyStart, setSelectedJourneyStart] = useState(getDefaultJourneyStart());
 
   // Timer de atualização automática
   useEffect(() => {
@@ -49,14 +116,22 @@ const MapControls = ({
       setCountdown((prev) => {
         if (prev <= 1) {
           onRefresh();
-          return 60;
+          return refreshInterval;
         }
         return prev - 1;
       });
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [onRefresh]);
+  }, [onRefresh, refreshInterval]);
+
+  // Handle refresh interval change
+  const handleRefreshIntervalChange = (interval: number) => {
+    setRefreshInterval(interval);
+    setCountdown(interval);
+    localStorage.setItem('refreshInterval', interval.toString());
+    setOpenRefreshPopover(false);
+  };
 
   const mapStyles: { value: MapStyle; label: string }[] = [
     { value: 'satellite', label: 'Satélite' },
@@ -81,17 +156,37 @@ const MapControls = ({
 
   return (
     <>
-      {/* Status Bar */}
-      <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-40 max-w-5xl">
+      <TooltipProvider>
+        {/* Status Bar */}
+        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-40 max-w-5xl">
         <Card className="bg-gradient-overlay border-border/50 shadow-overlay backdrop-blur-sm">
           <CardContent className="p-3">
-            <div className="flex items-center space-x-3 md:space-x-4 overflow-x-auto scrollbar-hide whitespace-nowrap justify-center px-2">
-              <div className="flex items-center space-x-1.5">
-                <RefreshCw className="w-4 h-4 text-muted-foreground" />
-                <span className="text-xs text-muted-foreground whitespace-nowrap">
-                  {countdown}s
-                </span>
-              </div>
+            <div className="flex items-center space-x-2 md:space-x-3 overflow-x-auto scrollbar-hide whitespace-nowrap justify-center px-2">
+              <Popover open={openRefreshPopover} onOpenChange={setOpenRefreshPopover}>
+                <PopoverTrigger asChild>
+                  <button className="flex items-center space-x-1.5 hover:bg-muted/50 px-2 py-1 rounded transition-colors cursor-pointer">
+                    <RefreshCw className="w-4 h-4 text-muted-foreground" />
+                    <span className="text-xs text-muted-foreground whitespace-nowrap">
+                      {countdown.toString().padStart(2, '0')}s
+                    </span>
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-2 bg-card border-border/50 shadow-lg" align="start">
+                  <div className="flex flex-col space-y-1">
+                    {refreshIntervals.map((interval) => (
+                      <Button
+                        key={interval.value}
+                        variant={refreshInterval === interval.value ? "default" : "ghost"}
+                        size="sm"
+                        onClick={() => handleRefreshIntervalChange(interval.value)}
+                        className="w-full justify-start text-sm"
+                      >
+                        {interval.label}
+                      </Button>
+                    ))}
+                  </div>
+                </PopoverContent>
+              </Popover>
               
               <button
                 onClick={() => onToggleStatus('green')}
@@ -145,7 +240,7 @@ const MapControls = ({
                 </span>
               </button>
               
-              <div className="flex items-center space-x-1.5">
+              <div className="flex items-center space-x-1">
                 <AlertTriangle className="w-5 h-5 text-warning" />
                 <Badge 
                   variant={alertsCount > 0 ? "destructive" : "secondary"}
@@ -155,10 +250,36 @@ const MapControls = ({
                   {alertsCount} {alertsCount === 1 ? 'Alerta' : 'Alertas'}
                 </Badge>
               </div>
+
+              <div className="flex items-center space-x-1.5">
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div className="flex items-center">
+                      <Calendar className="w-4 h-4 text-muted-foreground" />
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Início da Jornada</p>
+                  </TooltipContent>
+                </Tooltip>
+                <Select value={selectedJourneyStart} onValueChange={setSelectedJourneyStart}>
+                  <SelectTrigger className="w-[200px] h-7 text-xs bg-[#00b359] text-white border-[#00b359] hover:bg-[#00a04f]">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="max-h-[300px]">
+                    {journeyStartOptions.map((option) => (
+                      <SelectItem key={option.value} value={option.value} className="text-xs">
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
           </CardContent>
         </Card>
       </div>
+      </TooltipProvider>
 
       {/* Map Controls */}
       <div className="absolute left-4 top-1/2 transform -translate-y-1/2 z-40">
