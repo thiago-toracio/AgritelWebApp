@@ -181,17 +181,85 @@ const MachineSidebar = ({ machine, isOpen, onClose }: MachineSidebarProps) => {
           </Card>
         )}
 
-        {/* Fuel & Hours */}
+        {/* General Information - Trip Journey */}
         <Card className="mb-6">
           <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium">Consumo</CardTitle>
+            <CardTitle className="text-sm font-medium">Informações Gerais</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <Clock className="w-4 h-4 text-muted-foreground" />
+                <span className="text-sm text-muted-foreground">Horímetro Ignição</span>
+              </div>
+              <span className="text-sm text-card-foreground font-medium">
+                {machine.tripJourney.hourmeterIgnition.toFixed(1)}h
+              </span>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <Clock className="w-4 h-4 text-muted-foreground" />
+                <span className="text-sm text-muted-foreground">Horímetro Trabalhado</span>
+              </div>
+              <span className="text-sm text-card-foreground font-medium">
+                {machine.tripJourney.hourmeterWorked.toFixed(1)}h
+              </span>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <Fuel className="w-4 h-4 text-muted-foreground" />
+                <span className="text-sm text-muted-foreground">Consumo de Combustível</span>
+              </div>
+              <span className="text-sm text-card-foreground font-medium">
+                {machine.tripJourney.fuelConsumption.toFixed(1)}L
+              </span>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <Droplets className="w-4 h-4 text-muted-foreground" />
+                <span className="text-sm text-muted-foreground">Aplicação Total</span>
+              </div>
+              <span className="text-sm text-card-foreground font-medium">
+                {machine.tripJourney.applicationTotal.toFixed(1)}L
+              </span>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <MapPin className="w-4 h-4 text-muted-foreground" />
+                <span className="text-sm text-muted-foreground">Área Trabalhada</span>
+              </div>
+              <span className="text-sm text-card-foreground font-medium">
+                {machine.tripJourney.area.toFixed(2)} ha
+              </span>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <Gauge className="w-4 h-4 text-muted-foreground" />
+                <span className="text-sm text-muted-foreground">Odômetro</span>
+              </div>
+              <span className="text-sm text-card-foreground font-medium">
+                {machine.tripJourney.odometer.toFixed(1)} km
+              </span>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Fuel Level */}
+        <Card className="mb-6">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-medium">Combustível</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center space-x-2">
                   <Fuel className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">Combustível</span>
+                  <span className="text-sm text-muted-foreground">Nível</span>
                 </div>
                 <span className={cn(
                   "text-sm font-medium",
@@ -210,18 +278,6 @@ const MachineSidebar = ({ machine, isOpen, onClose }: MachineSidebarProps) => {
                   <span className="text-xs text-warning">Nível baixo de combustível</span>
                 </div>
               )}
-            </div>
-
-            <Separator />
-
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <Clock className="w-4 h-4 text-muted-foreground" />
-                <span className="text-sm text-muted-foreground">Horas de operação</span>
-              </div>
-              <span className="text-sm text-card-foreground font-medium">
-                {machineDataAdapter.getOperationHours(machine).toLocaleString()}h
-              </span>
             </div>
           </CardContent>
         </Card>
