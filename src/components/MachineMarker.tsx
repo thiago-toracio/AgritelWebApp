@@ -56,66 +56,46 @@ const MachineMarker: React.FC<MachineMarkerProps> = ({ machine, isSelected, onCl
       
       {/* Hover tooltip with machine details */}
       <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-4 opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none z-[10000]">
-        <div className="bg-card border border-border rounded-lg px-3 py-2.5 shadow-overlay backdrop-blur-sm min-w-[220px] group-hover:min-w-[300px] transition-all duration-200">
+        <div className="bg-card border border-border rounded-lg px-3 py-2.5 shadow-overlay backdrop-blur-sm min-w-[200px] group-hover:min-w-[240px] transition-all duration-200">
           <div className="text-sm font-medium text-card-foreground mb-1">{name}</div>
-          <div className="text-[11px] text-muted-foreground mb-2">{statusTooltip}</div>
+          <div className="text-xs text-muted-foreground mb-2">{statusTooltip}</div>
           
           <div className="space-y-1">
             <div className="flex items-center gap-1.5">
               <Activity className="w-3 h-3 text-muted-foreground" />
-              <span className="text-[11px] text-card-foreground">{machineDataAdapter.getSpeed(machine)} km/h</span>
+              <span className="text-xs text-card-foreground">{machineDataAdapter.getSpeed(machine)} km/h</span>
             </div>
+            
+            {machine.telemetry?.fuelLevel !== undefined && machine.telemetry.fuelLevel > 0 && (
+              <div className="flex items-center gap-1.5">
+                <Fuel className="w-3 h-3 text-muted-foreground" />
+                <span className="text-xs text-card-foreground">{machine.telemetry.fuelLevel.toFixed(1)}L</span>
+              </div>
+            )}
+            
+            {machine.telemetry?.odometer !== undefined && machine.telemetry.odometer > 0 && (
+              <div className="flex items-center gap-1.5">
+                <Gauge className="w-3 h-3 text-muted-foreground" />
+                <span className="text-xs text-card-foreground">{machine.telemetry.odometer.toFixed(1)} km</span>
+              </div>
+            )}
+            
+            {machine.telemetry?.operationHours !== undefined && machine.telemetry.operationHours > 0 && (
+              <div className="flex items-center gap-1.5">
+                <Clock className="w-3 h-3 text-muted-foreground" />
+                <span className="text-xs text-card-foreground">{machine.telemetry.operationHours.toFixed(1)}h</span>
+              </div>
+            )}
             
             <div className="flex items-center gap-1.5 pt-1 mt-1 border-t border-border">
               <MapPin className="w-3 h-3 text-muted-foreground" />
-              <span className="text-[10px] text-muted-foreground">
+              <span className="text-[11px] text-muted-foreground">
                 {machine.deviceMessage.gps.latitude.toFixed(6)}, {machine.deviceMessage.gps.longitude.toFixed(6)}
               </span>
             </div>
           </div>
           
-          <div className="flex justify-end mt-2 pt-2 border-t border-border">
-            <span className="text-[10px] text-muted-foreground/70 italic">Jornada</span>
-          </div>
-          
-          <div className="space-y-1 mt-1">
-            {machine.tripJourney.hourmeterTotalFormatted && (
-              <div className="flex items-center gap-1.5">
-                <Clock className="w-3 h-3 text-muted-foreground" />
-                <span className="text-[11px] text-card-foreground">{machine.tripJourney.hourmeterTotalFormatted}</span>
-              </div>
-            )}
-            
-            {machine.tripJourney.hourmeterWorkedFormatted && (
-              <div className="flex items-center gap-1.5">
-                <Clock className="w-3 h-3 text-muted-foreground" />
-                <span className="text-[11px] text-card-foreground">{machine.tripJourney.hourmeterWorkedFormatted}</span>
-              </div>
-            )}
-            
-            {machine.tripJourney.area > 0 && (
-              <div className="flex items-center gap-1.5">
-                <MapPin className="w-3 h-3 text-muted-foreground" />
-                <span className="text-[11px] text-card-foreground">{machine.tripJourney.area.toFixed(2)} ha</span>
-              </div>
-            )}
-            
-            {machine.tripJourney.fuelConsumption > 0 && (
-              <div className="flex items-center gap-1.5">
-                <Fuel className="w-3 h-3 text-muted-foreground" />
-                <span className="text-[11px] text-card-foreground">{machine.tripJourney.fuelConsumption.toFixed(1)}L</span>
-              </div>
-            )}
-            
-            {machine.tripJourney.odometer > 0 && (
-              <div className="flex items-center gap-1.5">
-                <Gauge className="w-3 h-3 text-muted-foreground" />
-                <span className="text-[11px] text-card-foreground">{machine.tripJourney.odometer.toFixed(1)} km</span>
-              </div>
-            )}
-          </div>
-          
-          <div className="text-[11px] text-muted-foreground mt-2 pt-2 border-t border-border">
+          <div className="text-xs text-muted-foreground mt-2 pt-2 border-t border-border">
             Atualizado: {format(new Date(machine.deviceMessage.lastUpdate), "dd/MM/yyyy HH:mm:ss", { locale: ptBR })}
           </div>
         </div>
