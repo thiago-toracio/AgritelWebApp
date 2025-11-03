@@ -192,11 +192,23 @@ const MachineSidebar = ({ machine, isOpen, onClose }: MachineSidebarProps) => {
             <CardTitle className="text-sm font-medium">Informações da Jornada</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
+            {machine.tripJourney.hourmeterTotalFormatted && (
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Clock className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-sm text-muted-foreground">Tempo Ligado</span>
+                </div>
+                <span className="text-sm text-card-foreground font-medium">
+                  {machine.tripJourney.hourmeterTotalFormatted}
+                </span>
+              </div>
+            )}
+
             {machine.tripJourney.hourmeterWorkedFormatted && (
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
                   <Clock className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">Horímetro Trabalhado</span>
+                  <span className="text-sm text-muted-foreground">Tempo de Trabalho</span>
                 </div>
                 <span className="text-sm text-card-foreground font-medium">
                   {machine.tripJourney.hourmeterWorkedFormatted}
@@ -204,14 +216,14 @@ const MachineSidebar = ({ machine, isOpen, onClose }: MachineSidebarProps) => {
               </div>
             )}
 
-            {machine.tripJourney.hourmeterTotalFormatted && (
+            {machine.tripJourney.area > 0 && (
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
-                  <Settings className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">Horímetro Total</span>
+                  <MapPin className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-sm text-muted-foreground">Área Aplicada</span>
                 </div>
                 <span className="text-sm text-card-foreground font-medium">
-                  {machine.tripJourney.hourmeterTotalFormatted}
+                  {machine.tripJourney.area.toFixed(2)} ha
                 </span>
               </div>
             )}
@@ -228,35 +240,11 @@ const MachineSidebar = ({ machine, isOpen, onClose }: MachineSidebarProps) => {
               </div>
             )}
 
-            {machine.tripJourney.applicationTotal > 0 && (
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <Droplets className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">Aplicação Total</span>
-                </div>
-                <span className="text-sm text-card-foreground font-medium">
-                  {machine.tripJourney.applicationTotal.toFixed(1)}L
-                </span>
-              </div>
-            )}
-
-            {machine.tripJourney.area > 0 && (
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <MapPin className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">Área Trabalhada</span>
-                </div>
-                <span className="text-sm text-card-foreground font-medium">
-                  {machine.tripJourney.area.toFixed(2)} ha
-                </span>
-              </div>
-            )}
-
             {machine.tripJourney.odometer > 0 && (
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
                   <Gauge className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">Odômetro</span>
+                  <span className="text-sm text-muted-foreground">Distância Percorrida</span>
                 </div>
                 <span className="text-sm text-card-foreground font-medium">
                   {machine.tripJourney.odometer.toFixed(1)} km
