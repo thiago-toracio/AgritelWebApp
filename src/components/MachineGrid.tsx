@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { MachineData, DeviceState } from '@/types/machine';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -71,6 +71,15 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
     groups[area].push(machine);
     return groups;
   }, {} as Record<string, MachineData[]>);
+
+  // Expandir todas as áreas por padrão
+  useEffect(() => {
+    const allAreas = Object.keys(groupedMachines).reduce((acc, area) => {
+      acc[area] = true;
+      return acc;
+    }, {} as Record<string, boolean>);
+    setExpandedAreas(allAreas);
+  }, []);
 
   // Calcular estatísticas por grupo
   const getGroupStats = (machines: MachineData[]) => {
