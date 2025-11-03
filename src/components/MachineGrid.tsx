@@ -303,7 +303,6 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                               </div>
                               <div className="flex-1 min-w-0">
                                 <h3 className="font-semibold text-sm text-card-foreground truncate">{machine.vehicleInfo.name}</h3>
-                                <p className="text-xs text-muted-foreground capitalize">{machineDataAdapter.getType(machine)}</p>
                                 {machineDataAdapter.getNotation(machine) && (
                                   <div className="flex items-center gap-1 mt-1">
                                     <FileText className="w-3 h-3 text-muted-foreground flex-shrink-0" />
@@ -324,18 +323,12 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                           </div>
 
                           <div className="space-y-2">
-                            {machine.tripJourney.journeyStartsAt && (
+                            {machineDataAdapter.getNotation(machine)?.localRegistrationTime && (
                               <div className="text-xs">
                                 <span className="text-muted-foreground">Apontamento {machine.deviceMessage.area ? `${machine.deviceMessage.area} às ` : 'às '}</span>
                                 <span className="text-card-foreground font-medium">
-                                  {format(new Date(machine.tripJourney.journeyStartsAt), "dd/MM/yyyy HH:mm", { locale: ptBR })}
+                                  {format(new Date(machineDataAdapter.getNotation(machine)!.localRegistrationTime!), "dd/MM/yyyy HH:mm", { locale: ptBR })}
                                 </span>
-                              </div>
-                            )}
-                            
-                            {machine.deviceMessage.task && (
-                              <div className="text-xs">
-                                <span className="text-card-foreground">{machine.deviceMessage.task}</span>
                               </div>
                             )}
 
@@ -346,16 +339,9 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                               </div>
                             )}
 
-                            <div className="flex items-center justify-between text-xs pt-2">
-                              <div className="flex items-center space-x-1">
-                                {machine.deviceMessage.transmissionReason && (
-                                  <Badge variant="outline" className="text-xs px-2 py-0">
-                                    {machine.deviceMessage.transmissionReason}
-                                  </Badge>
-                                )}
-                              </div>
-                              <span className="text-muted-foreground">
-                                {format(new Date(machine.deviceMessage.lastUpdate), "dd/MM/yyyy HH:mm", { locale: ptBR })}
+                            <div className="flex items-center justify-end text-xs pt-2">
+                              <span className="text-muted-foreground uppercase tracking-wide font-semibold" style={{ fontSize: '10px' }}>
+                                PERIODIC
                               </span>
                             </div>
                           </div>
