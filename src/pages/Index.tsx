@@ -237,6 +237,7 @@ const Index = () => {
         onClose={handleCloseGrid}
         onMachineSelect={handleMachineSelect}
         selectedMachine={selectedMachine}
+        journeyStartTime={journeyStartTime}
       />
 
       {/* Alerts Panel */}

@@ -4,11 +4,17 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Search, Filter, Grid, X, Fuel, Clock, MapPin, Calendar, Gauge, Grid as GridIcon, Droplets, User, ChevronDown, ChevronUp, Maximize2, Minimize2 } from 'lucide-react';
+import { Search, Filter, Grid, X, Fuel, Clock, MapPin, Calendar, Gauge, Grid as GridIcon, Droplets, User, ChevronDown, ChevronUp, Maximize2, Minimize2, Timer, Settings, Grid3x3, Route } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { machineDataAdapter } from '@/utils/machineDataAdapter';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 interface MachineGridProps {
   machines: MachineData[];
@@ -16,9 +22,10 @@ interface MachineGridProps {
   onClose: () => void;
   onMachineSelect: (machineId: string) => void;
   selectedMachine?: string;
+  journeyStartTime?: string;
 }
 
-const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachine }: MachineGridProps) => {
+const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachine, journeyStartTime }: MachineGridProps) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [expandedAreas, setExpandedAreas] = useState<Record<string, boolean>>({});
@@ -333,51 +340,93 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                           </div>
 
                           <div className="mt-3 pt-3 border-t border-border">
-                            <div className="flex justify-end mb-1">
+                            <div className="flex justify-between items-center mb-1">
                               <span className="text-[10px] text-muted-foreground uppercase tracking-wide">Jornada</span>
-                            </div>
-                            <div className="grid grid-cols-5 gap-2">
-                              {machine.tripJourney.hourmeterTotalFormatted && (
-                                <div className="flex flex-col items-center">
-                                  <Clock className="w-4 h-4 text-muted-foreground mb-1" />
-                                  <span className="text-[11px] font-medium text-card-foreground">
-                                    {machine.tripJourney.hourmeterTotalFormatted}
-                                  </span>
-                                </div>
-                              )}
-                              {machine.tripJourney.hourmeterWorkedFormatted && (
-                                <div className="flex flex-col items-center">
-                                  <Clock className="w-4 h-4 text-muted-foreground mb-1" />
-                                  <span className="text-[11px] font-medium text-card-foreground">
-                                    {machine.tripJourney.hourmeterWorkedFormatted}
-                                  </span>
-                                </div>
-                              )}
-                              {machine.tripJourney.area > 0 && (
-                                <div className="flex flex-col items-center">
-                                  <MapPin className="w-4 h-4 text-muted-foreground mb-1" />
-                                  <span className="text-[11px] font-medium text-card-foreground">
-                                    {machine.tripJourney.area.toFixed(2)} ha
-                                  </span>
-                                </div>
-                              )}
-                              {machine.tripJourney.fuelConsumption > 0 && (
-                                <div className="flex flex-col items-center">
-                                  <Fuel className="w-4 h-4 text-muted-foreground mb-1" />
-                                  <span className="text-[11px] font-medium text-card-foreground">
-                                    {machine.tripJourney.fuelConsumption.toFixed(1)}L
-                                  </span>
-                                </div>
-                              )}
-                              {machine.tripJourney.odometer > 0 && (
-                                <div className="flex flex-col items-center">
-                                  <Gauge className="w-4 h-4 text-muted-foreground mb-1" />
-                                  <span className="text-[11px] font-medium text-card-foreground">
-                                    {machine.tripJourney.odometer.toFixed(1)} km
-                                  </span>
-                                </div>
+                              {journeyStartTime && (
+                                <span className="text-[10px] text-muted-foreground">
+                                  {format(new Date(journeyStartTime), "dd/MM/yyyy HH:mm", { locale: ptBR })}
+                                </span>
                               )}
                             </div>
+                            <TooltipProvider>
+                              <div className="grid grid-cols-5 gap-2">
+                                {machine.tripJourney.hourmeterTotalFormatted && (
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <div className="flex flex-col items-center cursor-help">
+                                        <Timer className="w-4 h-4 text-muted-foreground mb-1" />
+                                        <span className="text-[11px] font-medium text-card-foreground">
+                                          {machine.tripJourney.hourmeterTotalFormatted}
+                                        </span>
+                                      </div>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                      <p>Tempo ligado (aproximadamente)</p>
+                                    </TooltipContent>
+                                  </Tooltip>
+                                )}
+                                {machine.tripJourney.hourmeterWorkedFormatted && (
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <div className="flex flex-col items-center cursor-help">
+                                        <Settings className="w-4 h-4 text-muted-foreground mb-1" />
+                                        <span className="text-[11px] font-medium text-card-foreground">
+                                          {machine.tripJourney.hourmeterWorkedFormatted}
+                                        </span>
+                                      </div>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                      <p>Tempo de trabalho (aproximadamente)</p>
+                                    </TooltipContent>
+                                  </Tooltip>
+                                )}
+                                {machine.tripJourney.area > 0 && (
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <div className="flex flex-col items-center cursor-help">
+                                        <Grid3x3 className="w-4 h-4 text-muted-foreground mb-1" />
+                                        <span className="text-[11px] font-medium text-card-foreground">
+                                          {machine.tripJourney.area.toFixed(2)} ha
+                                        </span>
+                                      </div>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                      <p>Área aplicada em hectares</p>
+                                    </TooltipContent>
+                                  </Tooltip>
+                                )}
+                                {machine.tripJourney.fuelConsumption > 0 && (
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <div className="flex flex-col items-center cursor-help">
+                                        <Droplets className="w-4 h-4 text-muted-foreground mb-1" />
+                                        <span className="text-[11px] font-medium text-card-foreground">
+                                          {machine.tripJourney.fuelConsumption.toFixed(1)}L
+                                        </span>
+                                      </div>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                      <p>Combustível em litros</p>
+                                    </TooltipContent>
+                                  </Tooltip>
+                                )}
+                                {machine.tripJourney.odometer > 0 && (
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <div className="flex flex-col items-center cursor-help">
+                                        <Route className="w-4 h-4 text-muted-foreground mb-1" />
+                                        <span className="text-[11px] font-medium text-card-foreground">
+                                          {machine.tripJourney.odometer.toFixed(1)} km
+                                        </span>
+                                      </div>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                      <p>Distância percorrida</p>
+                                    </TooltipContent>
+                                  </Tooltip>
+                                )}
+                              </div>
+                            </TooltipProvider>
                           </div>
                         </CardContent>
                       </Card>
