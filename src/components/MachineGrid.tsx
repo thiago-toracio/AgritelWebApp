@@ -296,11 +296,11 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                           </div>
 
                           <div className="space-y-2">
-                            {machine.tripJourney.journeyStartsAt && (
+                            {machine.tripJourney.journeyStartAt && (
                               <div className="text-xs">
                                 <span className="text-muted-foreground">Apontamento {machine.deviceMessage.area ? `${machine.deviceMessage.area} às ` : 'às '}</span>
                                 <span className="text-card-foreground font-medium">
-                                  {format(new Date(machine.tripJourney.journeyStartsAt), "dd/MM/yyyy HH:mm", { locale: ptBR })}
+                                  {format(new Date(machine.tripJourney.journeyStartAt), "dd/MM/yyyy HH:mm", { locale: ptBR })}
                                 </span>
                               </div>
                             )}

@@ -59,11 +59,12 @@ export interface DeviceMessage {
 export interface TripJourneyData {
   hourmeterIgnition: number;
   hourmeterWorked: number;
+  hourmeterControls: number;
   fuelConsumption: number;
   applicationTotal: number;
   area: number;
   odometer: number;
-  journeyStartsAt: string | null;
+  journeyStartAt: string | null;
 }
 
 export interface MachineAlertData {

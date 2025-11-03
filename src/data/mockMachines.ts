@@ -7,11 +7,12 @@ import { MachineData } from '@/types/machine';
 const createTripJourney = (hourmeterIgnition: number) => ({
   hourmeterIgnition,
   hourmeterWorked: hourmeterIgnition * 0.95,
+  hourmeterControls: hourmeterIgnition * 0.82,
   fuelConsumption: Math.random() * 150 + 50,
   applicationTotal: 0,
   area: Math.random() * 20 + 5,
   odometer: hourmeterIgnition * 8 + Math.random() * 1000,
-  journeyStartsAt: new Date(Date.now() - Math.random() * 12 * 3600000).toISOString(),
+  journeyStartAt: new Date(Date.now() - Math.random() * 12 * 3600000).toISOString(),
 });
 
 export const mockMachines: MachineData[] = [
