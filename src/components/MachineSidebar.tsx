@@ -12,7 +12,10 @@ import {
   Settings, 
   Gauge,
   Droplets,
-  Activity
+  Activity,
+  Timer,
+  Grid3x3,
+  Route
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { formatDistanceToNow } from 'date-fns';
@@ -195,7 +198,7 @@ const MachineSidebar = ({ machine, isOpen, onClose }: MachineSidebarProps) => {
             {machine.tripJourney.hourmeterTotalFormatted && (
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
-                  <Clock className="w-4 h-4 text-muted-foreground" />
+                  <Timer className="w-4 h-4 text-muted-foreground" />
                   <span className="text-sm text-muted-foreground">Tempo Ligado</span>
                 </div>
                 <span className="text-sm text-card-foreground font-medium">
@@ -207,7 +210,7 @@ const MachineSidebar = ({ machine, isOpen, onClose }: MachineSidebarProps) => {
             {machine.tripJourney.hourmeterWorkedFormatted && (
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
-                  <Clock className="w-4 h-4 text-muted-foreground" />
+                  <Settings className="w-4 h-4 text-muted-foreground" />
                   <span className="text-sm text-muted-foreground">Tempo de Trabalho</span>
                 </div>
                 <span className="text-sm text-card-foreground font-medium">
@@ -219,7 +222,7 @@ const MachineSidebar = ({ machine, isOpen, onClose }: MachineSidebarProps) => {
             {machine.tripJourney.area > 0 && (
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
-                  <MapPin className="w-4 h-4 text-muted-foreground" />
+                  <Grid3x3 className="w-4 h-4 text-muted-foreground" />
                   <span className="text-sm text-muted-foreground">Área Aplicada</span>
                 </div>
                 <span className="text-sm text-card-foreground font-medium">
@@ -231,7 +234,7 @@ const MachineSidebar = ({ machine, isOpen, onClose }: MachineSidebarProps) => {
             {machine.tripJourney.fuelConsumption > 0 && (
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
-                  <Fuel className="w-4 h-4 text-muted-foreground" />
+                  <Droplets className="w-4 h-4 text-muted-foreground" />
                   <span className="text-sm text-muted-foreground">Consumo de Combustível</span>
                 </div>
                 <span className="text-sm text-card-foreground font-medium">
@@ -243,7 +246,7 @@ const MachineSidebar = ({ machine, isOpen, onClose }: MachineSidebarProps) => {
             {machine.tripJourney.odometer > 0 && (
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
-                  <Gauge className="w-4 h-4 text-muted-foreground" />
+                  <Route className="w-4 h-4 text-muted-foreground" />
                   <span className="text-sm text-muted-foreground">Distância Percorrida</span>
                 </div>
                 <span className="text-sm text-card-foreground font-medium">
