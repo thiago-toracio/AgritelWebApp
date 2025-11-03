@@ -21,7 +21,15 @@ const Index = () => {
   const [statusPanelFilter, setStatusPanelFilter] = useState<string | undefined>();
   const [alerts, setAlerts] = useState<MachineAlertData[]>([]);
   const [focusOnMachine, setFocusOnMachine] = useState<string | undefined>();
-  const [journeyStartDate, setJourneyStartDate] = useState<string | undefined>();
+  
+  // Initialize with today at 00:00 as default
+  const getDefaultJourneyStart = () => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return today.toISOString();
+  };
+  
+  const [journeyStartTime, setJourneyStartTime] = useState<string>(getDefaultJourneyStart());
   
   // Load map style from localStorage or default to 'satellite'
   const [mapStyle, setMapStyle] = useState<MapStyle>(() => {
@@ -35,17 +43,15 @@ const Index = () => {
   }, []);
 
   useEffect(() => {
-    if (journeyStartDate !== undefined) {
-      loadMachines();
-    }
-  }, [journeyStartDate]);
+    loadMachines();
+  }, [journeyStartTime]);
 
   const loadMachines = async (isInitial = false) => {
     try {
       if (isInitial) {
         setIsInitialLoading(true);
       }
-      const data = await machineService.getMachines(journeyStartDate);
+      const data = await machineService.getMachines(journeyStartTime);
       
       // Aplicar estado de leitura dos cookies aos alertas
       const readAlertIds = cookieManager.getReadAlerts();
@@ -210,7 +216,7 @@ const Index = () => {
         onMapStyleChange={handleMapStyleChange}
         currentMapStyle={mapStyle}
         onRefresh={loadMachines}
-        onJourneyStartChange={setJourneyStartDate}
+        onJourneyStartChange={setJourneyStartTime}
       />
 
       {/* Machine Grid Overlay */}

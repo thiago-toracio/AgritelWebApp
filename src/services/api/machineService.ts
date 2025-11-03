@@ -14,14 +14,14 @@ console.log('🔍 VITE_MOCK_DISABLED value:', import.meta.env.VITE_MOCK_DISABLED
 console.log('🔍 Mode:', import.meta.env.MODE);
 
 export class MachineService {
-  async getMachines(startDate?: string): Promise<MachineData[]> {
+  async getMachines(startTime?: string): Promise<MachineData[]> {
     if (isMockEnabled) {
       await new Promise(resolve => setTimeout(resolve, 300));
       return mockMachines;
     }
 
     console.log('🌐 Fetching machines from REAL API');
-    const params = startDate ? `?startAt=${encodeURIComponent(startDate)}` : '';
+    const params = startTime ? `?startAt=${encodeURIComponent(startTime)}` : '';
     return apiClient.get<MachineData[]>(`/machines${params}`);
   }
 

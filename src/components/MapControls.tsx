@@ -32,7 +32,7 @@ interface MapControlsProps {
   onMapStyleChange: (style: MapStyle) => void;
   currentMapStyle: MapStyle;
   onRefresh: () => void;
-  onJourneyStartChange?: (startDate: string) => void;
+  onJourneyStartChange?: (startTime: string) => void;
 }
 
 const MapControls = ({ 
