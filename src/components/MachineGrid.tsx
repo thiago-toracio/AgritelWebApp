@@ -303,18 +303,6 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                               </div>
                               <div className="flex-1 min-w-0">
                                 <h3 className="font-semibold text-sm text-card-foreground truncate">{machine.vehicleInfo.name}</h3>
-                                {machineDataAdapter.getNotation(machine) && (
-                                  <div className="flex items-center gap-1 mt-1">
-                                    <FileText className="w-3 h-3 text-muted-foreground flex-shrink-0" />
-                                    <span className="text-xs text-card-foreground font-medium truncate">
-                                      {machineDataAdapter.getNotation(machine)?.code}
-                                    </span>
-                                    <span className="text-xs text-muted-foreground">-</span>
-                                    <span className="text-xs text-muted-foreground truncate">
-                                      {machineDataAdapter.getNotation(machine)?.name}
-                                    </span>
-                                  </div>
-                                )}
                               </div>
                             </div>
                             <Badge variant={getStatusBadgeVariant(machine.deviceState.color)} className="text-xs flex-shrink-0 ml-2">
@@ -339,11 +327,18 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                               </div>
                             )}
 
-                            <div className="flex items-center justify-end text-xs pt-2">
-                              <span className="text-muted-foreground uppercase tracking-wide font-semibold" style={{ fontSize: '10px' }}>
-                                PERIODIC
-                              </span>
-                            </div>
+                            {machineDataAdapter.getNotation(machine) && (
+                              <div className="flex items-center gap-1 pt-2">
+                                <FileText className="w-3 h-3 text-muted-foreground flex-shrink-0" />
+                                <span className="text-xs text-card-foreground font-medium truncate">
+                                  {machineDataAdapter.getNotation(machine)?.code}
+                                </span>
+                                <span className="text-xs text-muted-foreground">-</span>
+                                <span className="text-xs text-muted-foreground truncate">
+                                  {machineDataAdapter.getNotation(machine)?.name}
+                                </span>
+                              </div>
+                            )}
                           </div>
 
                           <div className="mt-3 pt-3 border-t border-border">
