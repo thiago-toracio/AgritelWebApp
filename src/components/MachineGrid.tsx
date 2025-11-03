@@ -340,10 +340,10 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                           </div>
 
                           <div className="mt-3 pt-3 border-t border-border">
-                            <div className="flex justify-between items-center mb-1">
-                              <span className="text-[10px] text-muted-foreground uppercase tracking-wide">Jornada</span>
+                            <div className="flex justify-between items-center mb-2 bg-primary px-3 py-2 rounded-md -mx-2">
+                              <span className="text-[10px] text-primary-foreground uppercase tracking-wide font-semibold">Jornada</span>
                               {journeyStartTime && (
-                                <span className="text-[10px] text-muted-foreground">
+                                <span className="text-[10px] text-primary-foreground font-medium">
                                   {format(new Date(journeyStartTime), "dd/MM/yyyy HH:mm", { locale: ptBR })}
                                 </span>
                               )}
