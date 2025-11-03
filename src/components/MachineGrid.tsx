@@ -189,8 +189,16 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                 placeholder="Buscar por nome, tipo ou motorista..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
+                className="pl-10 pr-10"
               />
+              {searchTerm && (
+                <button
+                  onClick={() => setSearchTerm('')}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              )}
             </div>
             <div className="flex items-center space-x-2">
               <Filter className="w-4 h-4 text-muted-foreground" />
