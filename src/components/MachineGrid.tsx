@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Search, Filter, Grid, X, Fuel, Clock, MapPin, Calendar, Gauge, Grid as GridIcon, Droplets } from 'lucide-react';
+import { Search, Filter, Grid, X, Fuel, Clock, MapPin, Calendar, Gauge, Grid as GridIcon, Droplets, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { machineDataAdapter } from '@/utils/machineDataAdapter';
 import { format } from 'date-fns';
@@ -243,7 +243,8 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                             )}
 
                             {machine.deviceMessage.operator && (
-                              <div className="text-xs text-muted-foreground">
+                              <div className="flex items-center space-x-1.5 text-xs">
+                                <User className="w-3 h-3 text-muted-foreground" />
                                 <span className="text-card-foreground">{machine.deviceMessage.operator}</span>
                               </div>
                             )}
