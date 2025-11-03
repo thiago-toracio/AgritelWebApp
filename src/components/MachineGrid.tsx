@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Search, Filter, Grid, X, Fuel, Clock, MapPin, Calendar, Gauge, Grid as GridIcon, Droplets, User } from 'lucide-react';
+import { Search, Filter, Grid, X, Fuel, Clock, MapPin, Calendar, Gauge, Grid as GridIcon, Droplets, User, ChevronDown, ChevronUp, Maximize2, Minimize2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { machineDataAdapter } from '@/utils/machineDataAdapter';
 import { format } from 'date-fns';
@@ -21,6 +21,7 @@ interface MachineGridProps {
 const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachine }: MachineGridProps) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [expandedAreas, setExpandedAreas] = useState<Record<string, boolean>>({});
 
   const filteredMachines = machines.filter(machine => {
     const matchesSearch = machine.vehicleInfo.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -86,6 +87,28 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
   const getAreaDisplayName = (area: string) => {
     return area;
   };
+
+  const toggleArea = (area: string) => {
+    setExpandedAreas(prev => ({
+      ...prev,
+      [area]: !prev[area]
+    }));
+  };
+
+  const expandAll = () => {
+    const allAreas = Object.keys(groupedMachines).reduce((acc, area) => {
+      acc[area] = true;
+      return acc;
+    }, {} as Record<string, boolean>);
+    setExpandedAreas(allAreas);
+  };
+
+  const collapseAll = () => {
+    setExpandedAreas({});
+  };
+
+  const areAllExpanded = Object.keys(groupedMachines).length > 0 && 
+    Object.keys(groupedMachines).every(area => expandedAreas[area]);
 
   const getStatusBadgeVariant = (color: string) => {
     switch (color) {
@@ -185,6 +208,30 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
             </div>
           </div>
 
+          {/* Expand/Collapse All Controls */}
+          {Object.keys(groupedMachines).length > 0 && (
+            <div className="flex justify-end gap-2 mb-4">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={areAllExpanded ? collapseAll : expandAll}
+                className="text-xs"
+              >
+                {areAllExpanded ? (
+                  <>
+                    <Minimize2 className="w-3 h-3 mr-1" />
+                    Colapsar Todas
+                  </>
+                ) : (
+                  <>
+                    <Maximize2 className="w-3 h-3 mr-1" />
+                    Expandir Todas
+                  </>
+                )}
+              </Button>
+            </div>
+          )}
+
           {/* Groups */}
           <div className="space-y-6 max-h-96 overflow-y-auto">
             {Object.entries(groupedMachines).map(([area, groupMachines]) => {
@@ -192,19 +239,32 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
               return (
                 <div key={area} className="space-y-3">
                   {/* Group Header */}
-                  <div className="bg-card/50 border border-border/30 rounded-lg p-4">
+                  <div 
+                    className="bg-card/50 border border-border/30 rounded-lg p-4 cursor-pointer hover:bg-card/70 transition-colors"
+                    onClick={() => toggleArea(area)}
+                  >
                     <div className="flex items-center justify-between">
-                      <h3 className="text-lg font-semibold text-card-foreground">
-                        {getAreaDisplayName(area)}
-                      </h3>
-                      <Badge variant="outline" className="text-xs">
-                        {stats.total} {stats.total === 1 ? 'máquina' : 'máquinas'}
-                      </Badge>
+                      <div className="flex items-center gap-2">
+                        <h3 className="text-lg font-semibold text-card-foreground">
+                          {getAreaDisplayName(area)}
+                        </h3>
+                        <Badge variant="outline" className="text-xs">
+                          {stats.total} {stats.total === 1 ? 'máquina' : 'máquinas'}
+                        </Badge>
+                      </div>
+                      <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                        {expandedAreas[area] ? (
+                          <ChevronUp className="w-4 h-4" />
+                        ) : (
+                          <ChevronDown className="w-4 h-4" />
+                        )}
+                      </Button>
                     </div>
                   </div>
 
                   {/* Group Machines Grid */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                  {expandedAreas[area] && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                     {groupMachines.map((machine) => (
                       <Card
                         key={machine.vehicleInfo.id}
@@ -305,7 +365,8 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                         </CardContent>
                       </Card>
                     ))}
-                  </div>
+                    </div>
+                  )}
                 </div>
               );
             })}
