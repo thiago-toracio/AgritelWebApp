@@ -89,7 +89,7 @@ const MachineMarker: React.FC<MachineMarkerProps> = ({ machine, isSelected, onCl
             
             <div className="flex items-center gap-1.5 pt-1 mt-1 border-t border-border">
               <MapPin className="w-3 h-3 text-muted-foreground" />
-              <span className="text-[10px] text-muted-foreground">
+              <span className="text-[11px] text-muted-foreground">
                 {machine.deviceMessage.gps.latitude.toFixed(6)}, {machine.deviceMessage.gps.longitude.toFixed(6)}
               </span>
             </div>
