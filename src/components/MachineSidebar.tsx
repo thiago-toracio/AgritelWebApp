@@ -192,26 +192,26 @@ const MachineSidebar = ({ machine, isOpen, onClose }: MachineSidebarProps) => {
             <CardTitle className="text-sm font-medium">Informações da Jornada</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            {machine.tripJourney.hourmeterIgnition > 0 && (
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <Clock className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">Horímetro Ignição</span>
-                </div>
-                <span className="text-sm text-card-foreground font-medium">
-                  {machine.tripJourney.hourmeterIgnition.toFixed(1)}h
-                </span>
-              </div>
-            )}
-
-            {machine.tripJourney.hourmeterWorked > 0 && (
+            {machine.tripJourney.hourmeterWorkedFormatted && (
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
                   <Clock className="w-4 h-4 text-muted-foreground" />
                   <span className="text-sm text-muted-foreground">Horímetro Trabalhado</span>
                 </div>
                 <span className="text-sm text-card-foreground font-medium">
-                  {machine.tripJourney.hourmeterWorked.toFixed(1)}h
+                  {machine.tripJourney.hourmeterWorkedFormatted}
+                </span>
+              </div>
+            )}
+
+            {machine.tripJourney.hourmeterTotalFormatted && (
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Settings className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-sm text-muted-foreground">Horímetro Total</span>
+                </div>
+                <span className="text-sm text-card-foreground font-medium">
+                  {machine.tripJourney.hourmeterTotalFormatted}
                 </span>
               </div>
             )}

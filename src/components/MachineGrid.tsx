@@ -334,11 +334,11 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
 
                           <div className="mt-3 pt-3 border-t border-border">
                             <div className="grid grid-cols-4 gap-2">
-                              {machine.tripJourney.hourmeterWorked > 0 && (
+                              {machine.tripJourney.hourmeterWorkedFormatted && (
                                 <div className="flex flex-col items-center">
                                   <Clock className="w-4 h-4 text-muted-foreground mb-1" />
                                   <span className="text-xs font-medium text-card-foreground">
-                                    {machine.tripJourney.hourmeterWorked.toFixed(1)}
+                                    {machine.tripJourney.hourmeterWorkedFormatted}
                                   </span>
                                 </div>
                               )}

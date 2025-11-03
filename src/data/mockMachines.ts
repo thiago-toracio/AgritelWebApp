@@ -4,15 +4,30 @@ import { MachineData } from '@/types/machine';
  * Dados mock seguindo a nova estrutura C# com tripJourney e alerts
  */
 
-const createTripJourney = (hourmeterIgnition: number) => ({
-  hourmeterIgnition,
-  hourmeterWorked: hourmeterIgnition * 0.95,
-  fuelConsumption: Math.random() * 150 + 50,
-  applicationTotal: 0,
-  area: Math.random() * 20 + 5,
-  odometer: hourmeterIgnition * 8 + Math.random() * 1000,
-  journeyStartsAt: new Date(Date.now() - Math.random() * 12 * 3600000).toISOString(),
-});
+const createTripJourney = (hourmeterIgnition: number) => {
+  const hourmeterWorked = hourmeterIgnition * 0.95;
+  const hourmeterTotal = hourmeterIgnition;
+  
+  // Formata horas decimais para "H:MM"
+  const formatHours = (hours: number): string => {
+    const h = Math.floor(hours);
+    const m = Math.round((hours - h) * 60);
+    return `${h}:${m.toString().padStart(2, '0')}`;
+  };
+  
+  return {
+    hourmeterIgnition,
+    hourmeterWorked,
+    hourmeterIgnitionFormatted: formatHours(hourmeterIgnition),
+    hourmeterWorkedFormatted: formatHours(hourmeterWorked),
+    hourmeterTotalFormatted: hourmeterTotal.toFixed(1),
+    fuelConsumption: Math.random() * 150 + 50,
+    applicationTotal: 0,
+    area: Math.random() * 20 + 5,
+    odometer: hourmeterIgnition * 8 + Math.random() * 1000,
+    journeyStartsAt: new Date(Date.now() - Math.random() * 12 * 3600000).toISOString(),
+  };
+};
 
 export const mockMachines: MachineData[] = [
   // Green - Working machines

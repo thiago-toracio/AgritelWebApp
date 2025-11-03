@@ -59,6 +59,9 @@ export interface DeviceMessage {
 export interface TripJourneyData {
   hourmeterIgnition: number;
   hourmeterWorked: number;
+  hourmeterIgnitionFormatted: string;
+  hourmeterWorkedFormatted: string;
+  hourmeterTotalFormatted: string;
   fuelConsumption: number;
   applicationTotal: number;
   area: number;
