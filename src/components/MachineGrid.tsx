@@ -278,13 +278,13 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                       <Card
                         key={machine.vehicleInfo.id}
                         className={cn(
-                          "cursor-pointer transition-all duration-200 hover:shadow-lg border-2",
+                          "cursor-pointer transition-all duration-200 hover:shadow-lg border-2 w-full",
                           getStatusBgClass(machine.deviceState.color),
                           selectedMachine === machine.vehicleInfo.id && "ring-2 ring-primary shadow-glow"
                         )}
                         onClick={() => onMachineSelect(machine.vehicleInfo.id)}
                       >
-                        <CardContent className="p-4">
+                        <CardContent className="p-5">
                           <div className="flex items-start justify-between mb-3">
                             <div>
                               <h3 className="font-medium text-sm text-card-foreground">{machine.vehicleInfo.name}</h3>
@@ -333,11 +333,14 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                           </div>
 
                           <div className="mt-3 pt-3 border-t border-border">
+                            <div className="flex justify-end mb-1">
+                              <span className="text-[10px] text-muted-foreground uppercase tracking-wide">Jornada</span>
+                            </div>
                             <div className="grid grid-cols-5 gap-2">
                               {machine.tripJourney.hourmeterTotalFormatted && (
                                 <div className="flex flex-col items-center">
                                   <Clock className="w-4 h-4 text-muted-foreground mb-1" />
-                                  <span className="text-xs font-medium text-card-foreground">
+                                  <span className="text-[11px] font-medium text-card-foreground">
                                     {machine.tripJourney.hourmeterTotalFormatted}
                                   </span>
                                 </div>
@@ -345,7 +348,7 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                               {machine.tripJourney.hourmeterWorkedFormatted && (
                                 <div className="flex flex-col items-center">
                                   <Clock className="w-4 h-4 text-muted-foreground mb-1" />
-                                  <span className="text-xs font-medium text-card-foreground">
+                                  <span className="text-[11px] font-medium text-card-foreground">
                                     {machine.tripJourney.hourmeterWorkedFormatted}
                                   </span>
                                 </div>
@@ -353,7 +356,7 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                               {machine.tripJourney.area > 0 && (
                                 <div className="flex flex-col items-center">
                                   <MapPin className="w-4 h-4 text-muted-foreground mb-1" />
-                                  <span className="text-xs font-medium text-card-foreground">
+                                  <span className="text-[11px] font-medium text-card-foreground">
                                     {machine.tripJourney.area.toFixed(2)} ha
                                   </span>
                                 </div>
@@ -361,7 +364,7 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                               {machine.tripJourney.fuelConsumption > 0 && (
                                 <div className="flex flex-col items-center">
                                   <Fuel className="w-4 h-4 text-muted-foreground mb-1" />
-                                  <span className="text-xs font-medium text-card-foreground">
+                                  <span className="text-[11px] font-medium text-card-foreground">
                                     {machine.tripJourney.fuelConsumption.toFixed(1)}L
                                   </span>
                                 </div>
@@ -369,7 +372,7 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                               {machine.tripJourney.odometer > 0 && (
                                 <div className="flex flex-col items-center">
                                   <Gauge className="w-4 h-4 text-muted-foreground mb-1" />
-                                  <span className="text-xs font-medium text-card-foreground">
+                                  <span className="text-[11px] font-medium text-card-foreground">
                                     {machine.tripJourney.odometer.toFixed(1)} km
                                   </span>
                                 </div>
