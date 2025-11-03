@@ -67,6 +67,17 @@ const MapControls = ({
   // State to force regeneration of options when hour changes
   const [currentHourKey, setCurrentHourKey] = useState(() => startOfHour(new Date()).getTime());
 
+  // Helper to format date without timezone (no Z)
+  const formatDateTimeLocal = (date: Date): string => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+  };
+
   // Generate hourly options from current hour to 47 hours in past
   const journeyStartOptions = useMemo(() => {
     const now = new Date();
@@ -77,7 +88,7 @@ const MapControls = ({
     for (let i = 0; i <= 47; i++) {
       const hourDate = subHours(currentHour, i);
       options.push({
-        value: hourDate.toISOString(),
+        value: formatDateTimeLocal(hourDate),
         label: `A partir das ${format(hourDate, 'dd/MM/yyyy HH:00')}`
       });
     }
@@ -104,10 +115,8 @@ const MapControls = ({
   const getDefaultJourneyStart = () => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    return journeyStartOptions.find(option => {
-      const optionDate = new Date(option.value);
-      return optionDate.getTime() === today.getTime();
-    })?.value || journeyStartOptions[0].value;
+    const todayFormatted = formatDateTimeLocal(today);
+    return journeyStartOptions.find(option => option.value === todayFormatted)?.value || journeyStartOptions[0].value;
   };
 
   const [selectedJourneyStart, setSelectedJourneyStart] = useState(getDefaultJourneyStart());
