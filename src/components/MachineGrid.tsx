@@ -4,7 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Search, Filter, Grid, X, Fuel, Clock, MapPin, Calendar, Gauge, Grid as GridIcon, Droplets, User, ChevronDown, ChevronUp, Maximize2, Minimize2, Timer, Settings, Grid3x3, Route } from 'lucide-react';
+import { Search, Filter, Grid, X, Fuel, Clock, MapPin, Calendar, Gauge, Grid as GridIcon, Droplets, User, ChevronDown, ChevronUp, Maximize2, Minimize2, Timer, Settings, Grid3x3, Route, FileText } from 'lucide-react';
+import MachineIcon from '@/components/MachineIcons';
 import { cn } from '@/lib/utils';
 import { machineDataAdapter } from '@/utils/machineDataAdapter';
 import { format } from 'date-fns';
@@ -293,11 +294,31 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                       >
                         <CardContent className="p-4">
                           <div className="flex items-start justify-between mb-3">
-                            <div>
-                              <h3 className="font-medium text-sm text-card-foreground">{machine.vehicleInfo.name}</h3>
-                              <p className="text-xs text-muted-foreground capitalize">{machineDataAdapter.getType(machine)}</p>
+                            <div className="flex items-start gap-2 flex-1">
+                              <div className="flex-shrink-0 mt-0.5">
+                                <MachineIcon 
+                                  icon={machineDataAdapter.getIcon(machine)}
+                                  size={32}
+                                />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <h3 className="font-semibold text-sm text-card-foreground truncate">{machine.vehicleInfo.name}</h3>
+                                <p className="text-xs text-muted-foreground capitalize">{machineDataAdapter.getType(machine)}</p>
+                                {machineDataAdapter.getNotation(machine) && (
+                                  <div className="flex items-center gap-1 mt-1">
+                                    <FileText className="w-3 h-3 text-muted-foreground flex-shrink-0" />
+                                    <span className="text-xs text-card-foreground font-medium truncate">
+                                      {machineDataAdapter.getNotation(machine)?.code}
+                                    </span>
+                                    <span className="text-xs text-muted-foreground">-</span>
+                                    <span className="text-xs text-muted-foreground truncate">
+                                      {machineDataAdapter.getNotation(machine)?.name}
+                                    </span>
+                                  </div>
+                                )}
+                              </div>
                             </div>
-                            <Badge variant={getStatusBadgeVariant(machine.deviceState.color)} className="text-xs">
+                            <Badge variant={getStatusBadgeVariant(machine.deviceState.color)} className="text-xs flex-shrink-0 ml-2">
                               {machine.deviceState.tooltip}
                             </Badge>
                           </div>

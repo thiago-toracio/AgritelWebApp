@@ -48,6 +48,11 @@ export const mockMachines: MachineData[] = [
       fuelLevel: 78,
       operationHours: 1890,
       engineTemp: 92,
+      notation: {
+        code: 'AP001',
+        name: 'Colheita Talhão A1',
+        localRegistrationTime: new Date(Date.now() - 5400000).toISOString(),
+      }
     },
     deviceMessage: {
       lastUpdate: new Date(),
@@ -118,6 +123,11 @@ export const mockMachines: MachineData[] = [
       fuelLevel: 65,
       operationHours: 2150,
       engineTemp: 89,
+      notation: {
+        code: 'AP002',
+        name: 'Transbordo Talhão B3',
+        localRegistrationTime: new Date(Date.now() - 7200000).toISOString(),
+      }
     },
     deviceMessage: {
       lastUpdate: new Date(),
@@ -166,6 +176,11 @@ export const mockMachines: MachineData[] = [
       fuelLevel: 92,
       operationHours: 560,
       engineTemp: 88,
+      notation: {
+        code: 'AP003',
+        name: 'Preparo Solo C2',
+        localRegistrationTime: new Date(Date.now() - 3600000).toISOString(),
+      }
     },
     deviceMessage: {
       lastUpdate: new Date(),

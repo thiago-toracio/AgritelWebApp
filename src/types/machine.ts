@@ -17,6 +17,12 @@ export interface DeviceState {
   status: string;
 }
 
+export interface NotationData {
+  code: string;
+  name: string;
+  localRegistrationTime?: Date | string;
+}
+
 export interface TelemetryData {
   speed?: number;
   odometer?: number;
@@ -24,6 +30,7 @@ export interface TelemetryData {
   engineTemp?: number;
   operationHours?: number;
   operationHoursUpdatedTime?: Date | string;
+  notation?: NotationData;
 }
 
 export interface VehicleInfoView {

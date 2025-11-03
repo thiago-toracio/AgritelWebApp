@@ -148,5 +148,12 @@ export const machineDataAdapter = {
    */
   getIgnition: (machine: MachineData): boolean => {
     return machine.deviceMessage?.flag?.ignition ?? false;
+  },
+
+  /**
+   * Obtém os dados de notação
+   */
+  getNotation: (machine: MachineData) => {
+    return machine.telemetry?.notation;
   }
 };
