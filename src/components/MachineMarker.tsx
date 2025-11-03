@@ -36,8 +36,9 @@ const MachineMarker: React.FC<MachineMarkerProps> = ({ machine, isSelected, onCl
       <div
         className={cn(
           "relative flex items-center justify-center transition-all duration-300",
-          "shadow-lg hover:shadow-xl hover:scale-110",
-          isSelected && "scale-125 shadow-glow"
+          "shadow-lg hover:shadow-2xl hover:scale-125 hover:brightness-110",
+          "hover:ring-4 hover:ring-primary/30",
+          isSelected && "scale-125 shadow-glow ring-4 ring-primary/50"
         )}
       >
         <MachineIcon 
@@ -55,8 +56,8 @@ const MachineMarker: React.FC<MachineMarkerProps> = ({ machine, isSelected, onCl
       </div>
       
       {/* Hover tooltip with machine details */}
-      <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-4 opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none z-[10000]">
-        <div className="bg-card border border-border rounded-lg px-3 py-2.5 shadow-overlay backdrop-blur-sm min-w-[200px] group-hover:min-w-[240px] transition-all duration-200">
+      <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-4 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none z-[10000] scale-95 group-hover:scale-100">
+        <div className="bg-card border-2 border-primary/20 rounded-lg px-3 py-2.5 shadow-2xl backdrop-blur-md min-w-[200px] group-hover:min-w-[240px] transition-all duration-300 ring-1 ring-primary/10">
           <div className="text-sm font-medium text-card-foreground mb-1">{name}</div>
           <div className="text-xs text-muted-foreground mb-2">{statusTooltip}</div>
           
