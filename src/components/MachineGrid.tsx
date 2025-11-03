@@ -305,12 +305,28 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                                 <h3 className="font-semibold text-sm text-card-foreground truncate">{machine.vehicleInfo.name}</h3>
                               </div>
                             </div>
-                            <Badge variant={getStatusBadgeVariant(machine.deviceState.color)} className="text-xs flex-shrink-0 ml-2">
-                              {machine.deviceState.tooltip}
-                            </Badge>
+                            <div className="flex flex-col items-end gap-1">
+                              <Badge variant={getStatusBadgeVariant(machine.deviceState.color)} className="text-xs flex-shrink-0">
+                                {machine.deviceState.tooltip}
+                              </Badge>
+                              {machine.deviceMessage.lastUpdate && (
+                                <span className="text-[10px] text-muted-foreground">
+                                  {format(new Date(machine.deviceMessage.lastUpdate), "dd/MM/yyyy HH:mm", { locale: ptBR })}
+                                </span>
+                              )}
+                            </div>
                           </div>
 
                           <div className="space-y-2">
+                            {machineDataAdapter.getNotation(machine)?.localRegistrationTime && (
+                              <div className="text-xs">
+                                <span className="text-muted-foreground">Apontamento {machine.deviceMessage.area ? `${machine.deviceMessage.area} às ` : 'às '}</span>
+                                <span className="text-card-foreground font-medium">
+                                  {format(new Date(machineDataAdapter.getNotation(machine)!.localRegistrationTime!), "dd/MM/yyyy HH:mm", { locale: ptBR })}
+                                </span>
+                              </div>
+                            )}
+
                             {machine.deviceMessage.operator && (
                               <div className="flex items-center space-x-1.5 text-xs">
                                 <User className="w-3 h-3 text-muted-foreground" />
@@ -327,15 +343,6 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                                 <span className="text-xs text-muted-foreground">-</span>
                                 <span className="text-xs text-muted-foreground truncate">
                                   {machineDataAdapter.getNotation(machine)?.name}
-                                </span>
-                              </div>
-                            )}
-
-                            {machine.deviceMessage.lastUpdate && (
-                              <div className="text-xs">
-                                <span className="text-muted-foreground">Último registro </span>
-                                <span className="text-card-foreground font-medium">
-                                  {format(new Date(machine.deviceMessage.lastUpdate), "dd/MM/yyyy HH:mm", { locale: ptBR })}
                                 </span>
                               </div>
                             )}
