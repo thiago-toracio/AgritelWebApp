@@ -310,9 +310,16 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                                 {machine.deviceState.tooltip}
                               </Badge>
                               {machine.deviceMessage.lastUpdate && (
-                                <span className="text-[10px] text-muted-foreground">
-                                  {format(new Date(machine.deviceMessage.lastUpdate), "dd/MM/yyyy HH:mm", { locale: ptBR })}
-                                </span>
+                                <div className="flex items-center gap-1">
+                                  <span className="text-[10px] text-muted-foreground">
+                                    {format(new Date(machine.deviceMessage.lastUpdate), "dd/MM/yyyy HH:mm", { locale: ptBR })}
+                                  </span>
+                                  {machine.deviceMessage.networkSource && (
+                                    <Badge variant="outline" className="text-[9px] px-1 py-0 h-4">
+                                      {machine.deviceMessage.networkSource}
+                                    </Badge>
+                                  )}
+                                </div>
                               )}
                             </div>
                           </div>

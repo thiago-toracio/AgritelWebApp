@@ -61,6 +61,7 @@ export interface DeviceMessage {
   operator: string; 
   area: string; 
   task: string;
+  networkSource: string;
 }
 
 export interface TripJourneyData {
