@@ -310,7 +310,7 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                                 {machine.deviceState.tooltip}
                               </Badge>
                               {machine.deviceMessage.lastUpdate && (
-                                <div className="flex items-center gap-1">
+                                <div className="flex items-center gap-1 whitespace-nowrap">
                                   {machine.deviceMessage.networkSource && (
                                     <Badge variant="outline" className="text-[9px] px-1 py-0 h-4">
                                       {machine.deviceMessage.networkSource}
