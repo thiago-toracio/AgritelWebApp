@@ -311,15 +311,6 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                           </div>
 
                           <div className="space-y-2">
-                            {machineDataAdapter.getNotation(machine)?.localRegistrationTime && (
-                              <div className="text-xs">
-                                <span className="text-muted-foreground">Apontamento {machine.deviceMessage.area ? `${machine.deviceMessage.area} às ` : 'às '}</span>
-                                <span className="text-card-foreground font-medium">
-                                  {format(new Date(machineDataAdapter.getNotation(machine)!.localRegistrationTime!), "dd/MM/yyyy HH:mm", { locale: ptBR })}
-                                </span>
-                              </div>
-                            )}
-
                             {machine.deviceMessage.operator && (
                               <div className="flex items-center space-x-1.5 text-xs">
                                 <User className="w-3 h-3 text-muted-foreground" />
@@ -328,7 +319,7 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                             )}
 
                             {machineDataAdapter.getNotation(machine) && (
-                              <div className="flex items-center gap-1 pt-2">
+                              <div className="flex items-center gap-1">
                                 <FileText className="w-3 h-3 text-muted-foreground flex-shrink-0" />
                                 <span className="text-xs text-card-foreground font-medium truncate">
                                   {machineDataAdapter.getNotation(machine)?.code}
@@ -336,6 +327,15 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                                 <span className="text-xs text-muted-foreground">-</span>
                                 <span className="text-xs text-muted-foreground truncate">
                                   {machineDataAdapter.getNotation(machine)?.name}
+                                </span>
+                              </div>
+                            )}
+
+                            {machine.deviceMessage.lastUpdate && (
+                              <div className="text-xs">
+                                <span className="text-muted-foreground">Último registro </span>
+                                <span className="text-card-foreground font-medium">
+                                  {format(new Date(machine.deviceMessage.lastUpdate), "dd/MM/yyyy HH:mm", { locale: ptBR })}
                                 </span>
                               </div>
                             )}
