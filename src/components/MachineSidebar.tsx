@@ -201,7 +201,7 @@ const MachineSidebar = ({ machine, isOpen, onClose }: MachineSidebarProps) => {
                   <Timer className="w-4 h-4 text-muted-foreground" />
                   <span className="text-sm text-muted-foreground">Tempo Ligado</span>
                 </div>
-                <span className="text-sm text-card-foreground font-medium">
+                <span className="text-sm text-foreground font-semibold">
                   {machine.tripJourney.hourmeterTotalFormatted}
                 </span>
               </div>
@@ -213,7 +213,7 @@ const MachineSidebar = ({ machine, isOpen, onClose }: MachineSidebarProps) => {
                   <Settings className="w-4 h-4 text-muted-foreground" />
                   <span className="text-sm text-muted-foreground">Tempo de Trabalho</span>
                 </div>
-                <span className="text-sm text-card-foreground font-medium">
+                <span className="text-sm text-foreground font-semibold">
                   {machine.tripJourney.hourmeterWorkedFormatted}
                 </span>
               </div>
@@ -225,7 +225,7 @@ const MachineSidebar = ({ machine, isOpen, onClose }: MachineSidebarProps) => {
                   <Grid3x3 className="w-4 h-4 text-muted-foreground" />
                   <span className="text-sm text-muted-foreground">Área Aplicada</span>
                 </div>
-                <span className="text-sm text-card-foreground font-medium">
+                <span className="text-sm text-foreground font-semibold">
                   {machine.tripJourney.area.toFixed(2)} ha
                 </span>
               </div>
@@ -237,7 +237,7 @@ const MachineSidebar = ({ machine, isOpen, onClose }: MachineSidebarProps) => {
                   <Droplets className="w-4 h-4 text-muted-foreground" />
                   <span className="text-sm text-muted-foreground">Consumo de Combustível</span>
                 </div>
-                <span className="text-sm text-card-foreground font-medium">
+                <span className="text-sm text-foreground font-semibold">
                   {machine.tripJourney.fuelConsumption.toFixed(1)}L
                 </span>
               </div>
@@ -249,7 +249,7 @@ const MachineSidebar = ({ machine, isOpen, onClose }: MachineSidebarProps) => {
                   <Route className="w-4 h-4 text-muted-foreground" />
                   <span className="text-sm text-muted-foreground">Distância Percorrida</span>
                 </div>
-                <span className="text-sm text-card-foreground font-medium">
+                <span className="text-sm text-foreground font-semibold">
                   {machine.tripJourney.odometer.toFixed(1)} km
                 </span>
               </div>
