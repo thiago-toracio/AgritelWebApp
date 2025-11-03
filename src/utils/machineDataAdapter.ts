@@ -155,5 +155,20 @@ export const machineDataAdapter = {
    */
   getNotation: (machine: MachineData) => {
     return machine.telemetry?.notation;
+  },
+
+  /**
+   * Valida se as coordenadas GPS são válidas
+   * Latitude deve estar entre -90 e 90
+   * Longitude deve estar entre -180 e 180
+   */
+  hasValidCoordinates: (machine: MachineData): boolean => {
+    const lat = machineDataAdapter.getLatitude(machine);
+    const lng = machineDataAdapter.getLongitude(machine);
+    
+    const isValidLat = lat >= -90 && lat <= 90;
+    const isValidLng = lng >= -180 && lng <= 180;
+    
+    return isValidLat && isValidLng;
   }
 };

@@ -6,6 +6,7 @@ import MachineMarker from './MachineMarker';
 import FallbackMachineMarker from './FallbackMachineMarker';
 import { getMapboxToken, PARANA_BOUNDS } from '@/lib/mapbox';
 import { MapStyle } from './MapControls';
+import { machineDataAdapter } from '@/utils/machineDataAdapter';
 
 const MAP_STYLES: Record<MapStyle, string> = {
   satellite: 'mapbox://styles/mapbox/satellite-streets-v12',
@@ -111,9 +112,12 @@ const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine
   useEffect(() => {
     if (!map.current || !mapLoaded || mapboxError) return;
 
+    // Filter machines with valid coordinates
+    const validMachines = machines.filter(machine => machineDataAdapter.hasValidCoordinates(machine));
+
     // Remove old markers that no longer exist
     Object.keys(markers.current).forEach(id => {
-      if (!machines.find(m => m.vehicleInfo.id === id)) {
+      if (!validMachines.find(m => m.vehicleInfo.id === id)) {
         const { marker, root } = markers.current[id];
         root.unmount();
         marker.remove();
@@ -122,7 +126,7 @@ const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine
     });
 
     // Add or update markers
-    machines.forEach(machine => {
+    validMachines.forEach(machine => {
       const existing = markers.current[machine.vehicleInfo.id];
       const machineAlerts = alerts.filter(alert => alert.machineId === machine.vehicleInfo.id && !alert.isRead);
       
@@ -164,10 +168,13 @@ const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine
   useEffect(() => {
     if (!map.current || !mapLoaded || mapboxError || hasAdjustedInitialBounds.current) return;
     
-    if (machines.length > 0) {
+    // Filter machines with valid coordinates
+    const validMachines = machines.filter(machine => machineDataAdapter.hasValidCoordinates(machine));
+    
+    if (validMachines.length > 0) {
       const bounds = new mapboxgl.LngLatBounds();
       
-      machines.forEach(machine => {
+      validMachines.forEach(machine => {
         bounds.extend([machine.deviceMessage.gps.longitude, machine.deviceMessage.gps.latitude]);
       });
       
