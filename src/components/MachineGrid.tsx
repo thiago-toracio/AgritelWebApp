@@ -336,7 +336,7 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                           <div className="space-y-2">
                             {machineDataAdapter.getNotation(machine)?.localRegistrationTime && (
                               <div className="text-xs">
-                                <span className="text-muted-foreground">Apontamento {machine.deviceMessage.area ? `${machine.deviceMessage.area} às ` : 'às '}</span>
+                                <span className="text-muted-foreground">Apontamento às </span>
                                 <span className="text-card-foreground font-medium">
                                   {format(new Date(machineDataAdapter.getNotation(machine)!.localRegistrationTime!), "dd/MM/yyyy HH:mm", { locale: ptBR })}
                                 </span>

@@ -197,9 +197,6 @@ const Index = () => {
       <div className="flex h-screen w-full items-center justify-center bg-background">
         <div className="text-center">
           <div className="mb-4 text-xl font-semibold">Carregando máquinas...</div>
-          <div className="text-muted-foreground">
-            {import.meta.env.VITE_MOCK_DISABLED == 'false' ? '🔧 Modo Mock' : '🌐 API Real'}
-          </div>
         </div>
       </div>
     );
