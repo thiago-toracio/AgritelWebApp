@@ -25,7 +25,8 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
 
   const filteredMachines = machines.filter(machine => {
     const matchesSearch = machine.vehicleInfo.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          machineDataAdapter.getType(machine).toLowerCase().includes(searchTerm.toLowerCase());
+                          machineDataAdapter.getType(machine).toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          (machine.deviceMessage.operator && machine.deviceMessage.operator.toLowerCase().includes(searchTerm.toLowerCase()));
     
     // Map status filter to device state status
     let matchesStatus = true;
@@ -185,7 +186,7 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
-                placeholder="Buscar por nome ou tipo..."
+                placeholder="Buscar por nome, tipo ou motorista..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-10"
@@ -233,11 +234,11 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
           )}
 
           {/* Groups */}
-          <div className="space-y-6 max-h-96 overflow-y-auto">
+          <div className="space-y-4 max-h-96 overflow-y-auto">
             {Object.entries(groupedMachines).map(([area, groupMachines]) => {
               const stats = getGroupStats(groupMachines);
               return (
-                <div key={area} className="space-y-3">
+                <div key={area} className="space-y-2">
                   {/* Group Header */}
                   <div 
                     className="bg-card/50 border border-border/30 rounded-lg p-4 cursor-pointer hover:bg-card/70 transition-colors"
