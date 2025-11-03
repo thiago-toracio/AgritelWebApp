@@ -280,7 +280,7 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
 
                   {/* Group Machines Grid */}
                   {expandedAreas[area] && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3">
                     {groupMachines.map((machine) => (
                       <Card
                         key={machine.vehicleInfo.id}
@@ -291,7 +291,7 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                         )}
                         onClick={() => onMachineSelect(machine.vehicleInfo.id)}
                       >
-                        <CardContent className="p-5">
+                        <CardContent className="p-4">
                           <div className="flex items-start justify-between mb-3">
                             <div>
                               <h3 className="font-medium text-sm text-card-foreground">{machine.vehicleInfo.name}</h3>
@@ -349,82 +349,72 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                               )}
                             </div>
                             <TooltipProvider>
-                              <div className="grid grid-cols-5 gap-2">
-                                {machine.tripJourney.hourmeterTotalFormatted && (
-                                  <Tooltip>
-                                    <TooltipTrigger asChild>
-                                      <div className="flex flex-col items-center cursor-help">
-                                        <Timer className="w-4 h-4 text-muted-foreground mb-1" />
-                                        <span className="text-[11px] font-medium text-card-foreground">
-                                          {machine.tripJourney.hourmeterTotalFormatted}
-                                        </span>
-                                      </div>
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                      <p>Tempo ligado (aproximadamente)</p>
-                                    </TooltipContent>
-                                  </Tooltip>
-                                )}
-                                {machine.tripJourney.hourmeterWorkedFormatted && (
-                                  <Tooltip>
-                                    <TooltipTrigger asChild>
-                                      <div className="flex flex-col items-center cursor-help">
-                                        <Settings className="w-4 h-4 text-muted-foreground mb-1" />
-                                        <span className="text-[11px] font-medium text-card-foreground">
-                                          {machine.tripJourney.hourmeterWorkedFormatted}
-                                        </span>
-                                      </div>
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                      <p>Tempo de trabalho (aproximadamente)</p>
-                                    </TooltipContent>
-                                  </Tooltip>
-                                )}
-                                {machine.tripJourney.area > 0 && (
-                                  <Tooltip>
-                                    <TooltipTrigger asChild>
-                                      <div className="flex flex-col items-center cursor-help">
-                                        <Grid3x3 className="w-4 h-4 text-muted-foreground mb-1" />
-                                        <span className="text-[11px] font-medium text-card-foreground">
-                                          {machine.tripJourney.area.toFixed(2)} ha
-                                        </span>
-                                      </div>
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                      <p>Área aplicada em hectares</p>
-                                    </TooltipContent>
-                                  </Tooltip>
-                                )}
-                                {machine.tripJourney.fuelConsumption > 0 && (
-                                  <Tooltip>
-                                    <TooltipTrigger asChild>
-                                      <div className="flex flex-col items-center cursor-help">
-                                        <Droplets className="w-4 h-4 text-muted-foreground mb-1" />
-                                        <span className="text-[11px] font-medium text-card-foreground">
-                                          {machine.tripJourney.fuelConsumption.toFixed(1)}L
-                                        </span>
-                                      </div>
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                      <p>Combustível em litros</p>
-                                    </TooltipContent>
-                                  </Tooltip>
-                                )}
-                                {machine.tripJourney.odometer > 0 && (
-                                  <Tooltip>
-                                    <TooltipTrigger asChild>
-                                      <div className="flex flex-col items-center cursor-help">
-                                        <Route className="w-4 h-4 text-muted-foreground mb-1" />
-                                        <span className="text-[11px] font-medium text-card-foreground">
-                                          {machine.tripJourney.odometer.toFixed(1)} km
-                                        </span>
-                                      </div>
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                      <p>Distância percorrida</p>
-                                    </TooltipContent>
-                                  </Tooltip>
-                                )}
+                              <div className="grid grid-cols-5 gap-1">
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <div className="flex flex-col items-center cursor-help">
+                                      <Timer className="w-4 h-4 text-muted-foreground mb-1" />
+                                      <span className="text-[11px] font-medium text-card-foreground">
+                                        {machine.tripJourney.hourmeterTotalFormatted || '0:00'}
+                                      </span>
+                                    </div>
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p>Tempo ligado (aproximadamente)</p>
+                                  </TooltipContent>
+                                </Tooltip>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <div className="flex flex-col items-center cursor-help">
+                                      <Settings className="w-4 h-4 text-muted-foreground mb-1" />
+                                      <span className="text-[11px] font-medium text-card-foreground">
+                                        {machine.tripJourney.hourmeterWorkedFormatted || '0:00'}
+                                      </span>
+                                    </div>
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p>Tempo de trabalho (aproximadamente)</p>
+                                  </TooltipContent>
+                                </Tooltip>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <div className="flex flex-col items-center cursor-help">
+                                      <Grid3x3 className="w-4 h-4 text-muted-foreground mb-1" />
+                                      <span className="text-[11px] font-medium text-card-foreground">
+                                        {machine.tripJourney.area.toFixed(2)} ha
+                                      </span>
+                                    </div>
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p>Área aplicada em hectares</p>
+                                  </TooltipContent>
+                                </Tooltip>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <div className="flex flex-col items-center cursor-help">
+                                      <Droplets className="w-4 h-4 text-muted-foreground mb-1" />
+                                      <span className="text-[11px] font-medium text-card-foreground">
+                                        {machine.tripJourney.fuelConsumption.toFixed(1)}L
+                                      </span>
+                                    </div>
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p>Combustível em litros</p>
+                                  </TooltipContent>
+                                </Tooltip>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <div className="flex flex-col items-center cursor-help">
+                                      <Route className="w-4 h-4 text-muted-foreground mb-1" />
+                                      <span className="text-[11px] font-medium text-card-foreground">
+                                        {machine.tripJourney.odometer.toFixed(1)} km
+                                      </span>
+                                    </div>
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p>Distância percorrida</p>
+                                  </TooltipContent>
+                                </Tooltip>
                               </div>
                             </TooltipProvider>
                           </div>
