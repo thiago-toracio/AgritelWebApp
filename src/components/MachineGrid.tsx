@@ -333,7 +333,15 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                           </div>
 
                           <div className="mt-3 pt-3 border-t border-border">
-                            <div className="grid grid-cols-4 gap-2">
+                            <div className="grid grid-cols-5 gap-2">
+                              {machine.tripJourney.hourmeterTotalFormatted && (
+                                <div className="flex flex-col items-center">
+                                  <Clock className="w-4 h-4 text-muted-foreground mb-1" />
+                                  <span className="text-xs font-medium text-card-foreground">
+                                    {machine.tripJourney.hourmeterTotalFormatted}
+                                  </span>
+                                </div>
+                              )}
                               {machine.tripJourney.hourmeterWorkedFormatted && (
                                 <div className="flex flex-col items-center">
                                   <Clock className="w-4 h-4 text-muted-foreground mb-1" />
@@ -344,28 +352,25 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                               )}
                               {machine.tripJourney.area > 0 && (
                                 <div className="flex flex-col items-center">
-                                  <GridIcon className="w-4 h-4 text-muted-foreground mb-1" />
+                                  <MapPin className="w-4 h-4 text-muted-foreground mb-1" />
                                   <span className="text-xs font-medium text-card-foreground">
-                                    {machine.tripJourney.area.toFixed(1)}
+                                    {machine.tripJourney.area.toFixed(2)} ha
                                   </span>
                                 </div>
                               )}
-                              {machine.tripJourney.applicationTotal > 0 && (
-                                <div className="flex flex-col items-center">
-                                  <Droplets className="w-4 h-4 text-muted-foreground mb-1" />
-                                  <span className="text-xs font-medium text-card-foreground">
-                                    {machine.tripJourney.applicationTotal.toFixed(1)}
-                                  </span>
-                                </div>
-                              )}
-                              {machineDataAdapter.getFuel(machine) > 0 && (
+                              {machine.tripJourney.fuelConsumption > 0 && (
                                 <div className="flex flex-col items-center">
                                   <Fuel className="w-4 h-4 text-muted-foreground mb-1" />
-                                  <span className={cn(
-                                    "text-xs font-medium",
-                                    machineDataAdapter.getFuel(machine) < 20 ? "text-warning" : "text-card-foreground"
-                                  )}>
-                                    {machineDataAdapter.getFuel(machine)}
+                                  <span className="text-xs font-medium text-card-foreground">
+                                    {machine.tripJourney.fuelConsumption.toFixed(1)}L
+                                  </span>
+                                </div>
+                              )}
+                              {machine.tripJourney.odometer > 0 && (
+                                <div className="flex flex-col items-center">
+                                  <Gauge className="w-4 h-4 text-muted-foreground mb-1" />
+                                  <span className="text-xs font-medium text-card-foreground">
+                                    {machine.tripJourney.odometer.toFixed(1)} km
                                   </span>
                                 </div>
                               )}
