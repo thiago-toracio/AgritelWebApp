@@ -21,7 +21,7 @@ export class MachineService {
     }
 
     console.log('🌐 Fetching machines from REAL API');
-    const params = startTime ? `?startAt=${encodeURIComponent(startTime)}` : '';
+    const params = startTime ? `?startTime=${encodeURIComponent(startTime)}` : '';
     return apiClient.get<MachineData[]>(`/machines${params}`);
   }
 
