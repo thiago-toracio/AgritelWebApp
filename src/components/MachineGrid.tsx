@@ -393,12 +393,12 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                               )}
                             </div>
                             <TooltipProvider>
-                              <div className="grid grid-cols-5 gap-1">
+                              <div className="grid grid-cols-5 gap-0.5">
                                 <Tooltip>
                                   <TooltipTrigger asChild>
-                                    <div className="flex flex-col items-center cursor-help">
-                                      <Timer className="w-4 h-4 text-muted-foreground mb-1" />
-                                      <span className="text-[11px] font-medium text-card-foreground">
+                                    <div className="flex flex-col items-center cursor-help min-w-0">
+                                      <Timer className="w-3.5 h-3.5 text-muted-foreground mb-0.5 flex-shrink-0" />
+                                      <span className="text-[10px] font-medium text-card-foreground whitespace-nowrap truncate max-w-full">
                                         {machine.tripJourney.hourmeterTotalFormatted || '0:00'}
                                       </span>
                                     </div>
@@ -409,9 +409,9 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                                 </Tooltip>
                                 <Tooltip>
                                   <TooltipTrigger asChild>
-                                    <div className="flex flex-col items-center cursor-help">
-                                      <Settings className="w-4 h-4 text-muted-foreground mb-1" />
-                                      <span className="text-[11px] font-medium text-card-foreground">
+                                    <div className="flex flex-col items-center cursor-help min-w-0">
+                                      <Settings className="w-3.5 h-3.5 text-muted-foreground mb-0.5 flex-shrink-0" />
+                                      <span className="text-[10px] font-medium text-card-foreground whitespace-nowrap truncate max-w-full">
                                         {machine.tripJourney.hourmeterWorkedFormatted || '0:00'}
                                       </span>
                                     </div>
@@ -422,10 +422,10 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                                 </Tooltip>
                                 <Tooltip>
                                   <TooltipTrigger asChild>
-                                    <div className="flex flex-col items-center cursor-help">
-                                      <Grid3x3 className="w-4 h-4 text-muted-foreground mb-1" />
-                                      <span className="text-[11px] font-medium text-card-foreground">
-                                        {machine.tripJourney.area.toFixed(2)} ha
+                                    <div className="flex flex-col items-center cursor-help min-w-0">
+                                      <Grid3x3 className="w-3.5 h-3.5 text-muted-foreground mb-0.5 flex-shrink-0" />
+                                      <span className="text-[10px] font-medium text-card-foreground whitespace-nowrap truncate max-w-full">
+                                        {machine.tripJourney.area.toFixed(1)}
                                       </span>
                                     </div>
                                   </TooltipTrigger>
@@ -435,10 +435,10 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                                 </Tooltip>
                                 <Tooltip>
                                   <TooltipTrigger asChild>
-                                    <div className="flex flex-col items-center cursor-help">
-                                      <Droplets className="w-4 h-4 text-muted-foreground mb-1" />
-                                      <span className="text-[11px] font-medium text-card-foreground">
-                                        {machine.tripJourney.fuelConsumption.toFixed(1)}L
+                                    <div className="flex flex-col items-center cursor-help min-w-0">
+                                      <Droplets className="w-3.5 h-3.5 text-muted-foreground mb-0.5 flex-shrink-0" />
+                                      <span className="text-[10px] font-medium text-card-foreground whitespace-nowrap truncate max-w-full">
+                                        {machine.tripJourney.fuelConsumption.toFixed(0)}L
                                       </span>
                                     </div>
                                   </TooltipTrigger>
@@ -448,10 +448,10 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                                 </Tooltip>
                                 <Tooltip>
                                   <TooltipTrigger asChild>
-                                    <div className="flex flex-col items-center cursor-help">
-                                      <Route className="w-4 h-4 text-muted-foreground mb-1" />
-                                      <span className="text-[11px] font-medium text-card-foreground">
-                                        {machine.tripJourney.odometer.toFixed(1)} km
+                                    <div className="flex flex-col items-center cursor-help min-w-0">
+                                      <Route className="w-3.5 h-3.5 text-muted-foreground mb-0.5 flex-shrink-0" />
+                                      <span className="text-[10px] font-medium text-card-foreground whitespace-nowrap truncate max-w-full">
+                                        {machine.tripJourney.odometer.toFixed(0)} km
                                       </span>
                                     </div>
                                   </TooltipTrigger>
