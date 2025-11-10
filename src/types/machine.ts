@@ -28,6 +28,7 @@ export interface TelemetryData {
   odometer?: number;
   fuelLevel?: number;
   engineTemp?: number;
+  rpm?: number;
   operationHours?: number;
   operationHoursUpdatedTime?: Date | string;
   notation?: NotationData;

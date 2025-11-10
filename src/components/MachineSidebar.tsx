@@ -130,6 +130,18 @@ const MachineSidebar = ({ machine, isOpen, onClose }: MachineSidebarProps) => {
                 </span>
               </div>
 
+              {machineDataAdapter.getRpm(machine) > 0 && (
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <Gauge className="w-4 h-4 text-muted-foreground" />
+                    <span className="text-sm text-muted-foreground">RPM</span>
+                  </div>
+                  <span className="text-sm text-card-foreground font-medium">
+                    {machineDataAdapter.getRpm(machine).toFixed(0)} RPM
+                  </span>
+                </div>
+              )}
+
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
                   <Clock className="w-4 h-4 text-muted-foreground" />

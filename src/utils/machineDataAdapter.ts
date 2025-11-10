@@ -47,6 +47,13 @@ export const machineDataAdapter = {
   },
 
   /**
+   * Obtém o RPM
+   */
+  getRpm: (machine: MachineData): number => {
+    return machine.telemetry?.rpm ?? 0;
+  },
+
+  /**
    * Obtém as horas de operação
    */
   getOperationHours: (machine: MachineData): number => {
