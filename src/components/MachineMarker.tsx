@@ -60,7 +60,15 @@ const MachineMarker: React.FC<MachineMarkerProps> = ({ machine, isSelected, onCl
       {/* Hover tooltip with machine details */}
       <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-4 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none z-[10000] scale-95 group-hover:scale-100">
         <div className="bg-card border-2 border-primary/20 rounded-lg px-3 py-2.5 shadow-2xl backdrop-blur-md min-w-[200px] group-hover:min-w-[240px] transition-all duration-300 ring-1 ring-primary/10">
-          <div className="text-sm font-semibold text-card-foreground mb-1">{name}</div>
+          <div className="flex items-center justify-between gap-2 mb-1">
+            <div className="text-sm font-semibold text-card-foreground">{name}</div>
+            {hasUnreadAlerts && (
+              <div className="flex items-center gap-1 text-warning flex-shrink-0">
+                <AlertTriangle className="w-3.5 h-3.5" />
+                <span className="text-xs font-bold">{unreadAlerts.length}</span>
+              </div>
+            )}
+          </div>
           <div className="text-xs text-muted-foreground mb-2">{statusTooltip}</div>
           
           <div className="space-y-1">
@@ -84,13 +92,6 @@ const MachineMarker: React.FC<MachineMarkerProps> = ({ machine, isSelected, onCl
                     {format(new Date(machineDataAdapter.getNotation(machine)!.localRegistrationTime!), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })}
                   </div>
                 )}
-              </div>
-            )}
-
-            {hasUnreadAlerts && (
-              <div className="flex items-center gap-1.5 text-warning">
-                <AlertTriangle className="w-3 h-3" />
-                <span className="text-xs font-semibold">{unreadAlerts.length} alerta{unreadAlerts.length > 1 ? 's' : ''} não lido{unreadAlerts.length > 1 ? 's' : ''}</span>
               </div>
             )}
 
