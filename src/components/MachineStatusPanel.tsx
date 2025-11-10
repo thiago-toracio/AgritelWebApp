@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
-import { X, Search, MapPin, Gauge, Fuel, Clock } from 'lucide-react';
+import { X, Search, MapPin, Gauge, Fuel, Clock, Activity } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -152,7 +152,7 @@ const MachineStatusPanel = ({
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <div className="flex items-center space-x-2 cursor-help">
-                      <Gauge className="w-4 h-4 text-muted-foreground" />
+                      <Activity className="w-4 h-4 text-muted-foreground" />
                       <span>{machineDataAdapter.getSpeed(machine).toFixed(1)} km/h</span>
                     </div>
                   </TooltipTrigger>
