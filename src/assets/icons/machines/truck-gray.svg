@@ -7,7 +7,7 @@
       }
 
       .cls-2 {
-        fill: #ffb700;
+        fill: #898989;
       }
 
       .cls-3 {
@@ -78,7 +78,7 @@
       }
 
       .cls-13 {
-        stroke: #ffb700;
+        stroke: #898989;
       }
     </style>
     <linearGradient id="linear-gradient" x1="106.99" y1="14.56" x2="106.99" y2="26.08" gradientUnits="userSpaceOnUse">

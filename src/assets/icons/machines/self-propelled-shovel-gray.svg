@@ -15,7 +15,7 @@
       }
 
       .cls-1, .cls-2, .cls-4, .cls-6 {
-        stroke: #ffb700;
+        stroke: #898989;
       }
 
       .cls-7 {
@@ -27,7 +27,7 @@
       }
 
       .cls-15, .cls-9 {
-        fill: #ffb700;
+        fill: #898989;
       }
 
       .cls-16 {
@@ -84,11 +84,11 @@
       }
     </style>
     <linearGradient id="Orchid_14" data-name="Orchid 14" x1="94.85" y1="368.02" x2="114.51" y2="368.02" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#ffb700"/>
-      <stop offset=".22" stop-color="#ffb700" stop-opacity=".76"/>
-      <stop offset=".6" stop-color="#ffb700" stop-opacity=".36"/>
-      <stop offset=".87" stop-color="#ffb700" stop-opacity=".1"/>
-      <stop offset="1" stop-color="#ffb700" stop-opacity="0"/>
+      <stop offset="0" stop-color="#898989"/>
+      <stop offset=".22" stop-color="#898989" stop-opacity=".76"/>
+      <stop offset=".6" stop-color="#898989" stop-opacity=".36"/>
+      <stop offset=".87" stop-color="#898989" stop-opacity=".1"/>
+      <stop offset="1" stop-color="#898989" stop-opacity="0"/>
     </linearGradient>
     <linearGradient id="Orchid_14-2" data-name="Orchid 14" x1="-7264.8" y1="2632.02" x2="-7245.14" y2="2632.02" gradientTransform="translate(-7211.76 3000.03) rotate(-180)" xlink:href="#Orchid_14"/>
     <linearGradient id="Orchid_14-3" data-name="Orchid 14" x1="73.95" y1="311.94" x2="73.95" y2="363.4" xlink:href="#Orchid_14"/>
@@ -111,11 +111,11 @@
       <stop offset=".91" stop-color="#87000c"/>
     </radialGradient>
     <linearGradient id="linear-gradient-3" x1="73.95" y1="70.06" x2="73.95" y2="26.24" gradientUnits="userSpaceOnUse">
-      <stop offset=".51" stop-color="#ffb700"/>
-      <stop offset=".61" stop-color="#ffb700" stop-opacity=".76"/>
-      <stop offset=".78" stop-color="#ffb700" stop-opacity=".36"/>
-      <stop offset=".89" stop-color="#ffb700" stop-opacity=".1"/>
-      <stop offset=".95" stop-color="#ffb700" stop-opacity="0"/>
+      <stop offset=".51" stop-color="#898989"/>
+      <stop offset=".61" stop-color="#898989" stop-opacity=".76"/>
+      <stop offset=".78" stop-color="#898989" stop-opacity=".36"/>
+      <stop offset=".89" stop-color="#898989" stop-opacity=".1"/>
+      <stop offset=".95" stop-color="#898989" stop-opacity="0"/>
     </linearGradient>
   </defs>
   <g class="cls-18">

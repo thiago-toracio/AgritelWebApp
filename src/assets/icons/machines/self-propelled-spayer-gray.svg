@@ -32,7 +32,7 @@
       }
 
       .cls-2, .cls-3, .cls-4, .cls-6, .cls-7, .cls-10 {
-        stroke: #00a61f;
+        stroke: #898989;
       }
 
       .cls-2, .cls-6 {
@@ -56,7 +56,7 @@
       }
 
       .cls-20 {
-        fill: #00a61f;
+        fill: #898989;
       }
 
       .cls-21 {
@@ -117,10 +117,10 @@
       }
     </style>
     <linearGradient id="linear-gradient" x1="251.91" y1="38.86" x2="230.96" y2="37.98" gradientUnits="userSpaceOnUse">
-      <stop offset=".3" stop-color="#00a61f"/>
-      <stop offset=".59" stop-color="#00a61f" stop-opacity=".55"/>
-      <stop offset=".87" stop-color="#00a61f" stop-opacity=".15"/>
-      <stop offset="1" stop-color="#00a61f" stop-opacity="0"/>
+      <stop offset=".3" stop-color="#898989"/>
+      <stop offset=".59" stop-color="#898989" stop-opacity=".55"/>
+      <stop offset=".87" stop-color="#898989" stop-opacity=".15"/>
+      <stop offset="1" stop-color="#898989" stop-opacity="0"/>
     </linearGradient>
     <linearGradient id="Orchid_6" data-name="Orchid 6" x1="262.04" y1="15.87" x2="274.77" y2="31.19" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="#828899"/>
@@ -129,10 +129,10 @@
       <stop offset="1" stop-color="#828899" stop-opacity="0"/>
     </linearGradient>
     <linearGradient id="Orchid_10" data-name="Orchid 10" x1="310.02" y1="188.02" x2="341.12" y2="188.02" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#00a61f"/>
-      <stop offset=".42" stop-color="#00a61f" stop-opacity=".55"/>
-      <stop offset=".81" stop-color="#00a61f" stop-opacity=".15"/>
-      <stop offset="1" stop-color="#00a61f" stop-opacity="0"/>
+      <stop offset="0" stop-color="#898989"/>
+      <stop offset=".42" stop-color="#898989" stop-opacity=".55"/>
+      <stop offset=".81" stop-color="#898989" stop-opacity=".15"/>
+      <stop offset="1" stop-color="#898989" stop-opacity="0"/>
     </linearGradient>
     <linearGradient id="linear-gradient-2" x1="341.95" y1="185.2" x2="319.37" y2="185.2" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="#828899"/>
@@ -147,22 +147,22 @@
     <linearGradient id="Orchid_10-4" data-name="Orchid 10" x1="10260.05" y1="82.88" x2="12197.79" y2="82.88" gradientTransform="translate(12414.2) rotate(-180) scale(1 -1)" xlink:href="#Orchid_10"/>
     <linearGradient id="linear-gradient-5" x1="12198.62" y1="80.06" x2="12176.04" y2="80.06" gradientTransform="translate(12414.2) rotate(-180) scale(1 -1)" xlink:href="#linear-gradient-2"/>
     <linearGradient id="linear-gradient-6" x1="278.77" y1="70" x2="278.77" y2="110.56" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#00a61f"/>
-      <stop offset=".08" stop-color="#00a61f" stop-opacity=".85"/>
-      <stop offset=".24" stop-color="#00a61f" stop-opacity=".55"/>
-      <stop offset=".4" stop-color="#00a61f" stop-opacity=".31"/>
-      <stop offset=".54" stop-color="#00a61f" stop-opacity=".14"/>
-      <stop offset=".66" stop-color="#00a61f" stop-opacity=".04"/>
-      <stop offset=".75" stop-color="#00a61f" stop-opacity="0"/>
+      <stop offset="0" stop-color="#898989"/>
+      <stop offset=".08" stop-color="#898989" stop-opacity=".85"/>
+      <stop offset=".24" stop-color="#898989" stop-opacity=".55"/>
+      <stop offset=".4" stop-color="#898989" stop-opacity=".31"/>
+      <stop offset=".54" stop-color="#898989" stop-opacity=".14"/>
+      <stop offset=".66" stop-color="#898989" stop-opacity=".04"/>
+      <stop offset=".75" stop-color="#898989" stop-opacity="0"/>
     </linearGradient>
     <linearGradient id="linear-gradient-7" x1="5868.33" y1="6172.63" x2="5868.33" y2="6183.47" gradientTransform="translate(6426.93 -5830.57) rotate(90)" gradientUnits="userSpaceOnUse">
-      <stop offset=".1" stop-color="#00a61f"/>
-      <stop offset=".18" stop-color="#00a61f" stop-opacity=".85"/>
-      <stop offset=".33" stop-color="#00a61f" stop-opacity=".55"/>
-      <stop offset=".48" stop-color="#00a61f" stop-opacity=".31"/>
-      <stop offset=".62" stop-color="#00a61f" stop-opacity=".14"/>
-      <stop offset=".74" stop-color="#00a61f" stop-opacity=".04"/>
-      <stop offset=".82" stop-color="#00a61f" stop-opacity="0"/>
+      <stop offset=".1" stop-color="#898989"/>
+      <stop offset=".18" stop-color="#898989" stop-opacity=".85"/>
+      <stop offset=".33" stop-color="#898989" stop-opacity=".55"/>
+      <stop offset=".48" stop-color="#898989" stop-opacity=".31"/>
+      <stop offset=".62" stop-color="#898989" stop-opacity=".14"/>
+      <stop offset=".74" stop-color="#898989" stop-opacity=".04"/>
+      <stop offset=".82" stop-color="#898989" stop-opacity="0"/>
     </linearGradient>
     <linearGradient id="linear-gradient-8" x1="247.59" y1="172.45" x2="307.25" y2="172.45" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="#a3aabf" stop-opacity="0"/>

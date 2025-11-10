@@ -11,7 +11,7 @@
       }
 
       .cls-3 {
-        fill: #00a61f;
+        fill: #898989;
       }
 
       .cls-4 {
@@ -51,7 +51,7 @@
       }
 
       .cls-7, .cls-19 {
-        stroke: #00a61f;
+        stroke: #898989;
       }
 
       .cls-7, .cls-20 {
@@ -135,13 +135,13 @@
     </linearGradient>
     <linearGradient id="linear-gradient-7" x1="3463.19" y1="1539.57" x2="3483.11" y2="1539.57" gradientTransform="translate(3522.5 1581.14) rotate(-180)" xlink:href="#linear-gradient-6"/>
     <linearGradient id="linear-gradient-8" x1="79.66" y1="87.33" x2="79.66" y2="19.01" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#00a61f"/>
-      <stop offset=".1" stop-color="#00a61f" stop-opacity=".78"/>
-      <stop offset=".25" stop-color="#00a61f" stop-opacity=".5"/>
-      <stop offset=".39" stop-color="#00a61f" stop-opacity=".28"/>
-      <stop offset=".52" stop-color="#00a61f" stop-opacity=".13"/>
-      <stop offset=".64" stop-color="#00a61f" stop-opacity=".03"/>
-      <stop offset=".73" stop-color="#00a61f" stop-opacity="0"/>
+      <stop offset="0" stop-color="#898989"/>
+      <stop offset=".1" stop-color="#898989" stop-opacity=".78"/>
+      <stop offset=".25" stop-color="#898989" stop-opacity=".5"/>
+      <stop offset=".39" stop-color="#898989" stop-opacity=".28"/>
+      <stop offset=".52" stop-color="#898989" stop-opacity=".13"/>
+      <stop offset=".64" stop-color="#898989" stop-opacity=".03"/>
+      <stop offset=".73" stop-color="#898989" stop-opacity="0"/>
     </linearGradient>
     <linearGradient id="linear-gradient-9" x1="156.28" y1="174.85" x2="129.45" y2="174.85" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="#828899"/>
@@ -151,10 +151,10 @@
     </linearGradient>
     <linearGradient id="linear-gradient-10" x1="3519.99" y1="174.85" x2="3493.17" y2="174.85" gradientTransform="translate(3523.03) rotate(-180) scale(1 -1)" xlink:href="#linear-gradient-9"/>
     <linearGradient id="linear-gradient-11" x1="115.22" y1="165.74" x2="146.27" y2="165.74" gradientUnits="userSpaceOnUse">
-      <stop offset=".09" stop-color="#00a61f"/>
-      <stop offset=".29" stop-color="#00a61f" stop-opacity=".75"/>
-      <stop offset=".73" stop-color="#00a61f" stop-opacity=".13"/>
-      <stop offset=".81" stop-color="#00a61f" stop-opacity="0"/>
+      <stop offset=".09" stop-color="#898989"/>
+      <stop offset=".29" stop-color="#898989" stop-opacity=".75"/>
+      <stop offset=".73" stop-color="#898989" stop-opacity=".13"/>
+      <stop offset=".81" stop-color="#898989" stop-opacity="0"/>
     </linearGradient>
     <linearGradient id="linear-gradient-12" x1="3864.44" y1="165.74" x2="3895.49" y2="165.74" gradientTransform="translate(3908.54) rotate(-180) scale(1 -1)" xlink:href="#linear-gradient-11"/>
     <radialGradient id="Summer_3" data-name="Summer 3" cx="79.66" cy="101.12" fx="79.66" fy="101.12" r="7.61" gradientUnits="userSpaceOnUse">
