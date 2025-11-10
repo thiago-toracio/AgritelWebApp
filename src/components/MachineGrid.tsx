@@ -305,13 +305,13 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                       <Card
                         key={machine.vehicleInfo.id}
                         className={cn(
-                          "cursor-pointer transition-all duration-200 hover:shadow-lg border-2 w-full",
+                          "cursor-pointer transition-all duration-200 hover:shadow-lg border-2 w-full h-[400px]",
                           getStatusBgClass(machine),
                           selectedMachine === machine.vehicleInfo.id && "ring-2 ring-primary shadow-glow"
                         )}
                         onClick={() => onMachineSelect(machine.vehicleInfo.id)}
                       >
-                        <CardContent className="p-4">
+                        <CardContent className="p-4 h-full flex flex-col">
                           <div className="flex items-start justify-between mb-3">
                             <div className="flex items-start gap-2 flex-1">
                               <div className="flex-shrink-0 mt-0.5 relative">
@@ -352,7 +352,7 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                             </div>
                           </div>
 
-                          <div className="space-y-2">
+                          <div className="space-y-2 flex-1">
                             {machine.deviceMessage.operator && (
                               <div className="flex items-center space-x-1.5 text-xs">
                                 <User className="w-3 h-3 text-muted-foreground" />
@@ -383,7 +383,7 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                             )}
                           </div>
 
-                          <div className="mt-3 pt-3 border-t border-border">
+                          <div className="mt-auto pt-3 border-t border-border">
                             <div className="flex justify-between items-center mb-2 bg-primary px-3 py-2 rounded-md -mx-2">
                               <span className="text-[10px] text-primary-foreground uppercase tracking-wide font-semibold">Jornada</span>
                               {journeyStartTime && (
