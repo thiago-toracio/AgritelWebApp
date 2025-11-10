@@ -74,7 +74,6 @@ export const mockMachines: MachineData[] = [
       },
       operator: 'João Silva',
       area: 'Talhão A1',
-      task: 'Colheita de cana',
       networkSource: 'WIFI',
     },
     deviceState: {
@@ -150,7 +149,6 @@ export const mockMachines: MachineData[] = [
       },
       operator: 'Maria Santos',
       area: 'Talhão B3',
-      task: 'Carregamento',
       networkSource: 'GSM',
     },
     deviceState: {
@@ -204,7 +202,6 @@ export const mockMachines: MachineData[] = [
       },
       operator: 'Pedro Oliveira',
       area: 'Talhão C2',
-      task: 'Preparo de solo',
       networkSource: 'WIFI',
     },
     deviceState: {
@@ -255,7 +252,6 @@ export const mockMachines: MachineData[] = [
       },
       operator: 'Carlos Ferreira',
       area: 'Em trânsito',
-      task: 'Deslocamento',
       networkSource: 'GSM',
     },
     deviceState: {
@@ -304,7 +300,6 @@ export const mockMachines: MachineData[] = [
       },
       operator: 'Ana Costa',
       area: 'Em trânsito',
-      task: 'Deslocamento',
       networkSource: 'WIFI',
     },
     deviceState: {
@@ -353,7 +348,6 @@ export const mockMachines: MachineData[] = [
       },
       operator: 'Ricardo Alves',
       area: 'Em trânsito',
-      task: 'Deslocamento',
       networkSource: 'GSM',
     },
     deviceState: {
@@ -402,7 +396,6 @@ export const mockMachines: MachineData[] = [
       },
       operator: 'Fernando Lima',
       area: 'Em trânsito',
-      task: 'Transporte',
       networkSource: 'WIFI',
     },
     deviceState: {
@@ -453,7 +446,6 @@ export const mockMachines: MachineData[] = [
       },
       operator: 'Lucas Santos',
       area: 'Talhão D5',
-      task: 'Manobra',
       networkSource: 'GSM',
     },
     deviceState: {
@@ -502,7 +494,6 @@ export const mockMachines: MachineData[] = [
       },
       operator: 'Juliana Rocha',
       area: 'Talhão E2',
-      task: 'Manobra',
       networkSource: 'WIFI',
     },
     deviceState: {
@@ -573,7 +564,6 @@ export const mockMachines: MachineData[] = [
       },
       operator: 'Marcos Pereira',
       area: 'Talhão F1',
-      task: 'Manobra',
       networkSource: 'GSM',
     },
     deviceState: {
@@ -622,7 +612,6 @@ export const mockMachines: MachineData[] = [
       },
       operator: 'Sônia Martins',
       area: 'Talhão G3',
-      task: 'Manobra',
       networkSource: 'WIFI',
     },
     deviceState: {
@@ -673,7 +662,6 @@ export const mockMachines: MachineData[] = [
       },
       operator: 'Rodrigo Silva',
       area: 'Talhão H4',
-      task: 'Parado com motor ligado',
       networkSource: 'GSM',
     },
     deviceState: {
@@ -744,7 +732,6 @@ export const mockMachines: MachineData[] = [
       },
       operator: 'Paula Andrade',
       area: 'Talhão I2',
-      task: 'Parado com motor ligado',
       networkSource: 'WIFI',
     },
     deviceState: {
@@ -793,7 +780,6 @@ export const mockMachines: MachineData[] = [
       },
       operator: 'Gustavo Mendes',
       area: 'Talhão J5',
-      task: 'Parado com motor ligado',
       networkSource: 'GSM',
     },
     deviceState: {
@@ -842,7 +828,6 @@ export const mockMachines: MachineData[] = [
       },
       operator: 'Beatriz Gomes',
       area: 'Talhão K1',
-      task: 'Parado com motor ligado',
       networkSource: 'WIFI',
     },
     deviceState: {
@@ -893,7 +878,6 @@ export const mockMachines: MachineData[] = [
       },
       operator: '',
       area: '',
-      task: '',
       networkSource: 'GSM',
     },
     deviceState: {
@@ -942,7 +926,6 @@ export const mockMachines: MachineData[] = [
       },
       operator: '',
       area: '',
-      task: '',
       networkSource: 'WIFI',
     },
     deviceState: {
@@ -991,7 +974,6 @@ export const mockMachines: MachineData[] = [
       },
       operator: '',
       area: '',
-      task: '',
       networkSource: 'GSM',
     },
     deviceState: {
@@ -1040,7 +1022,6 @@ export const mockMachines: MachineData[] = [
       },
       operator: '',
       area: '',
-      task: '',
       networkSource: 'WIFI',
     },
     deviceState: {
@@ -1089,7 +1070,6 @@ export const mockMachines: MachineData[] = [
       },
       operator: '',
       area: '',
-      task: '',
       networkSource: 'GSM',
     },
     deviceState: {
@@ -1138,7 +1118,6 @@ export const mockMachines: MachineData[] = [
       },
       operator: '',
       area: '',
-      task: '',
       networkSource: 'WIFI',
     },
     deviceState: {

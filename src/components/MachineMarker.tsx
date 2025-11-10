@@ -1,6 +1,6 @@
 import React from 'react';
 import { MachineData, MachineAlertData } from '@/types/machine';
-import { AlertTriangle, Gauge, Fuel, Clock, MapPin, Activity } from 'lucide-react';
+import { AlertTriangle, Gauge, Fuel, Clock, MapPin, Activity, User, Settings } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import MachineIcon from './MachineIcons';
 import { machineDataAdapter } from '@/utils/machineDataAdapter';
@@ -62,6 +62,40 @@ const MachineMarker: React.FC<MachineMarkerProps> = ({ machine, isSelected, onCl
           <div className="text-xs text-muted-foreground mb-2">{statusTooltip}</div>
           
           <div className="space-y-1">
+            {machine.deviceMessage.operator && (
+              <div className="flex items-center gap-1.5">
+                <User className="w-3 h-3 text-muted-foreground" />
+                <span className="text-xs font-semibold text-card-foreground">{machine.deviceMessage.operator}</span>
+              </div>
+            )}
+
+            {machineDataAdapter.getNotation(machine) && (
+              <div className="space-y-0.5">
+                <div className="flex items-center gap-1.5">
+                  <Settings className="w-3 h-3 text-muted-foreground" />
+                  <span className="text-xs font-semibold text-card-foreground">
+                    {machineDataAdapter.getNotation(machine)?.code} - {machineDataAdapter.getNotation(machine)?.name}
+                  </span>
+                </div>
+                {machineDataAdapter.getNotation(machine)?.localRegistrationTime && (
+                  <div className="text-[11px] text-muted-foreground pl-5">
+                    {format(new Date(machineDataAdapter.getNotation(machine)!.localRegistrationTime!), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {machine.deviceMessage.area && (
+              <div className="flex items-center gap-1.5">
+                <MapPin className="w-3 h-3 text-muted-foreground" />
+                <span className="text-xs font-semibold text-card-foreground">{machine.deviceMessage.area}</span>
+              </div>
+            )}
+
+            {(machine.deviceMessage.operator || machineDataAdapter.getNotation(machine) || machine.deviceMessage.area) && (
+              <div className="border-t border-border pt-1 mt-1" />
+            )}
+
             <div className="flex items-center gap-1.5">
               <Activity className="w-3 h-3 text-muted-foreground" />
               <span className="text-xs font-semibold text-card-foreground">{machineDataAdapter.getSpeed(machine)} km/h</span>

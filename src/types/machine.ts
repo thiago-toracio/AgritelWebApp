@@ -60,7 +60,6 @@ export interface DeviceMessage {
   gps: GpsData;
   operator: string; 
   area: string; 
-  task: string;
   networkSource: string;
 }
 

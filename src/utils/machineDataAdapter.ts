@@ -116,13 +116,6 @@ export const machineDataAdapter = {
   },
 
   /**
-   * Obtém a tarefa
-   */
-  getTask: (machine: MachineData): string => {
-    return machine.deviceMessage?.task ?? '';
-  },
-
-  /**
    * Obtém o status
    */
   getStatus: (machine: MachineData): string => {

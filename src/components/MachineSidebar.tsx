@@ -18,7 +18,7 @@ import {
   Route
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { formatDistanceToNow } from 'date-fns';
+import { format, formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { machineDataAdapter } from '@/utils/machineDataAdapter';
 
@@ -155,27 +155,35 @@ const MachineSidebar = ({ machine, isOpen, onClose }: MachineSidebarProps) => {
           </CardContent>
         </Card>
 
-        {/* Operator & Task */}
-        {(machine.deviceMessage.operator || machine.deviceMessage.task || machine.deviceMessage.area) && (
+        {/* Operator & Notation */}
+        {(machine.deviceMessage.operator || machineDataAdapter.getNotation(machine) || machine.deviceMessage.area) && (
           <Card className="mb-6">
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-medium">Operação</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               {machine.deviceMessage.operator && (
-                <div className="space-y-1">
-                  <span className="text-sm text-muted-foreground">Operador:</span>
-                  <div className="flex items-center space-x-2">
-                    <User className="w-4 h-4 text-muted-foreground" />
-                    <span className="text-sm text-card-foreground font-medium">{machine.deviceMessage.operator}</span>
-                  </div>
+                <div className="flex items-center space-x-2">
+                  <User className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-sm text-card-foreground font-medium">{machine.deviceMessage.operator}</span>
                 </div>
               )}
-              {machine.deviceMessage.task && (
-                <div className="flex items-center space-x-2">
-                  <Settings className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">Tarefa:</span>
-                  <span className="text-sm text-card-foreground">{machine.deviceMessage.task}</span>
+              {machineDataAdapter.getNotation(machine) && (
+                <div className="space-y-2">
+                  <div className="flex items-center space-x-2">
+                    <Settings className="w-4 h-4 text-muted-foreground" />
+                    <span className="text-sm text-muted-foreground">Apontamento:</span>
+                  </div>
+                  <div className="pl-6">
+                    <div className="text-sm text-card-foreground font-medium mb-1">
+                      {machineDataAdapter.getNotation(machine)?.code} - {machineDataAdapter.getNotation(machine)?.name}
+                    </div>
+                    {machineDataAdapter.getNotation(machine)?.localRegistrationTime && (
+                      <div className="text-xs text-muted-foreground">
+                        {format(new Date(machineDataAdapter.getNotation(machine)!.localRegistrationTime!), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })}
+                      </div>
+                    )}
+                  </div>
                 </div>
               )}
               {machine.deviceMessage.area && (
