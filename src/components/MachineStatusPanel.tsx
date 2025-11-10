@@ -148,7 +148,7 @@ const MachineStatusPanel = ({
           <TooltipProvider>
             <div className="space-y-3 text-sm mb-3">
               {/* Telemetry data in one line */}
-              <div className="flex items-center justify-between gap-3 py-2 px-3 bg-muted/30 rounded-md">
+              <div className="flex items-center justify-between gap-2 py-2 px-3 bg-muted/30 rounded-md">
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <div className="flex items-center space-x-2 cursor-help">
@@ -160,6 +160,20 @@ const MachineStatusPanel = ({
                     <p>Velocidade atual do veículo</p>
                   </TooltipContent>
                 </Tooltip>
+
+                {machineDataAdapter.getRpm(machine) > 0 && (
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="flex items-center space-x-2 cursor-help">
+                        <Gauge className="w-4 h-4 text-muted-foreground" />
+                        <span>{machineDataAdapter.getRpm(machine).toFixed(0)} RPM</span>
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Rotações por minuto do motor</p>
+                    </TooltipContent>
+                  </Tooltip>
+                )}
 
                 <Tooltip>
                   <TooltipTrigger asChild>
