@@ -305,7 +305,7 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                       <Card
                         key={machine.vehicleInfo.id}
                         className={cn(
-                          "cursor-pointer transition-all duration-200 hover:shadow-lg border-2 w-full h-[400px]",
+                          "cursor-pointer transition-all duration-200 hover:shadow-lg border-2 w-full h-[280px]",
                           getStatusBgClass(machine),
                           selectedMachine === machine.vehicleInfo.id && "ring-2 ring-primary shadow-glow"
                         )}
