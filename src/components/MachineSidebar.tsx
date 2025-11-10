@@ -19,6 +19,12 @@ import {
   AlertTriangle,
   Settings
 } from 'lucide-react';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import { format, formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -119,53 +125,83 @@ const MachineSidebar = ({ machine, isOpen, onClose }: MachineSidebarProps) => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <Activity className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">Velocidade</span>
-                </div>
-                <span className={cn("font-medium", getStatusColorClass(machine.deviceState.color))}>
-                  {machineDataAdapter.getSpeed(machine)} km/h
-                </span>
-              </div>
+            <TooltipProvider>
+              <div className="space-y-3">
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div className="flex items-center justify-between cursor-help">
+                      <div className="flex items-center space-x-2">
+                        <Activity className="w-4 h-4 text-muted-foreground" />
+                        <span className="text-sm text-muted-foreground">Velocidade</span>
+                      </div>
+                      <span className={cn("font-medium", getStatusColorClass(machine.deviceState.color))}>
+                        {machineDataAdapter.getSpeed(machine)} km/h
+                      </span>
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Velocidade atual do veículo em quilômetros por hora</p>
+                  </TooltipContent>
+                </Tooltip>
 
-              {machineDataAdapter.getRpm(machine) > 0 && (
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <Gauge className="w-4 h-4 text-muted-foreground" />
-                    <span className="text-sm text-muted-foreground">RPM</span>
-                  </div>
-                  <span className="text-sm text-card-foreground font-medium">
-                    {machineDataAdapter.getRpm(machine).toFixed(0)} RPM
-                  </span>
-                </div>
-              )}
+                {machineDataAdapter.getRpm(machine) > 0 && (
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="flex items-center justify-between cursor-help">
+                        <div className="flex items-center space-x-2">
+                          <Gauge className="w-4 h-4 text-muted-foreground" />
+                          <span className="text-sm text-muted-foreground">RPM</span>
+                        </div>
+                        <span className="text-sm text-card-foreground font-medium">
+                          {machineDataAdapter.getRpm(machine).toFixed(0)} RPM
+                        </span>
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Rotações por minuto do motor</p>
+                    </TooltipContent>
+                  </Tooltip>
+                )}
 
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <Clock className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">Última atualização</span>
-                </div>
-                <span className="text-sm text-card-foreground">
-                  {formatDistanceToNow(new Date(machine.deviceMessage.lastUpdate), { addSuffix: true, locale: ptBR })}
-                </span>
-              </div>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div className="flex items-center justify-between cursor-help">
+                      <div className="flex items-center space-x-2">
+                        <Clock className="w-4 h-4 text-muted-foreground" />
+                        <span className="text-sm text-muted-foreground">Última atualização</span>
+                      </div>
+                      <span className="text-sm text-card-foreground">
+                        {formatDistanceToNow(new Date(machine.deviceMessage.lastUpdate), { addSuffix: true, locale: ptBR })}
+                      </span>
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Horário da última atualização dos dados da máquina</p>
+                  </TooltipContent>
+                </Tooltip>
 
-              <div 
-                className="flex items-center justify-between cursor-pointer hover:bg-muted/50 -mx-2 px-2 py-1 rounded transition-colors"
-                onClick={() => {
-                  const coords = `${machine.deviceMessage.gps.latitude.toFixed(6)}, ${machine.deviceMessage.gps.longitude.toFixed(6)}`;
-                  navigator.clipboard.writeText(coords);
-                  toast.success('Coordenadas copiadas para a área de transferência');
-                }}
-              >
-                <div className="flex items-center space-x-2">
-                  <MapPin className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">Copiar Coordenadas</span>
-                </div>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div 
+                      className="flex items-center justify-between cursor-pointer hover:bg-muted/50 -mx-2 px-2 py-1 rounded transition-colors"
+                      onClick={() => {
+                        const coords = `${machine.deviceMessage.gps.latitude.toFixed(6)}, ${machine.deviceMessage.gps.longitude.toFixed(6)}`;
+                        navigator.clipboard.writeText(coords);
+                        toast.success('Coordenadas copiadas para a área de transferência');
+                      }}
+                    >
+                      <div className="flex items-center space-x-2">
+                        <MapPin className="w-4 h-4 text-muted-foreground" />
+                        <span className="text-sm text-muted-foreground">Copiar Coordenadas</span>
+                      </div>
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Clique para copiar as coordenadas GPS da máquina</p>
+                  </TooltipContent>
+                </Tooltip>
               </div>
-            </div>
+            </TooltipProvider>
           </CardContent>
         </Card>
 
@@ -231,67 +267,102 @@ const MachineSidebar = ({ machine, isOpen, onClose }: MachineSidebarProps) => {
               }
 
               return (
-                <>
+                <TooltipProvider>
                   {machine.tripJourney.hourmeterTotalFormatted && (
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <Timer className="w-4 h-4 text-muted-foreground" />
-                        <span className="text-sm text-muted-foreground">Tempo Ligado</span>
-                      </div>
-                      <span className="text-sm text-foreground font-semibold">
-                        {machine.tripJourney.hourmeterTotalFormatted}
-                      </span>
-                    </div>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div className="flex items-center justify-between cursor-help">
+                          <div className="flex items-center space-x-2">
+                            <Timer className="w-4 h-4 text-muted-foreground" />
+                            <span className="text-sm text-muted-foreground">Tempo Ligado</span>
+                          </div>
+                          <span className="text-sm text-foreground font-semibold">
+                            {machine.tripJourney.hourmeterTotalFormatted}
+                          </span>
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Tempo total que a máquina ficou ligada na jornada</p>
+                      </TooltipContent>
+                    </Tooltip>
                   )}
 
                   {machine.tripJourney.hourmeterWorkedFormatted && (
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <Settings className="w-4 h-4 text-muted-foreground" />
-                        <span className="text-sm text-muted-foreground">Tempo de Trabalho</span>
-                      </div>
-                      <span className="text-sm text-foreground font-semibold">
-                        {machine.tripJourney.hourmeterWorkedFormatted}
-                      </span>
-                    </div>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div className="flex items-center justify-between cursor-help">
+                          <div className="flex items-center space-x-2">
+                            <Settings className="w-4 h-4 text-muted-foreground" />
+                            <span className="text-sm text-muted-foreground">Tempo de Trabalho</span>
+                          </div>
+                          <span className="text-sm text-foreground font-semibold">
+                            {machine.tripJourney.hourmeterWorkedFormatted}
+                          </span>
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Tempo efetivo trabalhado pela máquina na jornada</p>
+                      </TooltipContent>
+                    </Tooltip>
                   )}
 
                   {machine.tripJourney.area > 0 && (
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <Grid3x3 className="w-4 h-4 text-muted-foreground" />
-                        <span className="text-sm text-muted-foreground">Área Aplicada</span>
-                      </div>
-                      <span className="text-sm text-foreground font-semibold">
-                        {machine.tripJourney.area.toFixed(2)} ha
-                      </span>
-                    </div>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div className="flex items-center justify-between cursor-help">
+                          <div className="flex items-center space-x-2">
+                            <Grid3x3 className="w-4 h-4 text-muted-foreground" />
+                            <span className="text-sm text-muted-foreground">Área Aplicada</span>
+                          </div>
+                          <span className="text-sm text-foreground font-semibold">
+                            {machine.tripJourney.area.toFixed(2)} ha
+                          </span>
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Área total trabalhada em hectares na jornada</p>
+                      </TooltipContent>
+                    </Tooltip>
                   )}
 
                   {machine.tripJourney.fuelConsumption > 0 && (
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <Droplets className="w-4 h-4 text-muted-foreground" />
-                        <span className="text-sm text-muted-foreground">Consumo de Combustível</span>
-                      </div>
-                      <span className="text-sm text-foreground font-semibold">
-                        {machine.tripJourney.fuelConsumption.toFixed(1)}L
-                      </span>
-                    </div>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div className="flex items-center justify-between cursor-help">
+                          <div className="flex items-center space-x-2">
+                            <Droplets className="w-4 h-4 text-muted-foreground" />
+                            <span className="text-sm text-muted-foreground">Consumo de Combustível</span>
+                          </div>
+                          <span className="text-sm text-foreground font-semibold">
+                            {machine.tripJourney.fuelConsumption.toFixed(1)}L
+                          </span>
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Total de combustível consumido na jornada em litros</p>
+                      </TooltipContent>
+                    </Tooltip>
                   )}
 
                   {machine.tripJourney.odometer > 0 && (
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <Route className="w-4 h-4 text-muted-foreground" />
-                        <span className="text-sm text-muted-foreground">Distância Percorrida</span>
-                      </div>
-                      <span className="text-sm text-foreground font-semibold">
-                        {machine.tripJourney.odometer.toFixed(1)} km
-                      </span>
-                    </div>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div className="flex items-center justify-between cursor-help">
+                          <div className="flex items-center space-x-2">
+                            <Route className="w-4 h-4 text-muted-foreground" />
+                            <span className="text-sm text-muted-foreground">Distância Percorrida</span>
+                          </div>
+                          <span className="text-sm text-foreground font-semibold">
+                            {machine.tripJourney.odometer.toFixed(1)} km
+                          </span>
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Distância total percorrida pela máquina na jornada</p>
+                      </TooltipContent>
+                    </Tooltip>
                   )}
-                </>
+                </TooltipProvider>
               );
             })()}
           </CardContent>
