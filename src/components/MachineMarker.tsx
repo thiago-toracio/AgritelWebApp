@@ -111,13 +111,6 @@ const MachineMarker: React.FC<MachineMarkerProps> = ({ machine, isSelected, onCl
               <span className="text-xs font-semibold text-card-foreground">{machineDataAdapter.getSpeed(machine)} km/h</span>
             </div>
             
-            {machine.telemetry?.fuelLevel !== undefined && machine.telemetry.fuelLevel > 0 && (
-              <div className="flex items-center gap-1.5">
-                <Fuel className="w-3 h-3 text-muted-foreground" />
-                <span className="text-xs font-semibold text-card-foreground">{machine.telemetry.fuelLevel.toFixed(1)}L</span>
-              </div>
-            )}
-            
             {machine.telemetry?.odometer !== undefined && machine.telemetry.odometer > 0 && (
               <div className="flex items-center gap-1.5">
                 <Gauge className="w-3 h-3 text-muted-foreground" />

@@ -132,16 +132,6 @@ const MachineSidebar = ({ machine, isOpen, onClose }: MachineSidebarProps) => {
 
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
-                  <Fuel className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">Nível de Combustível</span>
-                </div>
-                <span className="text-sm text-card-foreground font-medium">
-                  {machineDataAdapter.getFuel(machine).toFixed(1)}L
-                </span>
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
                   <Clock className="w-4 h-4 text-muted-foreground" />
                   <span className="text-sm text-muted-foreground">Última atualização</span>
                 </div>

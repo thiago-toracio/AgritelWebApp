@@ -146,11 +146,6 @@ const MachineStatusPanel = ({
                 <Gauge className="w-4 h-4 text-muted-foreground" />
                 <span>{machineDataAdapter.getSpeed(machine).toFixed(1)} km/h</span>
               </div>
-              
-              <div className="flex items-center space-x-2">
-                <Fuel className="w-4 h-4 text-muted-foreground" />
-                <span>{machineDataAdapter.getFuel(machine).toFixed(1)}L</span>
-              </div>
 
               <div className="flex items-center space-x-2">
                 <Clock className="w-4 h-4 text-muted-foreground" />
