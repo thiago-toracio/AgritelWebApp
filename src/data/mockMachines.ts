@@ -176,6 +176,7 @@ export const mockMachines: MachineData[] = [
       fuelLevel: 92,
       operationHours: 560,
       engineTemp: 88,
+      rpm: 1000,
       notation: {
         code: 'AP003',
         name: 'Preparo Solo C2',
@@ -231,6 +232,7 @@ export const mockMachines: MachineData[] = [
       fuelLevel: 45,
       operationHours: 2100,
       engineTemp: 85,
+      rpm: 2000,
     },
     deviceMessage: {
       lastUpdate: new Date(),
