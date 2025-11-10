@@ -227,7 +227,7 @@ const MachineSidebar = ({ machine, isOpen, onClose }: MachineSidebarProps) => {
             {machine.tripJourney.hourmeterWorkedFormatted && (
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
-                  <Clock className="w-4 h-4 text-muted-foreground" />
+                  <Timer className="w-4 h-4 text-muted-foreground" />
                   <span className="text-sm text-muted-foreground">Tempo de Trabalho</span>
                 </div>
                 <span className="text-sm text-foreground font-semibold">
