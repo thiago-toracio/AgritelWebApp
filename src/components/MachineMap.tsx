@@ -164,11 +164,9 @@ const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine
     });
   }, [machines, mapLoaded, mapboxError, selectedMachine, onMachineSelect, alerts]);
 
-  // Ajustar bounds para mostrar todas as máquinas na primeira carga
   useEffect(() => {
     if (!map.current || !mapLoaded || mapboxError || hasAdjustedInitialBounds.current) return;
     
-    // Filter machines with valid coordinates
     const validMachines = machines.filter(machine => machineDataAdapter.hasValidCoordinates(machine));
     
     if (validMachines.length > 0) {
@@ -178,7 +176,6 @@ const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine
         bounds.extend([machine.deviceMessage.gps.longitude, machine.deviceMessage.gps.latitude]);
       });
       
-      // Ajustar mapa para mostrar todas as máquinas
       map.current.fitBounds(bounds, {
         padding: { top: 100, bottom: 100, left: 100, right: 100 },
         maxZoom: 14,
@@ -189,7 +186,6 @@ const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine
     }
   }, [machines, mapLoaded, mapboxError]);
 
-  // Focus on machine when focusOnMachine changes
   useEffect(() => {
     if (focusOnMachine && map.current && mapLoaded && !mapboxError) {
       const machine = machines.find(m => m.vehicleInfo.id === focusOnMachine);
@@ -206,10 +202,8 @@ const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine
 
   return (
     <div className="relative w-full h-full bg-background">
-      {/* Mapbox container - interativo */}
       <div ref={mapContainer} className="absolute inset-0 z-0" style={{ pointerEvents: 'auto' }} />
       
-      {/* Fallback for when Mapbox fails */}
       {mapboxError && (
         <div className="absolute inset-0 z-10 bg-gradient-to-br from-slate-900 to-slate-800"
           style={{
@@ -242,7 +236,6 @@ const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine
       )}
       
       
-      {/* Fallback demo markers quando Mapbox falha */}
       {mapboxError && mapLoaded && (
         <div className="absolute inset-0 z-20 pointer-events-none">
           {machines.map((machine) => (
@@ -257,7 +250,6 @@ const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine
         </div>
       )}
       
-      {/* Loading indicator */}
       {!mapLoaded && (
         <div className="absolute inset-0 z-30 flex items-center justify-center bg-background">
           <div className="text-center">

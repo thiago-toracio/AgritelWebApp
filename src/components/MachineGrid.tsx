@@ -39,15 +39,6 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
     // Map status filter to device state status
     let matchesStatus = true;
     if (statusFilter !== 'all') {
-      const statusMap: Record<string, string> = {
-        'active': 'active',
-        'moving': 'active',
-        'maneuvering': 'active',
-        'idle': 'idle',
-        'offline': 'offline'
-      };
-      
-      // Filter by tooltip instead of status
       const tooltipMap: Record<string, string> = {
         'active': 'Trabalhando',
         'moving': 'Deslocando',
@@ -164,15 +155,7 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
 
   const getStatusBgClass = (machine: MachineData) => {
     const color = machine.deviceState.color;
-    const tooltip = machine.deviceState?.tooltip?.toLowerCase() || '';
-    const ignition = machine.deviceMessage?.flag?.ignition;
-    const hasConnection = !machine.deviceMessage?.hasLostConnection;
-    
-    // Fix for "Parado Desligado" - should be red, not green
-    if ((ignition === false && hasConnection) || tooltip.includes('desligado')) {
-      return 'bg-status-idle/10 border-status-idle/30';
-    }
-    
+
     switch (color) {
       case 'green':
         return 'bg-status-active/10 border-status-active/30';
