@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Search, Filter, Grid, X, Fuel, Clock, MapPin, Calendar, Gauge, Grid as GridIcon, Droplets, User, ChevronDown, ChevronUp, Maximize2, Minimize2, Timer, Settings, Grid3x3, Route, FileText } from 'lucide-react';
+import { Search, Filter, Grid, X, Fuel, Clock, MapPin, Calendar, Gauge, Grid as GridIcon, Droplets, User, ChevronDown, ChevronUp, Maximize2, Minimize2, Timer, Settings, Grid3x3, Route, FileText, AlertTriangle } from 'lucide-react';
 import MachineIcon from '@/components/MachineIcons';
 import { cn } from '@/lib/utils';
 import { machineDataAdapter } from '@/utils/machineDataAdapter';
@@ -304,11 +304,20 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                         <CardContent className="p-4">
                           <div className="flex items-start justify-between mb-3">
                             <div className="flex items-start gap-2 flex-1">
-                              <div className="flex-shrink-0 mt-0.5">
+                              <div className="flex-shrink-0 mt-0.5 relative">
                                 <MachineIcon 
                                   icon={machineDataAdapter.getIcon(machine)}
                                   size={32}
                                 />
+                                {/* Alert indicator on machine icon */}
+                                {machine.alerts.filter(alert => !alert.isRead).length > 0 && (
+                                  <div className="absolute -top-1 -right-1 min-w-[16px] h-4 bg-warning rounded-full flex items-center justify-center px-1">
+                                    <AlertTriangle className="w-2.5 h-2.5 text-background flex-shrink-0" />
+                                    <span className="text-[9px] font-bold text-background ml-0.5">
+                                      {machine.alerts.filter(alert => !alert.isRead).length}
+                                    </span>
+                                  </div>
+                                )}
                               </div>
                               <div className="flex-1 min-w-0">
                                 <h3 className="font-semibold text-sm text-card-foreground truncate">{machine.vehicleInfo.name}</h3>

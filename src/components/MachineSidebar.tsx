@@ -15,7 +15,8 @@ import {
   Activity,
   Timer,
   Grid3x3,
-  Route
+  Route,
+  AlertTriangle
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { format, formatDistanceToNow } from 'date-fns';
@@ -30,6 +31,9 @@ interface MachineSidebarProps {
 
 const MachineSidebar = ({ machine, isOpen, onClose }: MachineSidebarProps) => {
   if (!isOpen || !machine) return null;
+
+  const unreadAlerts = machine.alerts.filter(alert => !alert.isRead);
+  const hasUnreadAlerts = unreadAlerts.length > 0;
 
   const getStatusColorClass = (color: string) => {
     switch (color) {
@@ -87,9 +91,17 @@ const MachineSidebar = ({ machine, isOpen, onClose }: MachineSidebarProps) => {
       <div className="p-6">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
-          <div>
-            <h2 className="text-xl font-semibold text-card-foreground">{machine.vehicleInfo.name}</h2>
-            <p className="text-sm text-muted-foreground capitalize">{machineDataAdapter.getType(machine)}</p>
+          <div className="flex items-center gap-2">
+            <div>
+              <h2 className="text-xl font-semibold text-card-foreground">{machine.vehicleInfo.name}</h2>
+              <p className="text-sm text-muted-foreground capitalize">{machineDataAdapter.getType(machine)}</p>
+            </div>
+            {hasUnreadAlerts && (
+              <div className="flex items-center gap-1 bg-warning/20 border border-warning/30 rounded-full px-2 py-1">
+                <AlertTriangle className="w-4 h-4 text-warning" />
+                <span className="text-xs font-bold text-warning">{unreadAlerts.length}</span>
+              </div>
+            )}
           </div>
           <Button variant="ghost" size="sm" onClick={onClose}>
             <X className="w-4 h-4" />

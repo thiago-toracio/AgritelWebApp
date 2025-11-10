@@ -1,6 +1,6 @@
 import React from 'react';
 import { MachineData, MachineAlertData } from '@/types/machine';
-import { AlertTriangle, Gauge, Fuel, Clock, MapPin, Activity, User, Settings } from 'lucide-react';
+import { AlertTriangle, Gauge, Fuel, Clock, MapPin, Activity, User, FileText } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import MachineIcon from './MachineIcons';
 import { machineDataAdapter } from '@/utils/machineDataAdapter';
@@ -17,7 +17,8 @@ interface MachineMarkerProps {
 const MachineMarker: React.FC<MachineMarkerProps> = ({ machine, isSelected, onClick, alerts }) => {
   const statusColor = machineDataAdapter.getStatusColor(machine);
   const statusTooltip = machineDataAdapter.getStatusTooltip(machine);
-  const hasAlert = alerts.length > 0;
+  const unreadAlerts = alerts.filter(alert => !alert.isRead);
+  const hasUnreadAlerts = unreadAlerts.length > 0;
   const heading = machineDataAdapter.getHeading(machine);
   const icon = machineDataAdapter.getIcon(machine);
   const name = machineDataAdapter.getName(machine);
@@ -47,10 +48,11 @@ const MachineMarker: React.FC<MachineMarkerProps> = ({ machine, isSelected, onCl
           size={48}
         />
         
-        {/* Alert warning indicator */}
-        {hasAlert && (
-          <div className="absolute -top-1 -right-1 w-5 h-5 bg-warning rounded-full flex items-center justify-center">
-            <AlertTriangle className="w-3 h-3 text-background" />
+        {/* Alert warning indicator with count */}
+        {hasUnreadAlerts && (
+          <div className="absolute -top-1 -right-1 min-w-[20px] h-5 bg-warning rounded-full flex items-center justify-center px-1 gap-0.5">
+            <AlertTriangle className="w-3 h-3 text-background flex-shrink-0" />
+            <span className="text-[10px] font-bold text-background">{unreadAlerts.length}</span>
           </div>
         )}
       </div>
@@ -72,7 +74,7 @@ const MachineMarker: React.FC<MachineMarkerProps> = ({ machine, isSelected, onCl
             {machineDataAdapter.getNotation(machine) && (
               <div className="space-y-0.5">
                 <div className="flex items-center gap-1.5">
-                  <Settings className="w-3 h-3 text-muted-foreground" />
+                  <FileText className="w-3 h-3 text-muted-foreground" />
                   <span className="text-xs font-semibold text-card-foreground">
                     {machineDataAdapter.getNotation(machine)?.code} - {machineDataAdapter.getNotation(machine)?.name}
                   </span>
@@ -82,6 +84,13 @@ const MachineMarker: React.FC<MachineMarkerProps> = ({ machine, isSelected, onCl
                     {format(new Date(machineDataAdapter.getNotation(machine)!.localRegistrationTime!), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })}
                   </div>
                 )}
+              </div>
+            )}
+
+            {hasUnreadAlerts && (
+              <div className="flex items-center gap-1.5 text-warning">
+                <AlertTriangle className="w-3 h-3" />
+                <span className="text-xs font-semibold">{unreadAlerts.length} alerta{unreadAlerts.length > 1 ? 's' : ''} não lido{unreadAlerts.length > 1 ? 's' : ''}</span>
               </div>
             )}
 
