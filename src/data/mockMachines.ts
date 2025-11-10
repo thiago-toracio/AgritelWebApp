@@ -48,6 +48,7 @@ export const mockMachines: MachineData[] = [
       fuelLevel: 78,
       operationHours: 1890,
       engineTemp: 92,
+      rpm: 1800,
       notation: {
         code: 'AP001',
         name: 'Colheita Talhão A1',
@@ -123,6 +124,7 @@ export const mockMachines: MachineData[] = [
       fuelLevel: 65,
       operationHours: 2150,
       engineTemp: 89,
+      rpm: 1600,
       notation: {
         code: 'AP002',
         name: 'Transbordo Talhão B3',
@@ -281,6 +283,7 @@ export const mockMachines: MachineData[] = [
       fuelLevel: 55,
       operationHours: 1750,
       engineTemp: 87,
+      rpm: 2200,
     },
     deviceMessage: {
       lastUpdate: new Date(),
@@ -329,6 +332,7 @@ export const mockMachines: MachineData[] = [
       fuelLevel: 70,
       operationHours: 890,
       engineTemp: 82,
+      rpm: 2400,
     },
     deviceMessage: {
       lastUpdate: new Date(),
@@ -377,6 +381,7 @@ export const mockMachines: MachineData[] = [
       fuelLevel: 85,
       operationHours: 3200,
       engineTemp: 90,
+      rpm: 1900,
     },
     deviceMessage: {
       lastUpdate: new Date(),
@@ -427,6 +432,7 @@ export const mockMachines: MachineData[] = [
       fuelLevel: 60,
       operationHours: 1670,
       engineTemp: 86,
+      rpm: 1400,
     },
     deviceMessage: {
       lastUpdate: new Date(),
@@ -475,6 +481,7 @@ export const mockMachines: MachineData[] = [
       fuelLevel: 42,
       operationHours: 2350,
       engineTemp: 84,
+      rpm: 1500,
     },
     deviceMessage: {
       lastUpdate: new Date(),
@@ -545,6 +552,7 @@ export const mockMachines: MachineData[] = [
       fuelLevel: 75,
       operationHours: 720,
       engineTemp: 83,
+      rpm: 1300,
     },
     deviceMessage: {
       lastUpdate: new Date(),
@@ -593,6 +601,7 @@ export const mockMachines: MachineData[] = [
       fuelLevel: 68,
       operationHours: 2900,
       engineTemp: 81,
+      rpm: 1200,
     },
     deviceMessage: {
       lastUpdate: new Date(),
@@ -643,6 +652,7 @@ export const mockMachines: MachineData[] = [
       fuelLevel: 38,
       operationHours: 1980,
       engineTemp: 75,
+      rpm: 800,
     },
     deviceMessage: {
       lastUpdate: new Date(),
@@ -713,6 +723,7 @@ export const mockMachines: MachineData[] = [
       fuelLevel: 52,
       operationHours: 2050,
       engineTemp: 78,
+      rpm: 850,
     },
     deviceMessage: {
       lastUpdate: new Date(),
@@ -761,6 +772,7 @@ export const mockMachines: MachineData[] = [
       fuelLevel: 80,
       operationHours: 640,
       engineTemp: 72,
+      rpm: 750,
     },
     deviceMessage: {
       lastUpdate: new Date(),
@@ -809,6 +821,7 @@ export const mockMachines: MachineData[] = [
       fuelLevel: 72,
       operationHours: 3500,
       engineTemp: 74,
+      rpm: 900,
     },
     deviceMessage: {
       lastUpdate: new Date(),
@@ -859,6 +872,7 @@ export const mockMachines: MachineData[] = [
       fuelLevel: 50,
       operationHours: 1825,
       engineTemp: 0,
+      rpm: 0,
     },
     deviceMessage: {
       lastUpdate: new Date(Date.now() - 3600000), // 1 hora atrás
@@ -907,6 +921,7 @@ export const mockMachines: MachineData[] = [
       fuelLevel: 48,
       operationHours: 2225,
       engineTemp: 0,
+      rpm: 0,
     },
     deviceMessage: {
       lastUpdate: new Date(Date.now() - 7200000), // 2 horas atrás
@@ -955,6 +970,7 @@ export const mockMachines: MachineData[] = [
       fuelLevel: 55,
       operationHours: 480,
       engineTemp: 0,
+      rpm: 0,
     },
     deviceMessage: {
       lastUpdate: new Date(Date.now() - 5400000), // 1.5 horas atrás
@@ -1003,6 +1019,7 @@ export const mockMachines: MachineData[] = [
       fuelLevel: 62,
       operationHours: 3100,
       engineTemp: 0,
+      rpm: 0,
     },
     deviceMessage: {
       lastUpdate: new Date(Date.now() - 10800000), // 3 horas atrás
@@ -1051,6 +1068,7 @@ export const mockMachines: MachineData[] = [
       fuelLevel: 40,
       operationHours: 1550,
       engineTemp: 0,
+      rpm: 0,
     },
     deviceMessage: {
       lastUpdate: new Date(Date.now() - 14400000), // 4 horas atrás
@@ -1099,6 +1117,7 @@ export const mockMachines: MachineData[] = [
       fuelLevel: 35,
       operationHours: 1290,
       engineTemp: 0,
+      rpm: 0,
     },
     deviceMessage: {
       lastUpdate: new Date(Date.now() - 18000000), // 5 horas atrás
