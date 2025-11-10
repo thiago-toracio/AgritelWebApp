@@ -300,7 +300,7 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
 
                   {/* Group Machines Grid */}
                   {expandedAreas[area] && (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-2">
                     {groupMachines.map((machine) => (
                       <Card
                         key={machine.vehicleInfo.id}
@@ -311,10 +311,10 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                         )}
                         onClick={() => onMachineSelect(machine.vehicleInfo.id)}
                       >
-                        <CardContent className="p-4 h-full flex flex-col">
+                        <CardContent className="p-3 h-full flex flex-col">
                           <div className="flex items-start justify-between mb-3">
                             <div className="flex items-start gap-2 flex-1">
-                              <div className="flex-shrink-0 mt-0.5 relative">
+                              <div className="flex-shrink-0 mt-0.5 relative -ml-0.5">
                                 <MachineIcon 
                                   icon={machineDataAdapter.getIcon(machine)}
                                   size={32}
@@ -333,7 +333,7 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                                 <h3 className="font-semibold text-sm text-card-foreground truncate">{machine.vehicleInfo.name}</h3>
                               </div>
                             </div>
-                            <div className="flex flex-col items-end gap-1">
+                            <div className="flex flex-col items-end gap-1 -mr-0.5">
                               <Badge variant={getStatusBadgeVariant(machine.deviceState.color)} className="text-xs flex-shrink-0">
                                 {machine.deviceState.tooltip}
                               </Badge>
