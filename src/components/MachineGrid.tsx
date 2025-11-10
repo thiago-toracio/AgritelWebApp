@@ -162,7 +162,17 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
     }
   };
 
-  const getStatusBgClass = (color: string) => {
+  const getStatusBgClass = (machine: MachineData) => {
+    const color = machine.deviceState.color;
+    const tooltip = machine.deviceState?.tooltip?.toLowerCase() || '';
+    const ignition = machine.deviceMessage?.flag?.ignition;
+    const hasConnection = !machine.deviceMessage?.hasLostConnection;
+    
+    // Fix for "Parado Desligado" - should be red, not green
+    if ((ignition === false && hasConnection) || tooltip.includes('desligado')) {
+      return 'bg-status-idle/10 border-status-idle/30';
+    }
+    
     switch (color) {
       case 'green':
         return 'bg-status-active/10 border-status-active/30';
@@ -296,7 +306,7 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                         key={machine.vehicleInfo.id}
                         className={cn(
                           "cursor-pointer transition-all duration-200 hover:shadow-lg border-2 w-full",
-                          getStatusBgClass(machine.deviceState.color),
+                          getStatusBgClass(machine),
                           selectedMachine === machine.vehicleInfo.id && "ring-2 ring-primary shadow-glow"
                         )}
                         onClick={() => onMachineSelect(machine.vehicleInfo.id)}

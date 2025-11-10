@@ -95,7 +95,6 @@ const MachineSidebar = ({ machine, isOpen, onClose }: MachineSidebarProps) => {
           <div className="flex items-center gap-2">
             <div>
               <h2 className="text-xl font-semibold text-card-foreground">{machine.vehicleInfo.name}</h2>
-              <p className="text-sm text-muted-foreground capitalize">{machineDataAdapter.getType(machine)}</p>
             </div>
             {hasUnreadAlerts && (
               <div className="flex items-center gap-1 bg-warning/20 border border-warning/30 rounded-full px-2 py-1">
@@ -213,65 +212,86 @@ const MachineSidebar = ({ machine, isOpen, onClose }: MachineSidebarProps) => {
             <CardTitle className="text-sm font-medium">Informações da Jornada</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            {machine.tripJourney.hourmeterTotalFormatted && (
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <Timer className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">Tempo Ligado</span>
-                </div>
-                <span className="text-sm text-foreground font-semibold">
-                  {machine.tripJourney.hourmeterTotalFormatted}
-                </span>
-              </div>
-            )}
+            {(() => {
+              const hasJourneyData = 
+                machine.tripJourney.hourmeterTotalFormatted || 
+                machine.tripJourney.hourmeterWorkedFormatted || 
+                (machine.tripJourney.area && machine.tripJourney.area > 0) ||
+                (machine.tripJourney.fuelConsumption && machine.tripJourney.fuelConsumption > 0) ||
+                (machine.tripJourney.odometer && machine.tripJourney.odometer > 0);
 
-            {machine.tripJourney.hourmeterWorkedFormatted && (
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <Settings className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">Tempo de Trabalho</span>
-                </div>
-                <span className="text-sm text-foreground font-semibold">
-                  {machine.tripJourney.hourmeterWorkedFormatted}
-                </span>
-              </div>
-            )}
+              if (!hasJourneyData) {
+                return (
+                  <div className="flex items-center justify-center py-8">
+                    <p className="text-sm text-muted-foreground">Sem jornada no período</p>
+                  </div>
+                );
+              }
 
-            {machine.tripJourney.area > 0 && (
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <Grid3x3 className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">Área Aplicada</span>
-                </div>
-                <span className="text-sm text-foreground font-semibold">
-                  {machine.tripJourney.area.toFixed(2)} ha
-                </span>
-              </div>
-            )}
+              return (
+                <>
+                  {machine.tripJourney.hourmeterTotalFormatted && (
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2">
+                        <Timer className="w-4 h-4 text-muted-foreground" />
+                        <span className="text-sm text-muted-foreground">Tempo Ligado</span>
+                      </div>
+                      <span className="text-sm text-foreground font-semibold">
+                        {machine.tripJourney.hourmeterTotalFormatted}
+                      </span>
+                    </div>
+                  )}
 
-            {machine.tripJourney.fuelConsumption > 0 && (
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <Droplets className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">Consumo de Combustível</span>
-                </div>
-                <span className="text-sm text-foreground font-semibold">
-                  {machine.tripJourney.fuelConsumption.toFixed(1)}L
-                </span>
-              </div>
-            )}
+                  {machine.tripJourney.hourmeterWorkedFormatted && (
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2">
+                        <Settings className="w-4 h-4 text-muted-foreground" />
+                        <span className="text-sm text-muted-foreground">Tempo de Trabalho</span>
+                      </div>
+                      <span className="text-sm text-foreground font-semibold">
+                        {machine.tripJourney.hourmeterWorkedFormatted}
+                      </span>
+                    </div>
+                  )}
 
-            {machine.tripJourney.odometer > 0 && (
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <Route className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">Distância Percorrida</span>
-                </div>
-                <span className="text-sm text-foreground font-semibold">
-                  {machine.tripJourney.odometer.toFixed(1)} km
-                </span>
-              </div>
-            )}
+                  {machine.tripJourney.area > 0 && (
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2">
+                        <Grid3x3 className="w-4 h-4 text-muted-foreground" />
+                        <span className="text-sm text-muted-foreground">Área Aplicada</span>
+                      </div>
+                      <span className="text-sm text-foreground font-semibold">
+                        {machine.tripJourney.area.toFixed(2)} ha
+                      </span>
+                    </div>
+                  )}
+
+                  {machine.tripJourney.fuelConsumption > 0 && (
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2">
+                        <Droplets className="w-4 h-4 text-muted-foreground" />
+                        <span className="text-sm text-muted-foreground">Consumo de Combustível</span>
+                      </div>
+                      <span className="text-sm text-foreground font-semibold">
+                        {machine.tripJourney.fuelConsumption.toFixed(1)}L
+                      </span>
+                    </div>
+                  )}
+
+                  {machine.tripJourney.odometer > 0 && (
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2">
+                        <Route className="w-4 h-4 text-muted-foreground" />
+                        <span className="text-sm text-muted-foreground">Distância Percorrida</span>
+                      </div>
+                      <span className="text-sm text-foreground font-semibold">
+                        {machine.tripJourney.odometer.toFixed(1)} km
+                      </span>
+                    </div>
+                  )}
+                </>
+              );
+            })()}
           </CardContent>
         </Card>
       </div>
