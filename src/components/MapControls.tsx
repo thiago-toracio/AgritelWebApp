@@ -201,48 +201,12 @@ const MapControls = ({
         <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-40 max-w-5xl">
           <Card className="bg-gradient-overlay border-border/50 shadow-overlay backdrop-blur-sm">
             <CardContent className="p-3">
-              <div className="flex items-center space-x-1 md:space-x-2 overflow-x-auto scrollbar-hide whitespace-nowrap justify-center px-2">
-                <Popover
-                  open={openRefreshPopover}
-                  onOpenChange={setOpenRefreshPopover}
-                >
-                  <PopoverTrigger asChild>
-                    <button className="flex items-center space-x-1.5 hover:bg-muted/50 px-2 py-1 rounded transition-colors cursor-pointer">
-                      <RefreshCw className="w-4 h-4 text-muted-foreground" />
-                      <span className="text-xs text-muted-foreground whitespace-nowrap">
-                        {countdown.toString().padStart(2, "0")}s
-                      </span>
-                    </button>
-                  </PopoverTrigger>
-                  <PopoverContent
-                    className="w-auto p-2 bg-card border-border/50 shadow-lg"
-                    align="start"
-                  >
-                    <div className="flex flex-col space-y-1">
-                      {refreshIntervals.map((interval) => (
-                        <Button
-                          key={interval.value}
-                          variant={
-                            refreshInterval === interval.value
-                              ? "default"
-                              : "ghost"
-                          }
-                          size="sm"
-                          onClick={() =>
-                            handleRefreshIntervalChange(interval.value)
-                          }
-                          className="w-full justify-start text-sm"
-                        >
-                          {interval.label}
-                        </Button>
-                      ))}
-                    </div>
-                  </PopoverContent>
-                </Popover>
+              <div className="flex items-center space-x-0.5 md:space-x-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap justify-center px-2">
+                {/* Botões de status com espaçamento reduzido */}
 
                 <button
                   onClick={() => onToggleStatus("green")}
-                  className="flex items-center space-x-1.5 hover:bg-muted/50 px-2 py-1 rounded transition-colors cursor-pointer"
+                  className="flex items-center space-x-1 hover:bg-muted/50 px-2 py-1 rounded transition-colors cursor-pointer"
                 >
                   <Settings className="w-5 h-5 text-[#22c55e]" />
                   <span className="text-sm font-semibold text-[#22c55e] whitespace-nowrap">
@@ -255,7 +219,7 @@ const MapControls = ({
 
                 <button
                   onClick={() => onToggleStatus("yellow")}
-                  className="flex items-center space-x-1.5 hover:bg-muted/50 px-2 py-1 rounded transition-colors cursor-pointer"
+                  className="flex items-center space-x-1 hover:bg-muted/50 px-2 py-1 rounded transition-colors cursor-pointer"
                 >
                   <CornerDownRight className="w-5 h-5 text-[#eab308]" />
                   <span className="text-sm font-semibold text-[#eab308] whitespace-nowrap">
@@ -268,7 +232,7 @@ const MapControls = ({
 
                 <button
                   onClick={() => onToggleStatus("red")}
-                  className="flex items-center space-x-1.5 hover:bg-muted/50 px-2 py-1 rounded transition-colors cursor-pointer"
+                  className="flex items-center space-x-1 hover:bg-muted/50 px-2 py-1 rounded transition-colors cursor-pointer"
                 >
                   <StopCircle className="w-5 h-5 text-[#ef4444]" />
                   <span className="text-sm font-semibold text-[#ef4444] whitespace-nowrap">
@@ -281,7 +245,7 @@ const MapControls = ({
 
                 <button
                   onClick={() => onToggleStatus("blue")}
-                  className="flex items-center space-x-1.5 hover:bg-muted/50 px-2 py-1 rounded transition-colors cursor-pointer"
+                  className="flex items-center space-x-1 hover:bg-muted/50 px-2 py-1 rounded transition-colors cursor-pointer"
                 >
                   <ArrowRightLeft className="w-5 h-5 text-[#3b82f6]" />
                   <span className="text-sm font-semibold text-[#3b82f6] whitespace-nowrap">
@@ -294,7 +258,7 @@ const MapControls = ({
 
                 <button
                   onClick={() => onToggleStatus("gray")}
-                  className="flex items-center space-x-1.5 hover:bg-muted/50 px-2 py-1 rounded transition-colors cursor-pointer"
+                  className="flex items-center space-x-1 hover:bg-muted/50 px-2 py-1 rounded transition-colors cursor-pointer"
                 >
                   <HelpCircle className="w-5 h-5 text-gray-400" />
                   <span className="text-sm font-semibold text-gray-400 whitespace-nowrap">
@@ -304,20 +268,6 @@ const MapControls = ({
                     Sem Sinal
                   </span>
                 </button>
-
-                {/* <button
-                  onClick={() => onToggleStatus("gray")}
-                  className="flex items-center space-x-1.5 hover:bg-muted/50 px-2 py-1 rounded transition-colors cursor-pointer"
-                >
-                  <HelpCircle className="w-5 h-5 text-gray-400" />             
-                  <span className="text-sm font-semibold text-gray-400 whitespace-nowrap">
-                     {indefinido}           
-                  </span>
-                  <span className="text-sm text-card-foreground whitespace-nowrap">
-                     Indefinido           
-                  </span>
-
-                </button> */}
 
                 <div className="flex items-center space-x-1">
                   <AlertTriangle className="w-5 h-5 text-warning" />
@@ -330,7 +280,7 @@ const MapControls = ({
                   </Badge>
                 </div>
 
-                <div className="flex items-center space-x-1.5">
+                <div className="flex items-center space-x-1">
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <div className="flex items-center cursor-pointer">
@@ -375,6 +325,56 @@ const MapControls = ({
         <Card className="bg-gradient-overlay border-border/50 shadow-overlay backdrop-blur-sm">
           <CardContent className="p-2">
             <div className="flex flex-col space-y-2">
+              {/* Refresh Controls - Design melhorado */}
+              <Popover
+                open={openRefreshPopover}
+                onOpenChange={setOpenRefreshPopover}
+              >
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="w-10 h-10 p-0 relative group"
+                    title="Intervalo de Atualização"
+                  >
+                    <RefreshCw className="w-5 h-5 transition-transform group-hover:rotate-45" />
+                    {/* Contador integrado ao ícone */}
+                    <div className="absolute -top-1 -right-1 bg-primary text-primary-foreground rounded-full w-4 h-4 flex items-center justify-center text-[10px] font-bold leading-none shadow-sm">
+                      {countdown}
+                    </div>
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent
+                  className="w-auto p-2 bg-card border-border/50 shadow-lg"
+                  align="start"
+                >
+                  <div className="flex flex-col space-y-1">
+                    <div className="px-2 py-1 text-xs text-muted-foreground border-b border-border/50 mb-1">
+                      Atualizar a cada:
+                    </div>
+                    {refreshIntervals.map((interval) => (
+                      <Button
+                        key={interval.value}
+                        variant={
+                          refreshInterval === interval.value
+                            ? "default"
+                            : "ghost"
+                        }
+                        size="sm"
+                        onClick={() =>
+                          handleRefreshIntervalChange(interval.value)
+                        }
+                        className="w-full justify-start text-sm"
+                      >
+                        {interval.label}
+                      </Button>
+                    ))}
+                  </div>
+                </PopoverContent>
+              </Popover>
+
+              <div className="w-full h-px bg-border my-1" />
+
               <div className="relative">
                 <Button
                   variant="ghost"

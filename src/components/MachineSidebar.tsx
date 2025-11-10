@@ -143,26 +143,22 @@ const MachineSidebar = ({ machine, isOpen, onClose }: MachineSidebarProps) => {
                     <p>Velocidade atual do veículo em quilômetros por hora</p>
                   </TooltipContent>
                 </Tooltip>
-
-                {machineDataAdapter.getRpm(machine) > 0 && (
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div className="flex items-center justify-between cursor-help">
-                        <div className="flex items-center space-x-2">
-                          <Gauge className="w-4 h-4 text-muted-foreground" />
-                          <span className="text-sm text-muted-foreground">RPM</span>
-                        </div>
-                        <span className="text-sm text-card-foreground font-medium">
-                          {machineDataAdapter.getRpm(machine).toFixed(0)} RPM
-                        </span>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div className="flex items-center justify-between cursor-help">
+                      <div className="flex items-center space-x-2">
+                        <Gauge className="w-4 h-4 text-muted-foreground" />
+                        <span className="text-sm text-muted-foreground">RPM</span>
                       </div>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Rotações por minuto do motor</p>
-                    </TooltipContent>
-                  </Tooltip>
-                )}
-
+                      <span className="text-sm text-card-foreground font-medium">
+                        {machineDataAdapter.getRpm(machine).toFixed(0)} RPM
+                      </span>
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Rotações por minuto do motor</p>
+                  </TooltipContent>
+                </Tooltip>
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <div className="flex items-center justify-between cursor-help">

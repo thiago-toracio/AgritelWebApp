@@ -1,18 +1,18 @@
-import { useState, useMemo, useEffect } from 'react';
-import { X, Search, MapPin, Gauge, Fuel, Clock, Activity } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { useState, useMemo, useEffect } from "react";
+import { X, Search, MapPin, Gauge, Fuel, Clock, Activity } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@/components/ui/tooltip';
-import { MachineData } from '@/types/machine';
-import { machineDataAdapter } from '@/utils/machineDataAdapter';
+} from "@/components/ui/tooltip";
+import { MachineData } from "@/types/machine";
+import { machineDataAdapter } from "@/utils/machineDataAdapter";
 
 interface MachineStatusPanelProps {
   machines: MachineData[];
@@ -22,14 +22,14 @@ interface MachineStatusPanelProps {
   initialFilter?: string;
 }
 
-const MachineStatusPanel = ({ 
-  machines, 
-  isOpen, 
+const MachineStatusPanel = ({
+  machines,
+  isOpen,
   onClose,
   onViewMachine,
-  initialFilter
+  initialFilter,
 }: MachineStatusPanelProps) => {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string | null>(null);
 
   // Update filter when initialFilter changes
@@ -44,34 +44,35 @@ const MachineStatusPanel = ({
   // Filtrar máquinas por busca
   const filteredMachines = useMemo(() => {
     if (!searchQuery.trim()) return machines;
-    
+
     const query = searchQuery.toLowerCase();
-    return machines.filter(machine => 
-      machineDataAdapter.getName(machine).toLowerCase().includes(query) ||
-      machineDataAdapter.getType(machine).toLowerCase().includes(query) ||
-      machineDataAdapter.getOperator(machine).toLowerCase().includes(query) ||
-      machineDataAdapter.getArea(machine).toLowerCase().includes(query)
+    return machines.filter(
+      (machine) =>
+        machineDataAdapter.getName(machine).toLowerCase().includes(query) ||
+        machineDataAdapter.getType(machine).toLowerCase().includes(query) ||
+        machineDataAdapter.getOperator(machine).toLowerCase().includes(query) ||
+        machineDataAdapter.getArea(machine).toLowerCase().includes(query)
     );
   }, [machines, searchQuery]);
 
   // Categorizar máquinas
   const categorizedMachines = useMemo(() => {
     const categories = {
-      green: [] as MachineData[],  // Trabalhando
+      green: [] as MachineData[], // Trabalhando
       yellow: [] as MachineData[], // Manobrando
-      blue: [] as MachineData[],   // Deslocando
-      red: [] as MachineData[],    // Parado
-      gray: [] as MachineData[]    // Sem sinal
+      blue: [] as MachineData[], // Deslocando
+      red: [] as MachineData[], // Parado
+      gray: [] as MachineData[], // Sem sinal
     };
 
-    filteredMachines.forEach(machine => {
+    filteredMachines.forEach((machine) => {
       const statusColor = machineDataAdapter.getStatusColor(machine);
-      
+
       // Apply status filter if set
       if (statusFilter && statusColor !== statusFilter) {
         return;
       }
-      
+
       categories[statusColor as keyof typeof categories].push(machine);
     });
 
@@ -80,41 +81,41 @@ const MachineStatusPanel = ({
 
   const getStatusLabel = (color: string) => {
     const labels: Record<string, string> = {
-      green: 'Trabalhando',
-      yellow: 'Manobrando',
-      blue: 'Deslocando',
-      red: 'Parado',
-      gray: 'Sem Sinal'
+      green: "Trabalhando",
+      yellow: "Manobrando",
+      blue: "Deslocando",
+      red: "Parado",
+      gray: "Sem Sinal",
     };
     return labels[color] || color;
   };
 
   const getStatusColor = (color: string) => {
     const colors: Record<string, string> = {
-      green: 'text-green-500',
-      yellow: 'text-yellow-500',
-      blue: 'text-blue-500',
-      red: 'text-red-500',
-      gray: 'text-gray-500'
+      green: "text-green-500",
+      yellow: "text-yellow-500",
+      blue: "text-blue-500",
+      red: "text-red-500",
+      gray: "text-gray-500",
     };
-    return colors[color] || 'text-gray-500';
+    return colors[color] || "text-gray-500";
   };
 
   const getStatusBgColor = (color: string) => {
     const colors: Record<string, string> = {
-      green: 'bg-green-500/10 border-green-500/20',
-      yellow: 'bg-yellow-500/10 border-yellow-500/20',
-      blue: 'bg-blue-500/10 border-blue-500/20',
-      red: 'bg-red-500/10 border-red-500/20',
-      gray: 'bg-gray-500/10 border-gray-500/20'
+      green: "bg-green-500/10 border-green-500/20",
+      yellow: "bg-yellow-500/10 border-yellow-500/20",
+      blue: "bg-blue-500/10 border-blue-500/20",
+      red: "bg-red-500/10 border-red-500/20",
+      gray: "bg-gray-500/10 border-gray-500/20",
     };
-    return colors[color] || 'bg-gray-500/10 border-gray-500/20';
+    return colors[color] || "bg-gray-500/10 border-gray-500/20";
   };
 
   const formatTime = (date: Date | string) => {
-    return new Date(date).toLocaleTimeString('pt-BR', {
-      hour: '2-digit',
-      minute: '2-digit'
+    return new Date(date).toLocaleTimeString("pt-BR", {
+      hour: "2-digit",
+      minute: "2-digit",
     });
   };
 
@@ -126,21 +127,26 @@ const MachineStatusPanel = ({
     const operator = machineDataAdapter.getOperator(machine);
     const area = machineDataAdapter.getArea(machine);
     const lastUpdate = machineDataAdapter.getLastUpdate(machine);
-    
+
     return (
-      <Card 
+      <Card
         key={machineId}
-        className={`mb-3 border ${getStatusBgColor(statusColor)} hover:shadow-md transition-shadow`}
+        className={`mb-3 border ${getStatusBgColor(
+          statusColor
+        )} hover:shadow-md transition-shadow`}
       >
         <CardContent className="p-4">
           <div className="flex justify-between items-start mb-3">
             <div>
               <h4 className="font-semibold text-base">{machineName}</h4>
               <p className="text-sm text-muted-foreground capitalize">
-                {machineDataAdapter.getType(machine).replace(/-/g, ' ')}
+                {machineDataAdapter.getType(machine).replace(/-/g, " ")}
               </p>
             </div>
-            <Badge variant="secondary" className={`bg-muted ${getStatusColor(statusColor)}`}>
+            <Badge
+              variant="secondary"
+              className={`bg-muted ${getStatusColor(statusColor)}`}
+            >
               {statusTooltip}
             </Badge>
           </div>
@@ -153,7 +159,9 @@ const MachineStatusPanel = ({
                   <TooltipTrigger asChild>
                     <div className="flex items-center space-x-2 cursor-help">
                       <Activity className="w-4 h-4 text-muted-foreground" />
-                      <span>{machineDataAdapter.getSpeed(machine).toFixed(1)} km/h</span>
+                      <span>
+                        {machineDataAdapter.getSpeed(machine).toFixed(1)} km/h
+                      </span>
                     </div>
                   </TooltipTrigger>
                   <TooltipContent>
@@ -161,25 +169,30 @@ const MachineStatusPanel = ({
                   </TooltipContent>
                 </Tooltip>
 
-                {machineDataAdapter.getRpm(machine) > 0 && (
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div className="flex items-center space-x-2 cursor-help">
-                        <Gauge className="w-4 h-4 text-muted-foreground" />
-                        <span>{machineDataAdapter.getRpm(machine).toFixed(0)} RPM</span>
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Rotações por minuto do motor</p>
-                    </TooltipContent>
-                  </Tooltip>
-                )}
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div className="flex items-center space-x-2 cursor-help">
+                      <Gauge className="w-4 h-4 text-muted-foreground" />
+                      <span>
+                        {machineDataAdapter.getRpm(machine).toFixed(0)} RPM
+                      </span>
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Rotações por minuto do motor</p>
+                  </TooltipContent>
+                </Tooltip>
 
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <div className="flex items-center space-x-2 cursor-help">
                       <Clock className="w-4 h-4 text-muted-foreground" />
-                      <span>{machineDataAdapter.getOperationHours(machine).toFixed(1)}h</span>
+                      <span>
+                        {machineDataAdapter
+                          .getOperationHours(machine)
+                          .toFixed(1)}
+                        h
+                      </span>
                     </div>
                   </TooltipTrigger>
                   <TooltipContent>
@@ -256,9 +269,9 @@ const MachineStatusPanel = ({
           </h3>
           <Badge variant="secondary">{machines.length}</Badge>
         </div>
-        
+
         <div className="space-y-2">
-          {machines.map(machine => renderMachineCard(machine))}
+          {machines.map((machine) => renderMachineCard(machine))}
         </div>
       </div>
     );
@@ -297,12 +310,12 @@ const MachineStatusPanel = ({
               className="pl-10"
             />
           </div>
-          
+
           {/* Status Filter Buttons */}
           {statusFilter && (
             <div className="flex items-center gap-2 flex-wrap">
               <span className="text-sm text-muted-foreground">Filtro:</span>
-              <Badge 
+              <Badge
                 variant="secondary"
                 className={`cursor-pointer ${getStatusColor(statusFilter)}`}
               >
@@ -326,16 +339,18 @@ const MachineStatusPanel = ({
             {filteredMachines.length === 0 ? (
               <div className="text-center py-12">
                 <p className="text-muted-foreground">
-                  {searchQuery ? 'Nenhuma máquina encontrada' : 'Nenhuma máquina disponível'}
+                  {searchQuery
+                    ? "Nenhuma máquina encontrada"
+                    : "Nenhuma máquina disponível"}
                 </p>
               </div>
             ) : (
               <>
-                {renderCategory('green', categorizedMachines.green)}
-                {renderCategory('blue', categorizedMachines.blue)}
-                {renderCategory('yellow', categorizedMachines.yellow)}
-                {renderCategory('red', categorizedMachines.red)}
-                {renderCategory('gray', categorizedMachines.gray)}
+                {renderCategory("green", categorizedMachines.green)}
+                {renderCategory("blue", categorizedMachines.blue)}
+                {renderCategory("yellow", categorizedMachines.yellow)}
+                {renderCategory("red", categorizedMachines.red)}
+                {renderCategory("gray", categorizedMachines.gray)}
               </>
             )}
           </div>

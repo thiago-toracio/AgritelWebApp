@@ -79,6 +79,7 @@ export interface TripJourneyData {
 
 export interface MachineAlertData {
   id: string;
+  machineName: string;
   alertType: number;
   reachedValue: number | null;
   timeSpanExceeded: string | null;

@@ -64,13 +64,13 @@ const Index = () => {
       }
       const data = await machineService.getMachines(journeyStartTime);
       
-      // Aplicar estado de leitura dos cookies aos alertas
       const readAlertIds = cookieManager.getReadAlerts();
       
       const machinesWithReadState = data.map(machine => ({
         ...machine,
         alerts: machine.alerts.map(alert => ({
           ...alert,
+          machineName: machine.vehicleInfo.name,
           isRead: alert.isRead || readAlertIds.includes(alert.id)
         }))
       }));
