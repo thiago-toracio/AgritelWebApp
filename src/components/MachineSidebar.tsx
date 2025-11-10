@@ -169,7 +169,7 @@ const MachineSidebar = ({ machine, isOpen, onClose }: MachineSidebarProps) => {
                 </div>
               )}
               {machineDataAdapter.getNotation(machine) && (
-                <div className="space-y-1 pl-6">
+                <div className="space-y-1">
                   <div className="flex items-center space-x-2">
                     <Settings className="w-4 h-4 text-muted-foreground" />
                     <span className="text-sm text-card-foreground font-medium">
