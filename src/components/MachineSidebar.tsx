@@ -169,21 +169,18 @@ const MachineSidebar = ({ machine, isOpen, onClose }: MachineSidebarProps) => {
                 </div>
               )}
               {machineDataAdapter.getNotation(machine) && (
-                <div className="space-y-2">
+                <div className="space-y-1 pl-6">
                   <div className="flex items-center space-x-2">
                     <Settings className="w-4 h-4 text-muted-foreground" />
-                    <span className="text-sm text-muted-foreground">Apontamento:</span>
-                  </div>
-                  <div className="pl-6">
-                    <div className="text-sm text-card-foreground font-medium mb-1">
+                    <span className="text-sm text-card-foreground font-medium">
                       {machineDataAdapter.getNotation(machine)?.code} - {machineDataAdapter.getNotation(machine)?.name}
-                    </div>
-                    {machineDataAdapter.getNotation(machine)?.localRegistrationTime && (
-                      <div className="text-xs text-muted-foreground">
-                        {format(new Date(machineDataAdapter.getNotation(machine)!.localRegistrationTime!), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })}
-                      </div>
-                    )}
+                    </span>
                   </div>
+                  {machineDataAdapter.getNotation(machine)?.localRegistrationTime && (
+                    <div className="text-xs text-muted-foreground pl-6">
+                      Apontamento às {format(new Date(machineDataAdapter.getNotation(machine)!.localRegistrationTime!), "dd/MM/yyyy HH:mm", { locale: ptBR })}
+                    </div>
+                  )}
                 </div>
               )}
               {machine.deviceMessage.area && (
