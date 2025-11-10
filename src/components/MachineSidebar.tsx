@@ -16,7 +16,8 @@ import {
   Timer,
   Grid3x3,
   Route,
-  AlertTriangle
+  AlertTriangle,
+  Settings
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { format, formatDistanceToNow } from 'date-fns';
@@ -227,7 +228,7 @@ const MachineSidebar = ({ machine, isOpen, onClose }: MachineSidebarProps) => {
             {machine.tripJourney.hourmeterWorkedFormatted && (
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
-                  <Timer className="w-4 h-4 text-muted-foreground" />
+                  <Settings className="w-4 h-4 text-muted-foreground" />
                   <span className="text-sm text-muted-foreground">Tempo de Trabalho</span>
                 </div>
                 <span className="text-sm text-foreground font-semibold">
