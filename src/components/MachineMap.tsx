@@ -1,18 +1,23 @@
-import { useEffect, useRef, useState } from 'react';
-import ReactDOM from 'react-dom/client';
-import mapboxgl from 'mapbox-gl';
+import { useEffect, useRef, useState, useCallback } from 'react';
+// 1. Use 'OverlayViewF' para melhor performance
+import { GoogleMap, useLoadScript, OverlayViewF, OverlayView } from '@react-google-maps/api'
 import { MachineData, MachineAlertData } from '@/types/machine';
 import MachineMarker from './MachineMarker';
 import FallbackMachineMarker from './FallbackMachineMarker';
-import { getMapboxToken, PARANA_BOUNDS } from '@/lib/mapbox';
+import { PARANA_BOUNDS } from '@/lib/mapbox'; 
 import { MapStyle } from './MapControls';
 import { machineDataAdapter } from '@/utils/machineDataAdapter';
 
-const MAP_STYLES: Record<MapStyle, string> = {
-  satellite: 'mapbox://styles/mapbox/satellite-streets-v12',
-  streets: 'mapbox://styles/mapbox/streets-v12',
-  outdoors: 'mapbox://styles/mapbox/outdoors-v12',
-  dark: 'mapbox://styles/mapbox/dark-v11'
+const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY as string;
+
+const containerStyle = {
+  width: '100%',
+  height: '100%'
+};
+
+const googleCenter = {
+  lat: PARANA_BOUNDS.center[1],
+  lng: PARANA_BOUNDS.center[0]
 };
 
 interface MachineMapProps {
@@ -25,186 +30,81 @@ interface MachineMapProps {
 }
 
 const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine, mapStyle, alerts }: MachineMapProps) => {
-  const mapContainer = useRef<HTMLDivElement>(null);
-  const map = useRef<mapboxgl.Map | null>(null);
-  const markers = useRef<{ [key: string]: { marker: mapboxgl.Marker; root: ReactDOM.Root } }>({});
-  const [mapLoaded, setMapLoaded] = useState(false);
-  const [mapboxError, setMapboxError] = useState<string | null>(null);
+  const { isLoaded, loadError } = useLoadScript({
+    googleMapsApiKey: GOOGLE_MAPS_API_KEY,
+  });
+
+  console.log('entrou:', mapStyle)
+
+  const [map, setMap] = useState<google.maps.Map | null>(null);
   const hasAdjustedInitialBounds = useRef(false);
+  const [hoveredMachine, setHoveredMachine] = useState<string | undefined>();
+
+  const onLoad = useCallback((mapInstance: google.maps.Map) => {
+    setMap(mapInstance);
+  }, []);
+
+  const onUnmount = useCallback(() => {
+    setMap(null);
+  }, []);
 
   useEffect(() => {
-    const initializeMap = async () => {
-      if (!mapContainer.current) {
-        setMapboxError('Container não encontrado');
-        setMapLoaded(true);
-        return;
-      }
-      
-      try {
-        const token = "pk.eyJ1IjoicmFmYWVsb3Jhc21vIiwiYSI6ImNtZWlrMjBhaDAzNzgybHEwaWl5OTZjYjIifQ.XJKLRgv-kKSvUGkPRsChEQ";
-        
-        if (!token) {
-          setMapboxError('Token do Mapbox não configurado');
-          setMapLoaded(true);
-          return;
-        }
+    if (map && mapStyle) {
+      map.setMapTypeId(mapStyle);
+    }
+  }, [map, mapStyle]);
 
-        mapboxgl.accessToken = token;
-        
-        map.current = new mapboxgl.Map({
-          container: mapContainer.current,
-          style: MAP_STYLES[mapStyle],
-          center: PARANA_BOUNDS.center,
-          zoom: PARANA_BOUNDS.zoom,
-          attributionControl: false,
-        });
-
-        map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
-
-        map.current.on('load', () => {
-          setMapLoaded(true);
-        });
-
-        map.current.on('error', () => {
-          setMapboxError('Erro ao carregar mapa do Mapbox');
-          setMapLoaded(true);
-        });
-
-      } catch (error) {
-        setMapboxError('Erro ao carregar mapa');
-        setMapLoaded(true);
-      }
-    };
-
-    if (!mapContainer.current) {
-      setMapboxError('Usando modo de demonstração');
-      setMapLoaded(true);
-    } else {
-      initializeMap();
-    }
-
-    return () => {
-      // Clean up markers
-      Object.values(markers.current).forEach(({ marker, root }) => {
-        root.unmount();
-        marker.remove();
-      });
-      markers.current = {};
-      map.current?.remove();
-    };
-  }, []); // Removido 'machines' da dependência para não recriar o mapa
-
-  // Update map style when mapStyle prop changes
+  // Efeito para ajustar os limites (fitBounds) na carga inicial
   useEffect(() => {
-    if (map.current && mapLoaded && !mapboxError) {
-      map.current.setStyle(MAP_STYLES[mapStyle]);
-      
-      // Re-add markers after style loads
-      map.current.once('style.load', () => {
-        Object.values(markers.current).forEach(({ marker }) => {
-          marker.addTo(map.current!);
-        });
-      });
-    }
-  }, [mapStyle, mapLoaded, mapboxError]);
-
-  // Create and update Mapbox GL markers
-  useEffect(() => {
-    if (!map.current || !mapLoaded || mapboxError) return;
-
-    // Filter machines with valid coordinates
-    const validMachines = machines.filter(machine => machineDataAdapter.hasValidCoordinates(machine));
-
-    // Remove old markers that no longer exist
-    Object.keys(markers.current).forEach(id => {
-      if (!validMachines.find(m => m.vehicleInfo.id === id)) {
-        const { marker, root } = markers.current[id];
-        root.unmount();
-        marker.remove();
-        delete markers.current[id];
-      }
-    });
-
-    // Add or update markers
-    validMachines.forEach(machine => {
-      const existing = markers.current[machine.vehicleInfo.id];
-      const machineAlerts = alerts.filter(alert => alert.machineId === machine.vehicleInfo.id && !alert.isRead);
-      
-      if (existing) {
-        // Update existing marker position and content
-        existing.marker.setLngLat([machine.deviceMessage.gps.longitude, machine.deviceMessage.gps.latitude]);
-        existing.root.render(
-          <MachineMarker
-            machine={machine}
-            isSelected={selectedMachine === machine.vehicleInfo.id}
-            onClick={() => onMachineSelect(machine.vehicleInfo.id)}
-            alerts={machineAlerts}
-          />
-        );
-      } else {
-        // Create new marker
-        const el = document.createElement('div');
-        const root = ReactDOM.createRoot(el);
-        
-        root.render(
-          <MachineMarker
-            machine={machine}
-            isSelected={selectedMachine === machine.vehicleInfo.id}
-            onClick={() => onMachineSelect(machine.vehicleInfo.id)}
-            alerts={machineAlerts}
-          />
-        );
-
-        const marker = new mapboxgl.Marker({ element: el, anchor: 'center' })
-          .setLngLat([machine.deviceMessage.gps.longitude, machine.deviceMessage.gps.latitude])
-          .addTo(map.current);
-
-        markers.current[machine.vehicleInfo.id] = { marker, root };
-      }
-    });
-  }, [machines, mapLoaded, mapboxError, selectedMachine, onMachineSelect, alerts]);
-
-  useEffect(() => {
-    if (!map.current || !mapLoaded || mapboxError || hasAdjustedInitialBounds.current) return;
+    if (!map || !isLoaded || hasAdjustedInitialBounds.current) return;
     
     const validMachines = machines.filter(machine => machineDataAdapter.hasValidCoordinates(machine));
     
     if (validMachines.length > 0) {
-      const bounds = new mapboxgl.LngLatBounds();
+      const bounds = new window.google.maps.LatLngBounds();
       
       validMachines.forEach(machine => {
-        bounds.extend([machine.deviceMessage.gps.longitude, machine.deviceMessage.gps.latitude]);
+        bounds.extend(new window.google.maps.LatLng(
+          machine.deviceMessage.gps.latitude,
+          machine.deviceMessage.gps.longitude
+        ));
       });
       
-      map.current.fitBounds(bounds, {
-        padding: { top: 100, bottom: 100, left: 100, right: 100 },
-        maxZoom: 14,
-        duration: 1000
-      });
+      map.fitBounds(bounds, { top: 100, bottom: 100, left: 100, right: 100 });
       
       hasAdjustedInitialBounds.current = true;
     }
-  }, [machines, mapLoaded, mapboxError]);
+  }, [map, machines, isLoaded]);
 
   useEffect(() => {
-    if (focusOnMachine && map.current && mapLoaded && !mapboxError) {
+    if (focusOnMachine && map && isLoaded) {
       const machine = machines.find(m => m.vehicleInfo.id === focusOnMachine);
-      if (machine) {
-        map.current.flyTo({
-          center: [machine.deviceMessage.gps.longitude, machine.deviceMessage.gps.latitude],
-          zoom: 16,
-          duration: 1500,
-          essential: true
-        });
+      if (machine && machineDataAdapter.hasValidCoordinates(machine)) {
+        const position = {
+          lat: machine.deviceMessage.gps.latitude,
+          lng: machine.deviceMessage.gps.longitude
+        };
+        map.panTo(position);
+        map.setZoom(16);
       }
     }
-  }, [focusOnMachine, mapLoaded, mapboxError]);
+  }, [focusOnMachine, map, machines, isLoaded]);
 
-  return (
-    <div className="relative w-full h-full bg-background">
-      <div ref={mapContainer} className="absolute inset-0 z-0" style={{ pointerEvents: 'auto' }} />
-      
-      {mapboxError && (
+  if (!isLoaded) {
+    return (
+      <div className="absolute inset-0 z-30 flex items-center justify-center bg-background">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Carregando mapa...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Estado de Erro (seu fallback)
+  if (loadError) {
+    return (
+      <div className="relative w-full h-full bg-background">
         <div className="absolute inset-0 z-10 bg-gradient-to-br from-slate-900 to-slate-800"
           style={{
             backgroundImage: `
@@ -225,18 +125,15 @@ const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine
           </div>
           
           <div className="absolute top-4 left-4 bg-agriculture-blue/10 border border-agriculture-blue/20 text-agriculture-blue px-4 py-3 rounded-lg text-sm max-w-md">
-            <p className="font-medium">Mapa do Paraná configurado!</p>
+            <p className="font-medium">Erro ao carregar mapa!</p>
             <p className="text-xs mt-1 opacity-90">
-              Para ver o mapa real, adicione seu token do Mapbox nas configurações do Supabase.
+              Para ver o mapa real, verifique sua chave da Google Maps API e as restrições no Google Cloud.
               <br />
-              <span className="text-xs opacity-75">Obtenha em: mapbox.com → Tokens</span>
+              <span className="text-xs opacity-75">Obtenha em: console.cloud.google.com</span>
             </p>
           </div>
         </div>
-      )}
-      
-      
-      {mapboxError && mapLoaded && (
+        
         <div className="absolute inset-0 z-20 pointer-events-none">
           {machines.map((machine) => (
             <div key={machine.vehicleInfo.id} className="pointer-events-auto">
@@ -248,17 +145,65 @@ const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine
             </div>
           ))}
         </div>
-      )}
-      
-      {!mapLoaded && (
-        <div className="absolute inset-0 z-30 flex items-center justify-center bg-background">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-            <p className="text-muted-foreground">Carregando mapa...</p>
-          </div>
-        </div>
-      )}
-      
+      </div>
+    );
+  }
+
+  // Renderização Principal do Mapa
+  return (
+    <div className="relative w-full h-full bg-background">
+      <GoogleMap
+        mapContainerStyle={containerStyle}
+        center={googleCenter}
+        zoom={PARANA_BOUNDS.zoom}
+        onLoad={onLoad}
+        onUnmount={onUnmount}
+        mapTypeId={mapStyle} // Usa a prop 'mapStyle' diretamente
+        options={{
+          disableDefaultUI: true,       // Remove todos os controles padrão
+          zoomControl: true,          // Adiciona apenas o controle de zoom
+          zoomControlOptions: {
+            position: window.google.maps.ControlPosition.TOP_RIGHT // Posição igual ao Mapbox
+          },
+          mapTypeControl: false,      // Remove seletor de tipo de mapa (já temos o nosso)
+          streetViewControl: false,   // Remove Street View
+        }}
+      >
+        {/* Renderização dos marcadores */}
+        {machines
+          .filter(machine => machineDataAdapter.hasValidCoordinates(machine))
+          .map(machine => {
+            const machineAlerts = alerts.filter(alert => alert.machineId === machine.vehicleInfo.id && !alert.isRead);
+            const isSelected = machine.vehicleInfo.id === selectedMachine;
+            const isHovered = machine.vehicleInfo.id === hoveredMachine;
+            let z = 1;
+            if (isHovered) z = 500;
+            if (isSelected) z = 1000;
+            return (
+
+              <OverlayViewF
+                key={machine.vehicleInfo.id}
+                position={{
+                  lat: machine.deviceMessage.gps.latitude,
+                  lng: machine.deviceMessage.gps.longitude
+                }}
+                mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
+                zIndex={z}
+              >
+                {/* 4. Adicione esta 'div' para centralizar o marcador */}
+                <div style={{ transform: 'translate(-50%, -50%)', outline: 'none' }}>
+                  <MachineMarker
+                    machine={machine}
+                    isSelected={selectedMachine === machine.vehicleInfo.id}
+                    onClick={() => onMachineSelect(machine.vehicleInfo.id)}
+                    alerts={machineAlerts}
+                  />
+                </div>
+              </OverlayViewF>
+            );
+          })
+        }
+      </GoogleMap>
     </div>
   );
 };

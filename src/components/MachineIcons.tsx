@@ -1,24 +1,34 @@
-import React from 'react';
+import React from "react";
+import { cn } from "@/lib/utils";
 
 interface MachineIconProps {
-  icon: string
+  icon: string;
   heading?: number;
   size?: number;
+  className?: string;
 }
 
-const MachineIcon = ({ icon, heading = 0, size = 48 }: MachineIconProps) => {
+const MachineIcon = ({
+  icon,
+  heading = 0,
+  size = 48,
+  className, 
+}: MachineIconProps) => {
   const getIconPath = () => {
     try {
       return new URL(`/src/assets/icons/machines/${icon}`, import.meta.url).href;
     } catch (error) {
       console.error(`Icon not found: ${icon}`, error);
-      
-      return new URL(`/src/assets/icons/machines/truck-gray.svg`, import.meta.url).href;
+
+      return new URL(
+        `/src/assets/icons/machines/truck-gray.svg`,
+        import.meta.url
+      ).href;
     }
   };
 
   return (
-    <div className="inline-block">
+    <div className={cn("inline-block", className)}>
       <img
         src={getIconPath()}
         alt={`${icon}`}
@@ -26,7 +36,7 @@ const MachineIcon = ({ icon, heading = 0, size = 48 }: MachineIconProps) => {
           width: size,
           height: size,
           transform: `rotate(${heading}deg)`,
-          transition: 'transform 0.3s ease'
+          transition: "transform 0.3s ease",
         }}
       />
     </div>

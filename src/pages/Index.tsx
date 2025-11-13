@@ -9,7 +9,7 @@ import MapControls, { MapStyle } from '@/components/MapControls';
 import AlertsPanel from '@/components/AlertsPanel';
 import MachineStatusPanel from '@/components/MachineStatusPanel';
 import { cookieManager } from '@/utils/cookieManager';
-
+const validMapStyles: MapStyle[] = ["roadmap", "satellite", "hybrid", "terrain"];
 const Index = () => {
   const [machines, setMachines] = useState<MachineData[]>([]);
   const [isInitialLoading, setIsInitialLoading] = useState(true);
@@ -45,8 +45,17 @@ const Index = () => {
   // Load map style from localStorage or default to 'satellite'
   const [mapStyle, setMapStyle] = useState<MapStyle>(() => {
     const saved = localStorage.getItem('mapStyle');
-    return (saved as MapStyle) || 'satellite';
+
+    if (saved && validMapStyles.includes(saved as MapStyle)) {
+      return saved as MapStyle;
+    }
+    
+    return 'satellite'; 
   });
+
+  useEffect(() => {
+    localStorage.setItem('mapStyle', mapStyle);
+  }, [mapStyle]);
 
   // Fetch machines on mount and when journey start date changes
   useEffect(() => {
@@ -143,12 +152,10 @@ const Index = () => {
   };
 
   const handleToggleStatus = (filter?: string) => {
-    // Se o painel está aberto e clicamos no mesmo filtro, fecha
     if (isStatusPanelOpen && statusPanelFilter === filter) {
       setIsStatusPanelOpen(false);
       setStatusPanelFilter(undefined);
     } else {
-      // Caso contrário, abre o painel (ou mantém aberto) e atualiza o filtro
       setStatusPanelFilter(filter);
       setIsStatusPanelOpen(true);
     }
@@ -189,7 +196,6 @@ const Index = () => {
 
   const handleMapStyleChange = (style: MapStyle) => {
     setMapStyle(style);
-    localStorage.setItem('mapStyle', style);
   };
 
   if (isInitialLoading) {

@@ -37,7 +37,7 @@ import { MachineData, MachineAlertData } from "@/types/machine";
 import { machineDataAdapter } from "@/utils/machineDataAdapter";
 import { format, subHours, startOfHour } from "date-fns";
 
-export type MapStyle = "satellite" | "streets" | "outdoors" | "dark";
+export type MapStyle = "roadmap" | "satellite" | "hybrid" | "terrain";
 
 interface MapControlsProps {
   machines: MachineData[];
@@ -65,7 +65,6 @@ const MapControls = ({
   const [showMapStyles, setShowMapStyles] = useState(false);
   const [openRefreshPopover, setOpenRefreshPopover] = useState(false);
 
-  // Load refresh interval from localStorage or default to 30s
   const [refreshInterval, setRefreshInterval] = useState<number>(() => {
     const saved = localStorage.getItem("refreshInterval");
     return saved ? parseInt(saved) : 30;
@@ -80,12 +79,10 @@ const MapControls = ({
     { value: 60, label: "60s" },
   ];
 
-  // State to force regeneration of options when hour changes
   const [currentHourKey, setCurrentHourKey] = useState(() =>
     startOfHour(new Date()).getTime()
   );
 
-  // Helper to format date without timezone (no Z)
   const formatDateTimeLocal = (date: Date): string => {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -96,13 +93,11 @@ const MapControls = ({
     return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
   };
 
-  // Generate hourly options from current hour to 47 hours in past
   const journeyStartOptions = useMemo(() => {
     const now = new Date();
     const currentHour = startOfHour(now);
     const options = [];
 
-    // From current hour (0) to 47 hours in the past
     for (let i = 0; i <= 47; i++) {
       const hourDate = subHours(currentHour, i);
       options.push({
@@ -114,7 +109,6 @@ const MapControls = ({
     return options;
   }, [currentHourKey]);
 
-  // Update options when a new hour starts
   useEffect(() => {
     const checkHourChange = () => {
       const currentHourTime = startOfHour(new Date()).getTime();
@@ -123,13 +117,11 @@ const MapControls = ({
       }
     };
 
-    // Check every minute if the hour has changed
     const interval = setInterval(checkHourChange, 60000);
 
     return () => clearInterval(interval);
   }, [currentHourKey]);
 
-  // Find the start of today (00:00) as default
   const getDefaultJourneyStart = () => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -149,7 +141,6 @@ const MapControls = ({
     onJourneyStartChange?.(value);
   };
 
-  // Timer de atualização automática
   useEffect(() => {
     const timer = setInterval(() => {
       setCountdown((prev) => {
@@ -164,7 +155,6 @@ const MapControls = ({
     return () => clearInterval(timer);
   }, [onRefresh, refreshInterval]);
 
-  // Handle refresh interval change
   const handleRefreshIntervalChange = (interval: number) => {
     setRefreshInterval(interval);
     setCountdown(interval);
@@ -174,12 +164,11 @@ const MapControls = ({
 
   const mapStyles: { value: MapStyle; label: string }[] = [
     { value: "satellite", label: "Satélite" },
-    { value: "streets", label: "Ruas" },
-    { value: "outdoors", label: "Outdoor" },
-    { value: "dark", label: "Escuro" },
+    { value: "roadmap", label: "Estradas" },
+    { value: "hybrid", label: "Híbrido" },
+    { value: "terrain", label: "Terreno" },
   ];
 
-  // Categorização das máquinas usando machineDataAdapter
   const statusCounts = useMemo(() => {
     return machines.reduce((acc, machine) => {
       const statusColor = machineDataAdapter.getStatusColor(machine);
