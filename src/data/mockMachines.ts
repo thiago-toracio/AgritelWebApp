@@ -35,7 +35,7 @@ export const mockMachines: MachineData[] = [
     icon: 'sugar-cane-harvester-green.svg',
     vehicleInfo: {
       id: '1',
-      name: 'Sugar Cane Harvester 01',
+      name: 'Sugar Cane Harvester com um nome grande 01',
       brand: 'Marca Exemplo',
       model: 'Modelo X',
       yearModel: 2022,

@@ -295,15 +295,29 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                         onClick={() => onMachineSelect(machine.vehicleInfo.id)}
                       >
                         <CardContent className="p-2.5 h-full flex flex-col relative">
-                          {/* Status badge at top */}
-                          <div className="absolute top-2 right-2 z-10">
+                          {/* MODIFIED: Status, Network & Last Update at top */}
+                          <div className="absolute top-2 right-2 z-10 flex flex-col items-end space-y-1">
                             <Badge variant={getStatusBadgeVariant(machine.deviceState.color)} className="text-[10px] px-2 py-0.5 h-5">
                               {machine.deviceState.tooltip}
                             </Badge>
+                            
+                            {/* Wrapper for network and date on the same line */}
+                            <div className="flex items-center gap-1 whitespace-nowrap">
+                              {machine.deviceMessage.networkSource && (
+                                <Badge variant="outline" className="text-[9px] px-1 py-0 h-4">
+                                  {machine.deviceMessage.networkSource}
+                                </Badge>
+                              )}
+                              {machine.deviceMessage.lastUpdate && (
+                                <span className="text-[10px] text-muted-foreground">
+                                  {format(new Date(machine.deviceMessage.lastUpdate), "dd/MM/yyyy HH:mm", { locale: ptBR })}
+                                </span>
+                              )}
+                            </div>
                           </div>
 
                           {/* Vehicle name and icon */}
-                          <div className="flex items-center gap-2 pb-2 mb-2 border-b border-border/30">
+                          <div className="flex items-start gap-2 pb-2 mb-2 border-b border-border/30">
                             <div className="flex-shrink-0 relative">
                               <MachineIcon 
                                 icon={machineDataAdapter.getIcon(machine)}
@@ -319,10 +333,10 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                                 </div>
                               )}
                             </div>
-                            <h3 className="font-semibold text-sm text-card-foreground truncate flex-1 pr-20">{machine.vehicleInfo.name}</h3>
+                            <h3 className="font-semibold text-xs text-card-foreground line-clamp-2 flex-1 pr-20">{machine.vehicleInfo.name}</h3>
                           </div>
 
-                          {/* Info layout: left side content, right side last update */}
+                          {/* Info layout: left side content */}
                           <div className="flex items-start justify-between gap-2 flex-1">
                             <div className="flex-1 min-w-0 space-y-1.5">
                               {machine.deviceMessage.operator && (
@@ -350,20 +364,6 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                                   <span className="text-muted-foreground">Apontamento às </span>
                                   <span className="text-card-foreground font-medium">
                                     {format(new Date(machineDataAdapter.getNotation(machine)?.localRegistrationTime || new Date()), "dd/MM/yyyy HH:mm", { locale: ptBR })}
-                                  </span>
-                                </div>
-                              )}
-                            </div>
-                            <div className="flex flex-col items-end gap-1 justify-start">
-                              {machine.deviceMessage.lastUpdate && (
-                                <div className="flex items-center gap-1 whitespace-nowrap">
-                                  {machine.deviceMessage.networkSource && (
-                                    <Badge variant="outline" className="text-[9px] px-1 py-0 h-4">
-                                      {machine.deviceMessage.networkSource}
-                                    </Badge>
-                                  )}
-                                  <span className="text-[10px] text-muted-foreground">
-                                    {format(new Date(machine.deviceMessage.lastUpdate), "dd/MM/yyyy HH:mm", { locale: ptBR })}
                                   </span>
                                 </div>
                               )}
