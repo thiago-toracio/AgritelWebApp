@@ -170,7 +170,6 @@ const MapControls = ({
   return (
     <>
       <TooltipProvider>
-        {/* Status Bar */}
         <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-40 max-w-5xl">
           <Card className="bg-gradient-overlay border-border/50 shadow-overlay backdrop-blur-sm">
             <CardContent className="p-3">
@@ -292,7 +291,6 @@ const MapControls = ({
         </div>
       </TooltipProvider>
 
-      {/* Map Controls */}
       <div className="absolute left-4 top-1/2 transform -translate-y-1/2 z-40">
         <Card className="bg-gradient-overlay border-border/50 shadow-overlay backdrop-blur-sm">
           <CardContent className="p-2">
