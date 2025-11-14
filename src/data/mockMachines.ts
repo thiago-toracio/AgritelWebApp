@@ -35,7 +35,7 @@ export const mockMachines: MachineData[] = [
     icon: 'sugar-cane-harvester-green.svg',
     vehicleInfo: {
       id: '1',
-      name: 'Sugar Cane Harvester com um nome grande 01',
+      name: 'Sugar Cane Harvester com um nome grande demais 01',
       brand: 'Marca Exemplo',
       model: 'Modelo X',
       yearModel: 2022,
@@ -78,8 +78,8 @@ export const mockMachines: MachineData[] = [
       networkSource: 'WIFI',
     },
     deviceState: {
-      color: 'green',
-      tooltip: 'Trabalhando',
+      color: 'red',
+      tooltip: 'Parado Desligado',
       status: 'active',
     },
     tripJourney: createTripJourney(1890),

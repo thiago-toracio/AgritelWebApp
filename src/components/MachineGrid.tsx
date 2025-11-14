@@ -283,7 +283,7 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
 
                    {/* Group Machines Grid */}
                   {expandedAreas[area] && (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-1">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-1">
                     {groupMachines.map((machine) => (
                       <Card
                         key={machine.vehicleInfo.id}
@@ -295,45 +295,52 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                         onClick={() => onMachineSelect(machine.vehicleInfo.id)}
                       >
                         <CardContent className="p-2.5 h-full flex flex-col relative">
-                          {/* MODIFIED: Status, Network & Last Update at top */}
-                          <div className="absolute top-2 right-2 z-10 flex flex-col items-end space-y-1">
-                            <Badge variant={getStatusBadgeVariant(machine.deviceState.color)} className="text-[10px] px-2 py-0.5 h-5">
-                              {machine.deviceState.tooltip}
-                            </Badge>
+                          
+                          {/* MODIFIED: New Flex Container for Header */}
+                          <div className="flex items-start justify-between gap-2 pb-2 mb-2 border-b border-border/30">
                             
-                            {/* Wrapper for network and date on the same line */}
-                            <div className="flex items-center gap-1 whitespace-nowrap">
-                              {machine.deviceMessage.networkSource && (
-                                <Badge variant="outline" className="text-[9px] px-1 py-0 h-4">
-                                  {machine.deviceMessage.networkSource}
-                                </Badge>
-                              )}
-                              {machine.deviceMessage.lastUpdate && (
-                                <span className="text-[10px] text-muted-foreground">
-                                  {format(new Date(machine.deviceMessage.lastUpdate), "dd/MM/yyyy HH:mm", { locale: ptBR })}
-                                </span>
-                              )}
+                            {/* Left Side: Icon + Name */}
+                            <div className="flex items-start gap-2 flex-1 min-w-0">
+                              <div className="flex-shrink-0 relative">
+                                <MachineIcon 
+                                  icon={machineDataAdapter.getIcon(machine)}
+                                  size={36}
+                                />
+                                {/* Alert indicator on machine icon */}
+                                {machine.alerts.filter(alert => !alert.isRead).length > 0 && (
+                                  <div className="absolute -top-1 -right-1 min-w-[16px] h-4 bg-warning rounded-full flex items-center justify-center px-1">
+                                    <AlertTriangle className="w-2.5 h-2.5 text-background flex-shrink-0" />
+                                    <span className="text-[9px] font-bold text-background ml-0.5">
+                                      {machine.alerts.filter(alert => !alert.isRead).length}
+                                    </span>
+                                  </div>
+                                )}
+                              </div>
+                              {/* MODIFIED: Removed max-w class */}
+                              <h3 className="font-semibold text-[11px] text-card-foreground line-clamp-2">{machine.vehicleInfo.name}</h3>
                             </div>
-                          </div>
 
-                          {/* Vehicle name and icon */}
-                          <div className="flex items-start gap-2 pb-2 mb-2 border-b border-border/30">
-                            <div className="flex-shrink-0 relative">
-                              <MachineIcon 
-                                icon={machineDataAdapter.getIcon(machine)}
-                                size={32}
-                              />
-                              {/* Alert indicator on machine icon */}
-                              {machine.alerts.filter(alert => !alert.isRead).length > 0 && (
-                                <div className="absolute -top-1 -right-1 min-w-[16px] h-4 bg-warning rounded-full flex items-center justify-center px-1">
-                                  <AlertTriangle className="w-2.5 h-2.5 text-background flex-shrink-0" />
-                                  <span className="text-[9px] font-bold text-background ml-0.5">
-                                    {machine.alerts.filter(alert => !alert.isRead).length}
+                            {/* Right Side: Status, Network & Last Update */}
+                            {/* MODIFIED: Removed 'absolute', 'top-2', 'right-2', 'z-10'. Added 'flex-shrink-0' */}
+                            <div className="flex flex-col items-end space-y-1 flex-shrink-0">
+                              <Badge variant={getStatusBadgeVariant(machine.deviceState.color)} className="text-[8.5px] px-1.5 py-0.5 h-4.5">
+                                {machine.deviceState.tooltip}
+                              </Badge>
+                              
+                              {/* Wrapper for network and date on the same line */}
+                              <div className="flex items-center gap-1 whitespace-nowrap">
+                                {machine.deviceMessage.networkSource && (
+                                  <Badge variant="outline" className="text-[9px] px-1 py-0 h-4">
+                                    {machine.deviceMessage.networkSource}
+                                  </Badge>
+                                )}
+                                {machine.deviceMessage.lastUpdate && (
+                                  <span className="text-[10px] text-muted-foreground">
+                                    {format(new Date(machine.deviceMessage.lastUpdate), "dd/MM/yyyy HH:mm", { locale: ptBR })}
                                   </span>
-                                </div>
-                              )}
+                                )}
+                              </div>
                             </div>
-                            <h3 className="font-semibold text-xs text-card-foreground line-clamp-2 flex-1 pr-20">{machine.vehicleInfo.name}</h3>
                           </div>
 
                           {/* Info layout: left side content */}
