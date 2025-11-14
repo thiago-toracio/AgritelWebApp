@@ -9,7 +9,8 @@ import {
   CornerDownRight, 
   StopCircle, 
   ArrowRightLeft, 
-  HelpCircle 
+  HelpCircle,
+  RefreshCw 
 } from 'lucide-react';
 import MachineIcon from '@/components/MachineIcons';
 import { cn } from '@/lib/utils';
@@ -30,9 +31,10 @@ interface MachineGridProps {
   onMachineSelect: (machineId: string) => void;
   selectedMachine?: string;
   journeyStartTime?: string;
+  countdown: number; 
 }
 
-const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachine, journeyStartTime }: MachineGridProps) => {
+const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachine, journeyStartTime, countdown }: MachineGridProps) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
 
@@ -197,6 +199,22 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                 Máquinas Agrícolas
               </h2>
               <Badge variant="outline">Total: {machines.length}</Badge>
+              
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div className="relative cursor-help ml-2">
+                      <RefreshCw className="w-5 h-5 text-muted-foreground" />
+                      <div className="absolute -top-1.5 -right-1.5 bg-primary text-primary-foreground rounded-full w-4 h-4 flex items-center justify-center text-[10px] font-bold leading-none shadow-sm">
+                        {countdown}
+                      </div>
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Próxima atualização em {countdown}s</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </div>
 
             <div className="flex flex-1 items-center justify-center gap-4">
@@ -429,7 +447,6 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                             </div>
                           </div>
 
-                          {/* MODIFICADO AQUI: alterado border-border para border-foreground/20 */}
                           <div className="mt-auto pt-2 border-t border-foreground/20 relative">
                             <span className={cn(
                               "absolute -top-[7px] left-1/2 -translate-x-1/2 px-1.5 text-[9px] font-medium uppercase tracking-wide rounded-sm",

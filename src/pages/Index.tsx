@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useCallback } from 'react';
 import { MachineData, MachineAlertData } from '@/types/machine';
 import { machineService } from '@/services/api/machineService';
 import { machineDataAdapter } from '@/utils/machineDataAdapter';
@@ -9,7 +9,9 @@ import MapControls, { MapStyle } from '@/components/MapControls';
 import AlertsPanel from '@/components/AlertsPanel';
 import MachineStatusPanel from '@/components/MachineStatusPanel';
 import { cookieManager } from '@/utils/cookieManager';
+
 const validMapStyles: MapStyle[] = ["roadmap", "satellite", "hybrid", "terrain"];
+
 const Index = () => {
   const [machines, setMachines] = useState<MachineData[]>([]);
   const [isInitialLoading, setIsInitialLoading] = useState(true);
@@ -22,7 +24,6 @@ const Index = () => {
   const [alerts, setAlerts] = useState<MachineAlertData[]>([]);
   const [focusOnMachine, setFocusOnMachine] = useState<string | undefined>();
   
-  // Helper to format date without timezone (no Z)
   const formatDateTimeLocal = (date: Date): string => {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -33,7 +34,6 @@ const Index = () => {
     return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
   };
   
-  // Initialize with today at 00:00 as default
   const getDefaultJourneyStart = () => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -42,31 +42,52 @@ const Index = () => {
   
   const [journeyStartTime, setJourneyStartTime] = useState<string>(getDefaultJourneyStart());
   
-  // Load map style from localStorage or default to 'satellite'
   const [mapStyle, setMapStyle] = useState<MapStyle>(() => {
     const saved = localStorage.getItem('mapStyle');
-
     if (saved && validMapStyles.includes(saved as MapStyle)) {
       return saved as MapStyle;
     }
-    
     return 'satellite'; 
   });
+
+  // --- INÍCIO DA LÓGICA DO CONTADOR (MOVIDA PARA CÁ) ---
+  const [refreshInterval, setRefreshInterval] = useState<number>(() => {
+    const saved = localStorage.getItem("refreshInterval");
+    return saved ? parseInt(saved) : 30;
+  });
+  const [countdown, setCountdown] = useState(refreshInterval);
+  
+  // A função de refresh agora chama 'loadMachines'
+  const handleRefresh = useCallback(() => {
+    loadMachines();
+  }, [journeyStartTime]); // Recria se 'journeyStartTime' mudar
+  
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          handleRefresh();
+          return refreshInterval;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [handleRefresh, refreshInterval]);
+  
+  const handleRefreshIntervalChange = (interval: number) => {
+    setRefreshInterval(interval);
+    setCountdown(interval);
+    localStorage.setItem("refreshInterval", interval.toString());
+  };
+  // --- FIM DA LÓGICA DO CONTADOR ---
 
   useEffect(() => {
     localStorage.setItem('mapStyle', mapStyle);
   }, [mapStyle]);
 
-  // Fetch machines on mount and when journey start date changes
-  useEffect(() => {
-    loadMachines(true);
-  }, []);
-
-  useEffect(() => {
-    loadMachines();
-  }, [journeyStartTime]);
-
-  const loadMachines = async (isInitial = false) => {
+  // 'useCallback' adicionado para 'loadMachines'
+  const loadMachines = useCallback(async (isInitial = false) => {
     try {
       if (isInitial) {
         setIsInitialLoading(true);
@@ -92,22 +113,22 @@ const Index = () => {
         setIsInitialLoading(false);
       }
     }
-  };
+  }, [journeyStartTime]); // Dependência de 'loadMachines'
 
-  // Consolidar alertas de todas as máquinas
+  useEffect(() => {
+    loadMachines(true);
+  }, [loadMachines]); // Carrega inicialmente
+
   const consolidatedAlerts = useMemo(() => {
     const allAlerts: MachineAlertData[] = [];
-    
     machines.forEach(machine => {
       if (machine.alerts && machine.alerts.length > 0) {
         allAlerts.push(...machine.alerts);
       }
     });
-    
     return allAlerts;
   }, [machines]);
 
-  // Atualizar alertas quando as máquinas mudarem e aplicar estado de leitura dos cookies
   useEffect(() => {
     const readAlertIds = cookieManager.getReadAlerts();
     const alertsWithReadState = consolidatedAlerts.map(alert => ({
@@ -120,11 +141,7 @@ const Index = () => {
   const handleMachineSelect = (machineId: string) => {
     setSelectedMachine(machineId);
     setIsSidebarOpen(true);
-    
-    // Focar na máquina no mapa
     setFocusOnMachine(machineId);
-    
-    // Limpar o foco após um tempo para não ficar preso
     setTimeout(() => {
       setFocusOnMachine(undefined);
     }, 2000);
@@ -167,24 +184,16 @@ const Index = () => {
   };
 
   const handleMarkAsRead = (alertId: string) => {
-    // Salvar no localStorage (50h)
     cookieManager.saveReadAlert(alertId);
-    
-    // Atualizar estado local
     setAlerts(prev => prev.map(alert => 
       alert.id === alertId ? { ...alert, isRead: true } : alert
     ));
   };
 
   const handleViewMachineFromAlert = (machineId: string) => {
-    // Selecionar a máquina e abrir o sidebar
     setSelectedMachine(machineId);
     setIsSidebarOpen(true);
-    
-    // Focar na máquina no mapa
     setFocusOnMachine(machineId);
-    
-    // Limpar o foco após um tempo para não ficar preso
     setTimeout(() => {
       setFocusOnMachine(undefined);
     }, 2000);
@@ -210,7 +219,6 @@ const Index = () => {
 
   return (
     <div className="relative h-screen w-full overflow-hidden bg-background">
-      {/* Full-screen Map */}
       <MachineMap
         machines={machines}
         selectedMachine={selectedMachine}
@@ -220,7 +228,6 @@ const Index = () => {
         alerts={alerts}
       />
 
-      {/* Map Controls */}
       <MapControls
         machines={machines}
         alerts={alerts}
@@ -229,11 +236,13 @@ const Index = () => {
         onToggleStatus={handleToggleStatus}
         onMapStyleChange={handleMapStyleChange}
         currentMapStyle={mapStyle}
-        onRefresh={loadMachines}
+        onRefresh={handleRefresh}
         onJourneyStartChange={setJourneyStartTime}
+        countdown={countdown}
+        refreshInterval={refreshInterval}
+        onRefreshIntervalChange={handleRefreshIntervalChange}
       />
 
-      {/* Machine Grid Overlay */}
       <MachineGrid
         machines={machines}
         isOpen={isGridOpen}
@@ -241,9 +250,9 @@ const Index = () => {
         onMachineSelect={handleMachineSelect}
         selectedMachine={selectedMachine}
         journeyStartTime={journeyStartTime}
+        countdown={countdown}
       />
 
-      {/* Alerts Panel */}
       <AlertsPanel
         alerts={alerts}
         isOpen={isAlertsPanelOpen}
@@ -252,7 +261,6 @@ const Index = () => {
         onViewMachine={handleViewMachineFromAlert}
       />
 
-      {/* Machine Status Panel */}
       <MachineStatusPanel
         machines={machines}
         isOpen={isStatusPanelOpen}
@@ -261,7 +269,6 @@ const Index = () => {
         initialFilter={statusPanelFilter}
       />
 
-      {/* Machine Details Sidebar */}
       <MachineSidebar
         machine={selectedMachineData}
         isOpen={isSidebarOpen}

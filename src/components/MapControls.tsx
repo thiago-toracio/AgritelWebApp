@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -49,6 +49,9 @@ interface MapControlsProps {
   currentMapStyle: MapStyle;
   onRefresh: () => void;
   onJourneyStartChange?: (startTime: string) => void;
+  countdown: number;
+  refreshInterval: number;
+  onRefreshIntervalChange: (interval: number) => void;
 }
 
 const MapControls = ({
@@ -61,16 +64,13 @@ const MapControls = ({
   currentMapStyle,
   onRefresh,
   onJourneyStartChange,
+  countdown,
+  refreshInterval,
+  onRefreshIntervalChange,
 }: MapControlsProps) => {
   const [showMapStyles, setShowMapStyles] = useState(false);
   const [openRefreshPopover, setOpenRefreshPopover] = useState(false);
-
-  const [refreshInterval, setRefreshInterval] = useState<number>(() => {
-    const saved = localStorage.getItem("refreshInterval");
-    return saved ? parseInt(saved) : 30;
-  });
-
-  const [countdown, setCountdown] = useState(refreshInterval);
+  
   const alertsCount = alerts.filter((alert) => !alert.isRead).length;
 
   const refreshIntervals = [
@@ -141,24 +141,8 @@ const MapControls = ({
     onJourneyStartChange?.(value);
   };
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCountdown((prev) => {
-        if (prev <= 1) {
-          onRefresh();
-          return refreshInterval;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, [onRefresh, refreshInterval]);
-
   const handleRefreshIntervalChange = (interval: number) => {
-    setRefreshInterval(interval);
-    setCountdown(interval);
-    localStorage.setItem("refreshInterval", interval.toString());
+    onRefreshIntervalChange(interval);
     setOpenRefreshPopover(false);
   };
 
@@ -191,8 +175,7 @@ const MapControls = ({
           <Card className="bg-gradient-overlay border-border/50 shadow-overlay backdrop-blur-sm">
             <CardContent className="p-3">
               <div className="flex items-center space-x-0.5 md:space-x-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap justify-center px-2">
-                {/* Botões de status com espaçamento reduzido */}
-
+                
                 <button
                   onClick={() => onToggleStatus("green")}
                   className="flex items-center space-x-1 hover:bg-muted/50 px-2 py-1 rounded transition-colors cursor-pointer"
@@ -314,7 +297,6 @@ const MapControls = ({
         <Card className="bg-gradient-overlay border-border/50 shadow-overlay backdrop-blur-sm">
           <CardContent className="p-2">
             <div className="flex flex-col space-y-2">
-              {/* Refresh Controls - Design melhorado */}
               <Popover
                 open={openRefreshPopover}
                 onOpenChange={setOpenRefreshPopover}
@@ -327,7 +309,6 @@ const MapControls = ({
                     title="Intervalo de Atualização"
                   >
                     <RefreshCw className="w-5 h-5 transition-transform group-hover:rotate-45" />
-                    {/* Contador integrado ao ícone */}
                     <div className="absolute -top-1 -right-1 bg-primary text-primary-foreground rounded-full w-4 h-4 flex items-center justify-center text-[10px] font-bold leading-none shadow-sm">
                       {countdown}
                     </div>
@@ -411,7 +392,6 @@ const MapControls = ({
         </Card>
       </div>
 
-      {/* Grid Toggle Button - Bottom Left */}
       <div className="absolute bottom-4 left-4 z-40">
         <Button
           onClick={onToggleGrid}

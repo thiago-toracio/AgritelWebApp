@@ -188,7 +188,6 @@ const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine
                 mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
                 zIndex={z}
               >
-                {/* 4. Adicione esta 'div' para centralizar o marcador */}
                 <div style={{ transform: 'translate(-50%, -50%)', outline: 'none' }}>
                   <MachineMarker
                     machine={machine}
