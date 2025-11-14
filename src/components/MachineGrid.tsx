@@ -10,7 +10,8 @@ import {
   StopCircle, 
   ArrowRightLeft, 
   HelpCircle,
-  RefreshCw 
+  RefreshCw,
+  Activity // ÍCONE ADICIONADO
 } from 'lucide-react';
 import MachineIcon from '@/components/MachineIcons';
 import { cn } from '@/lib/utils';
@@ -31,7 +32,7 @@ interface MachineGridProps {
   onMachineSelect: (machineId: string) => void;
   selectedMachine?: string;
   journeyStartTime?: string;
-  countdown: number;
+  countdown: number; 
 }
 
 const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachine, journeyStartTime, countdown }: MachineGridProps) => {
@@ -366,7 +367,7 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                       <Card
                         key={machine.vehicleInfo.id}
                         className={cn(
-                          "cursor-pointer transition-all duration-200 hover:shadow-lg border-2 w-full h-[220px]",
+                          "cursor-pointer transition-all duration-200 hover:shadow-lg border-2 w-full h-[265px]",
                           getStatusBgClass(machine),
                           selectedMachine === machine.vehicleInfo.id && "ring-2 ring-primary shadow-glow"
                         )}
@@ -414,6 +415,32 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                             </div>
                           </div>
 
+                          {/* BLOCO DE VELOCIDADE E RPM ADICIONADO */}
+                          <div className="grid grid-cols-2 gap-2 mb-2">
+                            <div className="flex items-center gap-2 rounded-md bg-muted/50 p-2">
+                              <Activity className="w-5 h-5 text-status-active flex-shrink-0" /> 
+                              <div>
+                                <div className="text-[10px] font-medium uppercase text-muted-foreground">
+                                  Velocidade
+                                </div>
+                                <div className="text-sm font-semibold text-card-foreground">
+                                  {machineDataAdapter.getSpeed(machine).toFixed(1)} km/h
+                                </div>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2 rounded-md bg-muted/50 p-2">
+                              <Gauge className="w-5 h-5 text-status-active flex-shrink-0" />
+                              <div>
+                                <div className="text-[10px] font-medium uppercase text-muted-foreground">
+                                  RPM
+                                </div>
+                                <div className="text-sm font-semibold text-card-foreground">
+                                  {machineDataAdapter.getRpm(machine).toFixed(0)}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          
                           <div className="flex items-start justify-between gap-2 flex-1">
                             <div className="flex-1 min-w-0 space-y-1.5">
                               {machine.deviceMessage.operator && (
