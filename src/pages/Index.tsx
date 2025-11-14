@@ -50,43 +50,12 @@ const Index = () => {
     return 'satellite'; 
   });
 
-  // --- INÍCIO DA LÓGICA DO CONTADOR (MOVIDA PARA CÁ) ---
   const [refreshInterval, setRefreshInterval] = useState<number>(() => {
     const saved = localStorage.getItem("refreshInterval");
     return saved ? parseInt(saved) : 30;
   });
   const [countdown, setCountdown] = useState(refreshInterval);
   
-  // A função de refresh agora chama 'loadMachines'
-  const handleRefresh = useCallback(() => {
-    loadMachines();
-  }, [journeyStartTime]); // Recria se 'journeyStartTime' mudar
-  
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCountdown((prev) => {
-        if (prev <= 1) {
-          handleRefresh();
-          return refreshInterval;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-    return () => clearInterval(timer);
-  }, [handleRefresh, refreshInterval]);
-  
-  const handleRefreshIntervalChange = (interval: number) => {
-    setRefreshInterval(interval);
-    setCountdown(interval);
-    localStorage.setItem("refreshInterval", interval.toString());
-  };
-  // --- FIM DA LÓGICA DO CONTADOR ---
-
-  useEffect(() => {
-    localStorage.setItem('mapStyle', mapStyle);
-  }, [mapStyle]);
-
-  // 'useCallback' adicionado para 'loadMachines'
   const loadMachines = useCallback(async (isInitial = false) => {
     try {
       if (isInitial) {
@@ -113,11 +82,38 @@ const Index = () => {
         setIsInitialLoading(false);
       }
     }
-  }, [journeyStartTime]); // Dependência de 'loadMachines'
+  }, [journeyStartTime]);
+
+  const handleRefresh = useCallback(() => {
+    loadMachines();
+  }, [loadMachines]);
+  
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          handleRefresh();
+          return refreshInterval;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [handleRefresh, refreshInterval]);
+  
+  const handleRefreshIntervalChange = (interval: number) => {
+    setRefreshInterval(interval);
+    setCountdown(interval);
+    localStorage.setItem("refreshInterval", interval.toString());
+  };
+
+  useEffect(() => {
+    localStorage.setItem('mapStyle', mapStyle);
+  }, [mapStyle]);
 
   useEffect(() => {
     loadMachines(true);
-  }, [loadMachines]); // Carrega inicialmente
+  }, [loadMachines]);
 
   const consolidatedAlerts = useMemo(() => {
     const allAlerts: MachineAlertData[] = [];
@@ -138,14 +134,14 @@ const Index = () => {
     setAlerts(alertsWithReadState);
   }, [consolidatedAlerts]);
 
-  const handleMachineSelect = (machineId: string) => {
+  const handleMachineSelect = useCallback((machineId: string) => {
     setSelectedMachine(machineId);
     setIsSidebarOpen(true);
     setFocusOnMachine(machineId);
     setTimeout(() => {
       setFocusOnMachine(undefined);
     }, 2000);
-  };
+  }, []);
 
   const handleCloseSidebar = () => {
     setIsSidebarOpen(false);
@@ -190,14 +186,14 @@ const Index = () => {
     ));
   };
 
-  const handleViewMachineFromAlert = (machineId: string) => {
+  const handleViewMachineFromAlert = useCallback((machineId: string) => {
     setSelectedMachine(machineId);
     setIsSidebarOpen(true);
     setFocusOnMachine(machineId);
     setTimeout(() => {
       setFocusOnMachine(undefined);
     }, 2000);
-  };
+  }, []);
 
   const selectedMachineData = selectedMachine 
     ? machines.find(m => m.vehicleInfo.id === selectedMachine) 

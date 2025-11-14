@@ -31,7 +31,7 @@ interface MachineGridProps {
   onMachineSelect: (machineId: string) => void;
   selectedMachine?: string;
   journeyStartTime?: string;
-  countdown: number; 
+  countdown: number;
 }
 
 const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachine, journeyStartTime, countdown }: MachineGridProps) => {

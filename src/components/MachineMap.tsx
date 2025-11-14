@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
-// 1. Use 'OverlayViewF' para melhor performance
 import { GoogleMap, useLoadScript, OverlayViewF, OverlayView } from '@react-google-maps/api'
 import { MachineData, MachineAlertData } from '@/types/machine';
 import MachineMarker from './MachineMarker';
@@ -7,7 +6,7 @@ import FallbackMachineMarker from './FallbackMachineMarker';
 import { PARANA_BOUNDS } from '@/lib/mapbox'; 
 import { MapStyle } from './MapControls';
 import { machineDataAdapter } from '@/utils/machineDataAdapter';
-
+import React from 'react';
 const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY as string;
 
 const containerStyle = {
@@ -205,4 +204,4 @@ const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine
   );
 };
 
-export default MachineMap;
+export default React.memo(MachineMap);
