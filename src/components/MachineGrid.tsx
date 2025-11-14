@@ -315,54 +315,55 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                             <h3 className="font-semibold text-sm text-card-foreground truncate flex-1">{machine.vehicleInfo.name}</h3>
                           </div>
 
-                          {/* Status and last update info */}
-                          <div className="flex items-start justify-between mb-2 gap-2">
-                            <Badge variant={getStatusBadgeVariant(machine.deviceState.color)} className="text-xs flex-shrink-0">
-                              {machine.deviceState.tooltip}
-                            </Badge>
-                            {machine.deviceMessage.lastUpdate && (
-                              <div className="flex items-center gap-1 flex-wrap justify-end">
-                                {machine.deviceMessage.networkSource && (
-                                  <Badge variant="outline" className="text-[9px] px-1 py-0 h-4">
-                                    {machine.deviceMessage.networkSource}
-                                  </Badge>
-                                )}
-                                <span className="text-[10px] text-muted-foreground whitespace-nowrap">
-                                  {format(new Date(machine.deviceMessage.lastUpdate), "dd/MM/yyyy HH:mm", { locale: ptBR })}
-                                </span>
-                              </div>
-                            )}
-                          </div>
+                          {/* Two column layout: left side info, right side status */}
+                          <div className="flex items-start justify-between gap-2 flex-1">
+                            <div className="flex-1 min-w-0 space-y-1.5">
+                              {machine.deviceMessage.operator && (
+                                <div className="flex items-center space-x-1.5 text-xs">
+                                  <User className="w-3 h-3 text-muted-foreground" />
+                                  <span className="text-card-foreground">{machine.deviceMessage.operator}</span>
+                                </div>
+                              )}
 
-                          <div className="space-y-1.5 flex-1">
-                            {machine.deviceMessage.operator && (
-                              <div className="flex items-center space-x-1.5 text-xs">
-                                <User className="w-3 h-3 text-muted-foreground" />
-                                <span className="text-card-foreground">{machine.deviceMessage.operator}</span>
-                              </div>
-                            )}
+                              {machineDataAdapter.getNotation(machine) && (
+                                <div className="flex items-center gap-1">
+                                  <FileText className="w-3 h-3 text-muted-foreground flex-shrink-0" />
+                                  <span className="text-xs text-card-foreground font-medium truncate">
+                                    {machineDataAdapter.getNotation(machine)?.code}
+                                  </span>
+                                  <span className="text-xs text-muted-foreground">-</span>
+                                  <span className="text-xs text-muted-foreground truncate">
+                                    {machineDataAdapter.getNotation(machine)?.name}
+                                  </span>
+                                </div>
+                              )}
 
-                            {machineDataAdapter.getNotation(machine) && (
-                              <div className="flex items-center gap-1">
-                                <FileText className="w-3 h-3 text-muted-foreground flex-shrink-0" />
-                                <span className="text-xs text-card-foreground font-medium truncate">
-                                  {machineDataAdapter.getNotation(machine)?.code}
-                                </span>
-                                <span className="text-xs text-muted-foreground">-</span>
-                                <span className="text-xs text-muted-foreground truncate">
-                                  {machineDataAdapter.getNotation(machine)?.name}
-                                </span>
-                              </div>
-                            )}
-
-                            {machineDataAdapter.getNotation(machine)?.localRegistrationTime && (
-                              <div className="text-xs">
-                                <span className="text-muted-foreground">Apontamento às </span>
-                                <span className="text-card-foreground font-medium">
-                                  {format(new Date(machineDataAdapter.getNotation(machine)!.localRegistrationTime!), "dd/MM/yyyy HH:mm", { locale: ptBR })}
-                                </span>
-                              </div>
-                            )}
+                              {machineDataAdapter.getNotation(machine)?.localRegistrationTime && (
+                                <div className="text-xs">
+                                  <span className="text-muted-foreground">Apontamento às </span>
+                                  <span className="text-card-foreground font-medium">
+                                    {format(new Date(machineDataAdapter.getNotation(machine)?.localRegistrationTime || new Date()), "dd/MM/yyyy HH:mm", { locale: ptBR })}
+                                  </span>
+                                </div>
+                              )}
+                            </div>
+                            <div className="flex flex-col items-end gap-1">
+                              <Badge variant={getStatusBadgeVariant(machine.deviceState.color)} className="text-xs flex-shrink-0">
+                                {machine.deviceState.tooltip}
+                              </Badge>
+                              {machine.deviceMessage.lastUpdate && (
+                                <div className="flex items-center gap-1 whitespace-nowrap">
+                                  {machine.deviceMessage.networkSource && (
+                                    <Badge variant="outline" className="text-[9px] px-1 py-0 h-4">
+                                      {machine.deviceMessage.networkSource}
+                                    </Badge>
+                                  )}
+                                  <span className="text-[10px] text-muted-foreground">
+                                    {format(new Date(machine.deviceMessage.lastUpdate), "dd/MM/yyyy HH:mm", { locale: ptBR })}
+                                  </span>
+                                </div>
+                              )}
+                            </div>
                           </div>
 
                           <div className="mt-auto pt-2 border-t border-border">
