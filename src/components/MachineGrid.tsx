@@ -294,8 +294,15 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                         )}
                         onClick={() => onMachineSelect(machine.vehicleInfo.id)}
                       >
-                        <CardContent className="p-2.5 h-full flex flex-col">
-                          {/* Vehicle name and icon - Own line */}
+                        <CardContent className="p-2.5 h-full flex flex-col relative">
+                          {/* Status badge at top */}
+                          <div className="absolute top-2 right-2 z-10">
+                            <Badge variant={getStatusBadgeVariant(machine.deviceState.color)} className="text-[10px] px-2 py-0.5 h-5">
+                              {machine.deviceState.tooltip}
+                            </Badge>
+                          </div>
+
+                          {/* Vehicle name and icon */}
                           <div className="flex items-center gap-2 pb-2 mb-2 border-b border-border/30">
                             <div className="flex-shrink-0 relative">
                               <MachineIcon 
@@ -312,10 +319,10 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                                 </div>
                               )}
                             </div>
-                            <h3 className="font-semibold text-sm text-card-foreground truncate flex-1">{machine.vehicleInfo.name}</h3>
+                            <h3 className="font-semibold text-sm text-card-foreground truncate flex-1 pr-20">{machine.vehicleInfo.name}</h3>
                           </div>
 
-                          {/* Two column layout: left side info, right side status */}
+                          {/* Info layout: left side content, right side last update */}
                           <div className="flex items-start justify-between gap-2 flex-1">
                             <div className="flex-1 min-w-0 space-y-1.5">
                               {machine.deviceMessage.operator && (
@@ -347,10 +354,7 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                                 </div>
                               )}
                             </div>
-                            <div className="flex flex-col items-end gap-1">
-                              <Badge variant={getStatusBadgeVariant(machine.deviceState.color)} className="text-xs flex-shrink-0">
-                                {machine.deviceState.tooltip}
-                              </Badge>
+                            <div className="flex flex-col items-end gap-1 justify-start">
                               {machine.deviceMessage.lastUpdate && (
                                 <div className="flex items-center gap-1 whitespace-nowrap">
                                   {machine.deviceMessage.networkSource && (
