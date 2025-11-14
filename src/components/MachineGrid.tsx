@@ -295,44 +295,43 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                         onClick={() => onMachineSelect(machine.vehicleInfo.id)}
                       >
                         <CardContent className="p-2.5 h-full flex flex-col">
-                          <div className="flex items-start justify-between mb-2">
-                            <div className="flex items-start gap-2 flex-1">
-                              <div className="flex-shrink-0 mt-0.5 relative -ml-0.5">
-                                <MachineIcon 
-                                  icon={machineDataAdapter.getIcon(machine)}
-                                  size={32}
-                                />
-                                {/* Alert indicator on machine icon */}
-                                {machine.alerts.filter(alert => !alert.isRead).length > 0 && (
-                                  <div className="absolute -top-1 -right-1 min-w-[16px] h-4 bg-warning rounded-full flex items-center justify-center px-1">
-                                    <AlertTriangle className="w-2.5 h-2.5 text-background flex-shrink-0" />
-                                    <span className="text-[9px] font-bold text-background ml-0.5">
-                                      {machine.alerts.filter(alert => !alert.isRead).length}
-                                    </span>
-                                  </div>
-                                )}
-                              </div>
-                              <div className="flex-1 min-w-0">
-                                <h3 className="font-semibold text-sm text-card-foreground truncate">{machine.vehicleInfo.name}</h3>
-                              </div>
-                            </div>
-                            <div className="flex flex-col items-end gap-1 -mr-0.5">
-                              <Badge variant={getStatusBadgeVariant(machine.deviceState.color)} className="text-xs flex-shrink-0">
-                                {machine.deviceState.tooltip}
-                              </Badge>
-                              {machine.deviceMessage.lastUpdate && (
-                                <div className="flex items-center gap-1 whitespace-nowrap">
-                                  {machine.deviceMessage.networkSource && (
-                                    <Badge variant="outline" className="text-[9px] px-1 py-0 h-4">
-                                      {machine.deviceMessage.networkSource}
-                                    </Badge>
-                                  )}
-                                  <span className="text-[10px] text-muted-foreground">
-                                    {format(new Date(machine.deviceMessage.lastUpdate), "dd/MM/yyyy HH:mm", { locale: ptBR })}
+                          {/* Vehicle name and icon - Own line */}
+                          <div className="flex items-center gap-2 pb-2 mb-2 border-b border-border/30">
+                            <div className="flex-shrink-0 relative">
+                              <MachineIcon 
+                                icon={machineDataAdapter.getIcon(machine)}
+                                size={32}
+                              />
+                              {/* Alert indicator on machine icon */}
+                              {machine.alerts.filter(alert => !alert.isRead).length > 0 && (
+                                <div className="absolute -top-1 -right-1 min-w-[16px] h-4 bg-warning rounded-full flex items-center justify-center px-1">
+                                  <AlertTriangle className="w-2.5 h-2.5 text-background flex-shrink-0" />
+                                  <span className="text-[9px] font-bold text-background ml-0.5">
+                                    {machine.alerts.filter(alert => !alert.isRead).length}
                                   </span>
                                 </div>
                               )}
                             </div>
+                            <h3 className="font-semibold text-sm text-card-foreground truncate flex-1">{machine.vehicleInfo.name}</h3>
+                          </div>
+
+                          {/* Status and last update info */}
+                          <div className="flex items-start justify-between mb-2 gap-2">
+                            <Badge variant={getStatusBadgeVariant(machine.deviceState.color)} className="text-xs flex-shrink-0">
+                              {machine.deviceState.tooltip}
+                            </Badge>
+                            {machine.deviceMessage.lastUpdate && (
+                              <div className="flex items-center gap-1 flex-wrap justify-end">
+                                {machine.deviceMessage.networkSource && (
+                                  <Badge variant="outline" className="text-[9px] px-1 py-0 h-4">
+                                    {machine.deviceMessage.networkSource}
+                                  </Badge>
+                                )}
+                                <span className="text-[10px] text-muted-foreground whitespace-nowrap">
+                                  {format(new Date(machine.deviceMessage.lastUpdate), "dd/MM/yyyy HH:mm", { locale: ptBR })}
+                                </span>
+                              </div>
+                            )}
                           </div>
 
                           <div className="space-y-1.5 flex-1">
