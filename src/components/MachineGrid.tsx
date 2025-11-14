@@ -294,32 +294,67 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                         )}
                         onClick={() => onMachineSelect(machine.vehicleInfo.id)}
                       >
-                        <CardContent className="p-2.5 h-full flex flex-col">
-                          <div className="flex items-start justify-between mb-2">
-                            <div className="flex items-start gap-2 flex-1">
-                              <div className="flex-shrink-0 mt-0.5 relative -ml-0.5">
-                                <MachineIcon 
-                                  icon={machineDataAdapter.getIcon(machine)}
-                                  size={32}
-                                />
-                                {/* Alert indicator on machine icon */}
-                                {machine.alerts.filter(alert => !alert.isRead).length > 0 && (
-                                  <div className="absolute -top-1 -right-1 min-w-[16px] h-4 bg-warning rounded-full flex items-center justify-center px-1">
-                                    <AlertTriangle className="w-2.5 h-2.5 text-background flex-shrink-0" />
-                                    <span className="text-[9px] font-bold text-background ml-0.5">
-                                      {machine.alerts.filter(alert => !alert.isRead).length}
-                                    </span>
-                                  </div>
-                                )}
-                              </div>
-                              <div className="flex-1 min-w-0">
-                                <h3 className="font-semibold text-sm text-card-foreground truncate">{machine.vehicleInfo.name}</h3>
-                              </div>
+                        <CardContent className="p-2.5 h-full flex flex-col relative">
+                          {/* Status badge at top */}
+                          <div className="absolute top-2 right-2 z-10">
+                            <Badge variant={getStatusBadgeVariant(machine.deviceState.color)} className="text-[10px] px-2 py-0.5 h-5">
+                              {machine.deviceState.tooltip}
+                            </Badge>
+                          </div>
+
+                          {/* Vehicle name and icon */}
+                          <div className="flex items-center gap-2 pb-2 mb-2 border-b border-border/30">
+                            <div className="flex-shrink-0 relative">
+                              <MachineIcon 
+                                icon={machineDataAdapter.getIcon(machine)}
+                                size={32}
+                              />
+                              {/* Alert indicator on machine icon */}
+                              {machine.alerts.filter(alert => !alert.isRead).length > 0 && (
+                                <div className="absolute -top-1 -right-1 min-w-[16px] h-4 bg-warning rounded-full flex items-center justify-center px-1">
+                                  <AlertTriangle className="w-2.5 h-2.5 text-background flex-shrink-0" />
+                                  <span className="text-[9px] font-bold text-background ml-0.5">
+                                    {machine.alerts.filter(alert => !alert.isRead).length}
+                                  </span>
+                                </div>
+                              )}
                             </div>
-                            <div className="flex flex-col items-end gap-1 -mr-0.5">
-                              <Badge variant={getStatusBadgeVariant(machine.deviceState.color)} className="text-xs flex-shrink-0">
-                                {machine.deviceState.tooltip}
-                              </Badge>
+                            <h3 className="font-semibold text-sm text-card-foreground truncate flex-1 pr-20">{machine.vehicleInfo.name}</h3>
+                          </div>
+
+                          {/* Info layout: left side content, right side last update */}
+                          <div className="flex items-start justify-between gap-2 flex-1">
+                            <div className="flex-1 min-w-0 space-y-1.5">
+                              {machine.deviceMessage.operator && (
+                                <div className="flex items-center space-x-1.5 text-xs">
+                                  <User className="w-3 h-3 text-muted-foreground" />
+                                  <span className="text-card-foreground">{machine.deviceMessage.operator}</span>
+                                </div>
+                              )}
+
+                              {machineDataAdapter.getNotation(machine) && (
+                                <div className="flex items-center gap-1">
+                                  <FileText className="w-3 h-3 text-muted-foreground flex-shrink-0" />
+                                  <span className="text-xs text-card-foreground font-medium truncate">
+                                    {machineDataAdapter.getNotation(machine)?.code}
+                                  </span>
+                                  <span className="text-xs text-muted-foreground">-</span>
+                                  <span className="text-xs text-muted-foreground truncate">
+                                    {machineDataAdapter.getNotation(machine)?.name}
+                                  </span>
+                                </div>
+                              )}
+
+                              {machineDataAdapter.getNotation(machine)?.localRegistrationTime && (
+                                <div className="text-xs">
+                                  <span className="text-muted-foreground">Apontamento às </span>
+                                  <span className="text-card-foreground font-medium">
+                                    {format(new Date(machineDataAdapter.getNotation(machine)?.localRegistrationTime || new Date()), "dd/MM/yyyy HH:mm", { locale: ptBR })}
+                                  </span>
+                                </div>
+                              )}
+                            </div>
+                            <div className="flex flex-col items-end gap-1 justify-start">
                               {machine.deviceMessage.lastUpdate && (
                                 <div className="flex items-center gap-1 whitespace-nowrap">
                                   {machine.deviceMessage.networkSource && (
@@ -333,37 +368,6 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                                 </div>
                               )}
                             </div>
-                          </div>
-
-                          <div className="space-y-1.5 flex-1">
-                            {machine.deviceMessage.operator && (
-                              <div className="flex items-center space-x-1.5 text-xs">
-                                <User className="w-3 h-3 text-muted-foreground" />
-                                <span className="text-card-foreground">{machine.deviceMessage.operator}</span>
-                              </div>
-                            )}
-
-                            {machineDataAdapter.getNotation(machine) && (
-                              <div className="flex items-center gap-1">
-                                <FileText className="w-3 h-3 text-muted-foreground flex-shrink-0" />
-                                <span className="text-xs text-card-foreground font-medium truncate">
-                                  {machineDataAdapter.getNotation(machine)?.code}
-                                </span>
-                                <span className="text-xs text-muted-foreground">-</span>
-                                <span className="text-xs text-muted-foreground truncate">
-                                  {machineDataAdapter.getNotation(machine)?.name}
-                                </span>
-                              </div>
-                            )}
-
-                            {machineDataAdapter.getNotation(machine)?.localRegistrationTime && (
-                              <div className="text-xs">
-                                <span className="text-muted-foreground">Apontamento às </span>
-                                <span className="text-card-foreground font-medium">
-                                  {format(new Date(machineDataAdapter.getNotation(machine)!.localRegistrationTime!), "dd/MM/yyyy HH:mm", { locale: ptBR })}
-                                </span>
-                              </div>
-                            )}
                           </div>
 
                           <div className="mt-auto pt-2 border-t border-border">

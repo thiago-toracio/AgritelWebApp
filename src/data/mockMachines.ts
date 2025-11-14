@@ -86,6 +86,7 @@ export const mockMachines: MachineData[] = [
     alerts: [
       {
         id: 'alert-1-1',
+        machineName: 'Sugar Cane Harvester 01',
         alertType: 2,
         reachedValue: 92,
         timeSpanExceeded: null,
@@ -514,6 +515,7 @@ export const mockMachines: MachineData[] = [
     alerts: [
       {
         id: 'alert-9-1',
+        machineName: 'Loader Sugar Cane 03',
         alertType: 2,
         reachedValue: 42,
         timeSpanExceeded: null,
@@ -685,6 +687,7 @@ export const mockMachines: MachineData[] = [
     alerts: [
       {
         id: 'alert-12-1',
+        machineName: 'Sugar Cane Harvester 04',
         alertType: 3,
         reachedValue: null,
         timeSpanExceeded: '00:35:00',
