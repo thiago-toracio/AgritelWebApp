@@ -34,8 +34,6 @@ const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine
     googleMapsApiKey: GOOGLE_MAPS_API_KEY,
   });
 
-  console.log('entrou:', mapStyle)
-
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const hasAdjustedInitialBounds = useRef(false);
   const [hoveredMachine, setHoveredMachine] = useState<string | undefined>();

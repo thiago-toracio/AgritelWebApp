@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/tooltip";
 import { MachineData } from "@/types/machine";
 import { machineDataAdapter } from "@/utils/machineDataAdapter";
+import MachineIcon from "@/components/MachineIcons"; // <-- 1. IMPORTADO AQUI
 
 interface MachineStatusPanelProps {
   machines: MachineData[];
@@ -136,123 +137,138 @@ const MachineStatusPanel = ({
         )} hover:shadow-md transition-shadow`}
       >
         <CardContent className="p-4">
-          <div className="flex justify-between items-start mb-3">
-            <div>
-              <h4 className="font-semibold text-base">{machineName}</h4>
-              <p className="text-sm text-muted-foreground capitalize">
-                {machineDataAdapter.getType(machine).replace(/-/g, " ")}
-              </p>
+          {/* MODIFICADO AQUI: Wrapper Flex Adicionado */}
+          <div className="flex gap-3">
+            
+            {/* 2. Ícone adicionado */}
+            <div className="flex-shrink-0">
+              <MachineIcon
+                icon={machineDataAdapter.getIcon(machine)}
+                size={36}
+              />
             </div>
-            <Badge
-              variant="secondary"
-              className={`bg-muted ${getStatusColor(statusColor)}`}
-            >
-              {statusTooltip}
-            </Badge>
-          </div>
 
-          <TooltipProvider>
-            <div className="space-y-3 text-sm mb-3">
-              {/* Telemetry data in one line */}
-              <div className="flex items-center justify-between gap-2 py-2 px-3 bg-muted/30 rounded-md">
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <div className="flex items-center space-x-2 cursor-help">
-                      <Activity className="w-4 h-4 text-muted-foreground" />
-                      <span>
-                        {machineDataAdapter.getSpeed(machine).toFixed(1)} km/h
-                      </span>
-                    </div>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Velocidade atual do veículo</p>
-                  </TooltipContent>
-                </Tooltip>
-
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <div className="flex items-center space-x-2 cursor-help">
-                      <Gauge className="w-4 h-4 text-muted-foreground" />
-                      <span>
-                        {machineDataAdapter.getRpm(machine).toFixed(0)} RPM
-                      </span>
-                    </div>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Rotações por minuto do motor</p>
-                  </TooltipContent>
-                </Tooltip>
-
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <div className="flex items-center space-x-2 cursor-help">
-                      <Clock className="w-4 h-4 text-muted-foreground" />
-                      <span>
-                        {machineDataAdapter
-                          .getOperationHours(machine)
-                          .toFixed(1)}
-                        h
-                      </span>
-                    </div>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Horas de operação acumuladas</p>
-                  </TooltipContent>
-                </Tooltip>
+            {/* 3. Conteúdo agrupado */}
+            <div className="flex-1 min-w-0">
+              <div className="flex justify-between items-start mb-3">
+                <div>
+                  <h4 className="font-semibold text-base">{machineName}</h4>
+                  {/* 4. TIPO REMOVIDO DAQUI */}
+                </div>
+                <Badge
+                  variant="secondary"
+                  className={`bg-muted ${getStatusColor(statusColor)}`}
+                >
+                  {statusTooltip}
+                </Badge>
               </div>
 
-              {operator && (
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <div className="flex items-center space-x-2 cursor-help">
-                      <span className="text-muted-foreground">Operador:</span>
-                      <span className="font-medium">{operator}</span>
-                    </div>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Operador responsável pela máquina</p>
-                  </TooltipContent>
-                </Tooltip>
-              )}
+              <TooltipProvider>
+                <div className="space-y-3 text-sm mb-3">
+                  {/* Telemetry data in one line */}
+                  <div className="flex items-center justify-between gap-2 py-2 px-3 bg-muted/30 rounded-md">
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div className="flex items-center space-x-2 cursor-help">
+                          <Activity className="w-4 h-4 text-muted-foreground" />
+                          <span>
+                            {machineDataAdapter.getSpeed(machine).toFixed(1)} km/h
+                          </span>
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Velocidade atual do veículo</p>
+                      </TooltipContent>
+                    </Tooltip>
 
-              {area && (
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <div className="flex items-center space-x-2 cursor-help">
-                      <MapPin className="w-4 h-4 text-muted-foreground" />
-                      <span>{area}</span>
-                    </div>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Área de operação atual</p>
-                  </TooltipContent>
-                </Tooltip>
-              )}
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div className="flex items-center space-x-2 cursor-help">
+                          <Gauge className="w-4 h-4 text-muted-foreground" />
+                          <span>
+                            {machineDataAdapter.getRpm(machine).toFixed(0)} RPM
+                          </span>
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Rotações por minuto do motor</p>
+                      </TooltipContent>
+                    </Tooltip>
 
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <div className="flex items-center space-x-2 cursor-help">
-                    <Clock className="w-4 h-4 text-muted-foreground" />
-                    <span className="text-muted-foreground">
-                      Atualizado: {formatTime(lastUpdate)}
-                    </span>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div className="flex items-center space-x-2 cursor-help">
+                          <Clock className="w-4 h-4 text-muted-foreground" />
+                          <span>
+                            {machineDataAdapter
+                              .getOperationHours(machine)
+                              .toFixed(1)}
+                            h
+                          </span>
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Horas de operação acumuladas</p>
+                      </TooltipContent>
+                    </Tooltip>
                   </div>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Horário da última atualização dos dados</p>
-                </TooltipContent>
-              </Tooltip>
-            </div>
-          </TooltipProvider>
 
-          <Button
-            variant="outline"
-            size="sm"
-            className="w-full"
-            onClick={() => onViewMachine(machineId)}
-          >
-            Ver no Mapa
-          </Button>
+                  {operator && (
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div className="flex items-center space-x-2 cursor-help">
+                          <span className="text-muted-foreground">Operador:</span>
+                          <span className="font-medium">{operator}</span>
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Operador responsável pela máquina</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  )}
+
+                  {area && (
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div className="flex items-center space-x-2 cursor-help">
+                          <MapPin className="w-4 h-4 text-muted-foreground" />
+                          <span>{area}</span>
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Área de operação atual</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  )}
+
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="flex items-center space-x-2 cursor-help">
+                        <Clock className="w-4 h-4 text-muted-foreground" />
+                        <span className="text-muted-foreground">
+                          Atualizado: {formatTime(lastUpdate)}
+                        </span>
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Horário da última atualização dos dados</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </div>
+              </TooltipProvider>
+
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-full"
+                onClick={() => onViewMachine(machineId)}
+              >
+                Ver no Mapa
+              </Button>
+            </div>
+            {/* Fim do conteúdo agrupado */}
+          </div>
+          {/* Fim do Wrapper Flex */}
         </CardContent>
       </Card>
     );

@@ -32,7 +32,7 @@ const createTripJourney = (hourmeterIgnition: number) => {
 export const mockMachines: MachineData[] = [
   // Green - Working machines
   {
-    icon: 'sugar-cane-harvester-green.svg',
+    icon: 'sugar-cane-harvester-red.svg',
     vehicleInfo: {
       id: '1',
       name: 'Sugar Cane Harvester com um nome grande demais 01',
@@ -40,7 +40,7 @@ export const mockMachines: MachineData[] = [
       model: 'Modelo X',
       yearModel: 2022,
       plate: 'ABC0001',
-      color: 'Verde',
+      color: 'Red',
       vehicleType: 'sugar-cane-harvester',
     },
     telemetry: {
@@ -60,10 +60,10 @@ export const mockMachines: MachineData[] = [
       hasLostConnection: false,
       transmissionReason: 'PERIODIC',
       flag: {
-        working: true,
+        working: false,
         dislocating: false,
         maneuvering: false,
-        idling: false,
+        idling: true,
         ignition: true,
       },
       gps: {

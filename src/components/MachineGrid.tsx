@@ -1,10 +1,16 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { MachineData, DeviceState } from '@/types/machine';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Search, Filter, Grid, X, Fuel, Clock, MapPin, Calendar, Gauge, Grid as GridIcon, Droplets, User, ChevronDown, ChevronUp, Maximize2, Minimize2, Timer, Settings, Grid3x3, Route, FileText, AlertTriangle } from 'lucide-react';
+import { 
+  Search, Filter, Grid, X, Fuel, Clock, MapPin, Calendar, Gauge, Grid as GridIcon, Droplets, User, ChevronDown, ChevronUp, Maximize2, Minimize2, Timer, Settings, Grid3x3, Route, FileText, AlertTriangle,
+  CornerDownRight, 
+  StopCircle, 
+  ArrowRightLeft, 
+  HelpCircle 
+} from 'lucide-react';
 import MachineIcon from '@/components/MachineIcons';
 import { cn } from '@/lib/utils';
 import { machineDataAdapter } from '@/utils/machineDataAdapter';
@@ -29,31 +35,20 @@ interface MachineGridProps {
 const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachine, journeyStartTime }: MachineGridProps) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
-  const [expandedAreas, setExpandedAreas] = useState<Record<string, boolean>>({});
 
   const filteredMachines = machines.filter(machine => {
     const matchesSearch = machine.vehicleInfo.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                           machineDataAdapter.getType(machine).toLowerCase().includes(searchTerm.toLowerCase()) ||
                           (machine.deviceMessage.operator && machine.deviceMessage.operator.toLowerCase().includes(searchTerm.toLowerCase()));
     
-    // Map status filter to device state status
     let matchesStatus = true;
     if (statusFilter !== 'all') {
-      const tooltipMap: Record<string, string> = {
-        'active': 'Trabalhando',
-        'moving': 'Deslocando',
-        'maneuvering': 'Manobrando',
-        'idle': 'Parado',
-        'offline': 'Sem Sinal'
-      };
-      
-      matchesStatus = machine.deviceState.tooltip === tooltipMap[statusFilter];
+      matchesStatus = machine.deviceState.color === statusFilter;
     }
     
     return matchesSearch && matchesStatus;
   });
 
-  // Agrupar máquinas por frente de colheita
   const groupedMachines = filteredMachines.reduce((groups, machine) => {
     const area = machine.deviceMessage.area || 'Sem Frente';
     if (!groups[area]) {
@@ -63,35 +58,62 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
     return groups;
   }, {} as Record<string, MachineData[]>);
 
-  // Expandir todas as áreas por padrão
-  useEffect(() => {
-    const allAreas = Object.keys(groupedMachines).reduce((acc, area) => {
+  const [expandedAreas, setExpandedAreas] = useState<Record<string, boolean>>(() => {
+    const allAreas = machines.reduce((acc, machine) => {
+      const area = machine.deviceMessage.area || 'Sem Frente';
       acc[area] = true;
       return acc;
     }, {} as Record<string, boolean>);
-    setExpandedAreas(allAreas);
-  }, []);
+    return allAreas;
+  });
 
-  // Calcular estatísticas por grupo
   const getGroupStats = (machines: MachineData[]) => {
     const total = machines.length;
-    const productiveMachines = machines.filter(m => m.deviceState.status === 'active');
-    const nonproductiveMachines = machines.filter(m => m.deviceState.status !== 'active');
-    
-    const avgProductiveHours = productiveMachines.length > 0 
-      ? Math.round(productiveMachines.reduce((sum, m) => sum + machineDataAdapter.getOperationHours(m), 0) / productiveMachines.length)
-      : 0;
-    
-    const avgNonproductiveHours = nonproductiveMachines.length > 0
-      ? Math.round(nonproductiveMachines.reduce((sum, m) => sum + machineDataAdapter.getOperationHours(m), 0) / nonproductiveMachines.length)
-      : 0;
-    
     return {
       total,
-      avgProductiveHours,
-      avgNonproductiveHours
     };
   };
+  
+  const statusCounts = useMemo(() => {
+    const counts = {
+      green: 0,
+      blue: 0,
+      yellow: 0,
+      red: 0,
+      gray: 0,
+    };
+    for (const machine of machines) { 
+      const color = machine.deviceState.color;
+      if (color in counts) {
+        counts[color as keyof typeof counts]++;
+      }
+    }
+    return counts;
+  }, [machines]);
+
+  const unreadAlertsCount = useMemo(() => {
+    return machines.reduce((total, machine) => { 
+      const machineAlerts = machine.alerts.filter(alert => !alert.isRead).length;
+      return total + machineAlerts;
+    }, 0);
+  }, [machines]);
+
+  const statusDisplayInfo = {
+    green: { label: 'Trabalhando', color: 'text-status-active', Icon: Settings },
+    yellow: { label: 'Manobrando', color: 'text-status-maneuvering', Icon: CornerDownRight },
+    red: { label: 'Parado', color: 'text-status-idle', Icon: StopCircle },
+    blue: { label: 'Deslocando', color: 'text-status-moving', Icon: ArrowRightLeft },
+    gray: { label: 'Sem Sinal', color: 'text-status-offline', Icon: HelpCircle },
+  };
+
+  const statusDisplayOrder: (keyof typeof statusDisplayInfo)[] = [
+    'green',
+    'yellow',
+    'red',
+    'blue',
+    'gray'
+  ];
+
 
   const getAreaDisplayName = (area: string) => {
     return area;
@@ -104,17 +126,23 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
     }));
   };
 
-  const expandAll = () => {
+  const expandAll = useCallback(() => {
     const allAreas = Object.keys(groupedMachines).reduce((acc, area) => {
       acc[area] = true;
       return acc;
     }, {} as Record<string, boolean>);
     setExpandedAreas(allAreas);
-  };
+  }, [groupedMachines]);
 
-  const collapseAll = () => {
+  const collapseAll = useCallback(() => {
     setExpandedAreas({});
-  };
+  }, []);
+
+  useEffect(() => {
+    if (searchTerm) {
+      expandAll();
+    }
+  }, [searchTerm, expandAll]);
 
   const areAllExpanded = Object.keys(groupedMachines).length > 0 && 
     Object.keys(groupedMachines).every(area => expandedAreas[area]);
@@ -133,23 +161,6 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
         return 'outline';
       default:
         return 'secondary';
-    }
-  };
-
-  const getStatusColor = (color: string) => {
-    switch (color) {
-      case 'green':
-        return 'text-status-active';
-      case 'blue':
-        return 'text-status-moving';
-      case 'yellow':
-        return 'text-status-maneuvering';
-      case 'red':
-        return 'text-status-idle';
-      case 'gray':
-        return 'text-status-offline';
-      default:
-        return 'text-muted-foreground';
     }
   };
 
@@ -178,20 +189,73 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
     <div className="absolute top-4 left-4 right-4 z-50 animate-slide-up">
       <Card className="bg-gradient-overlay border-border/50 shadow-overlay backdrop-blur-sm">
         <CardContent className="p-6">
-          {/* Header */}
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center space-x-2">
+          
+          <div className="flex items-center justify-between mb-4 gap-4">
+            <div className="flex items-center space-x-2 flex-shrink-0">
               <Grid className="w-5 h-5 text-primary" />
               <h2 className="text-lg font-semibold text-card-foreground">
-                Máquinas Agrícolas ({filteredMachines.length})
+                Máquinas Agrícolas
               </h2>
+              <Badge variant="outline">Total: {machines.length}</Badge>
             </div>
-            <Button variant="ghost" size="sm" onClick={onClose}>
-              <X className="w-4 h-4" />
-            </Button>
+
+            <div className="flex flex-1 items-center justify-center gap-4">
+              <TooltipProvider>
+                {statusDisplayOrder.map((statusKey) => {
+                  const count = statusCounts[statusKey];
+                  const info = statusDisplayInfo[statusKey];
+                  return (
+                    <Tooltip key={statusKey}>
+                      <TooltipTrigger asChild>
+                        <div className="flex items-center space-x-1.5 cursor-help">
+                          <info.Icon className={cn("w-5 h-5", info.color)} />
+                          <span className={cn("text-sm font-semibold", info.color)}>
+                            {count}
+                          </span>
+                          <span className="text-sm text-card-foreground">
+                            {info.label}
+                          </span>
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>{count} {info.label}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  );
+                })}
+
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div className="flex items-center space-x-1.5 cursor-help">
+                      <AlertTriangle className={cn("w-5 h-5", unreadAlertsCount > 0 ? "text-warning" : "text-muted-foreground")} />
+                      <Badge variant={unreadAlertsCount > 0 ? "destructive" : "secondary"} className="text-xs">
+                        {unreadAlertsCount} {unreadAlertsCount === 1 ? "Alerta" : "Alertas"}
+                      </Badge>
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{unreadAlertsCount} {unreadAlertsCount === 1 ? "alerta não lido" : "alertas não lidos"}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+
+              {journeyStartTime && (
+                <div className="flex items-center gap-2 bg-primary/10 px-3 py-1.5 rounded-md border border-primary/30">
+                  <span className="text-[10px] text-primary uppercase tracking-wide font-semibold whitespace-nowrap">Início da Jornada</span>
+                  <span className="text-xs text-card-foreground font-medium">
+                    {format(new Date(journeyStartTime), "dd/MM/yyyy HH:mm", { locale: ptBR })}
+                  </span>
+                </div>
+              )}
+            </div>
+
+            <div className="flex items-center gap-4 flex-shrink-0">
+              <Button variant="ghost" size="sm" onClick={onClose}>
+                <X className="w-4 h-4" />
+              </Button>
+            </div>
           </div>
 
-          {/* Filters */}
           <div className="flex flex-col sm:flex-row gap-4 mb-6">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -214,20 +278,19 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
               <Filter className="w-4 h-4 text-muted-foreground" />
               <select
                 value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value as DeviceState['status'] | 'all')}
+                onChange={(e) => setStatusFilter(e.target.value as string | 'all')}
                 className="bg-input border border-border rounded-md px-3 py-2 text-sm text-foreground"
               >
                 <option value="all">Todos os Status</option>
-                <option value="active">Trabalhando</option>
-                <option value="moving">Deslocando</option>
-                <option value="maneuvering">Manobrando</option>
-                <option value="idle">Parado</option>
-                <option value="offline">Sem Sinal</option>
+                <option value="green">Trabalhando</option>
+                <option value="blue">Deslocando</option>
+                <option value="yellow">Manobrando</option>
+                <option value="red">Parado</option>
+                <option value="gray">Sem Sinal</option>
               </select>
             </div>
           </div>
 
-          {/* Expand/Collapse All Controls */}
           {Object.keys(groupedMachines).length > 0 && (
             <div className="flex justify-end gap-2 mb-4">
               <Button
@@ -251,13 +314,11 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
             </div>
           )}
 
-          {/* Groups */}
-          <div className="space-y-4 max-h-96 overflow-y-auto">
+          <div className="space-y-4 max-h-96 overflow-y-auto pl-1 pr-2">
             {Object.entries(groupedMachines).map(([area, groupMachines]) => {
               const stats = getGroupStats(groupMachines);
               return (
                 <div key={area} className="space-y-2">
-                  {/* Group Header */}
                   <div 
                     className="bg-card/50 border border-border/30 rounded-lg p-4 cursor-pointer hover:bg-card/70 transition-colors"
                     onClick={() => toggleArea(area)}
@@ -281,14 +342,13 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                     </div>
                   </div>
 
-                   {/* Group Machines Grid */}
                   {expandedAreas[area] && (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-1">
                     {groupMachines.map((machine) => (
                       <Card
                         key={machine.vehicleInfo.id}
                         className={cn(
-                          "cursor-pointer transition-all duration-200 hover:shadow-lg border-2 w-full h-[240px]",
+                          "cursor-pointer transition-all duration-200 hover:shadow-lg border-2 w-full h-[220px]",
                           getStatusBgClass(machine),
                           selectedMachine === machine.vehicleInfo.id && "ring-2 ring-primary shadow-glow"
                         )}
@@ -296,17 +356,14 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                       >
                         <CardContent className="p-2.5 h-full flex flex-col relative">
                           
-                          {/* MODIFIED: New Flex Container for Header */}
                           <div className="flex items-start justify-between gap-2 pb-2 mb-2 border-b border-border/30">
                             
-                            {/* Left Side: Icon + Name */}
                             <div className="flex items-start gap-2 flex-1 min-w-0">
                               <div className="flex-shrink-0 relative">
                                 <MachineIcon 
                                   icon={machineDataAdapter.getIcon(machine)}
                                   size={36}
                                 />
-                                {/* Alert indicator on machine icon */}
                                 {machine.alerts.filter(alert => !alert.isRead).length > 0 && (
                                   <div className="absolute -top-1 -right-1 min-w-[16px] h-4 bg-warning rounded-full flex items-center justify-center px-1">
                                     <AlertTriangle className="w-2.5 h-2.5 text-background flex-shrink-0" />
@@ -316,18 +373,14 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                                   </div>
                                 )}
                               </div>
-                              {/* MODIFIED: Removed max-w class */}
                               <h3 className="font-semibold text-[11px] text-card-foreground line-clamp-2">{machine.vehicleInfo.name}</h3>
                             </div>
 
-                            {/* Right Side: Status, Network & Last Update */}
-                            {/* MODIFIED: Removed 'absolute', 'top-2', 'right-2', 'z-10'. Added 'flex-shrink-0' */}
                             <div className="flex flex-col items-end space-y-1 flex-shrink-0">
                               <Badge variant={getStatusBadgeVariant(machine.deviceState.color)} className="text-[8.5px] px-1.5 py-0.5 h-4.5">
                                 {machine.deviceState.tooltip}
                               </Badge>
                               
-                              {/* Wrapper for network and date on the same line */}
                               <div className="flex items-center gap-1 whitespace-nowrap">
                                 {machine.deviceMessage.networkSource && (
                                   <Badge variant="outline" className="text-[9px] px-1 py-0 h-4">
@@ -343,7 +396,6 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                             </div>
                           </div>
 
-                          {/* Info layout: left side content */}
                           <div className="flex items-start justify-between gap-2 flex-1">
                             <div className="flex-1 min-w-0 space-y-1.5">
                               {machine.deviceMessage.operator && (
@@ -377,17 +429,17 @@ const MachineGrid = ({ machines, isOpen, onClose, onMachineSelect, selectedMachi
                             </div>
                           </div>
 
-                          <div className="mt-auto pt-2 border-t border-border">
-                            <div className="flex justify-between items-center mb-1.5 bg-primary px-2.5 py-1.5 rounded-md -mx-1.5">
-                              <span className="text-[10px] text-primary-foreground uppercase tracking-wide font-semibold">Jornada</span>
-                              {journeyStartTime && (
-                                <span className="text-[10px] text-primary-foreground font-medium">
-                                  {format(new Date(journeyStartTime), "dd/MM/yyyy HH:mm", { locale: ptBR })}
-                                </span>
-                              )}
-                            </div>
+                          {/* MODIFICADO AQUI: alterado border-border para border-foreground/20 */}
+                          <div className="mt-auto pt-2 border-t border-foreground/20 relative">
+                            <span className={cn(
+                              "absolute -top-[7px] left-1/2 -translate-x-1/2 px-1.5 text-[9px] font-medium uppercase tracking-wide rounded-sm",
+                              "bg-[#00b359] text-white",
+                              "dark:bg-card dark:text-yellow-400"
+                            )}>
+                              Jornada
+                            </span>
                             <TooltipProvider>
-                              <div className="grid grid-cols-5 gap-0.5">
+                              <div className="grid grid-cols-5 gap-0.5 pt-2">
                                 <Tooltip>
                                   <TooltipTrigger asChild>
                                     <div className="flex flex-col items-center cursor-help min-w-0">
