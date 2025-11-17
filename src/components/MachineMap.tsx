@@ -46,12 +46,11 @@ const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine
   }, []);
 
   useEffect(() => {
-    if (map && mapStyle) {
-      map.setMapTypeId(mapStyle);
-    }
-  }, [map, mapStyle]);
+    if (map && mapStyle) {
+      map.setMapTypeId(mapStyle);
+    }
+  }, [map, mapStyle]);
 
-  // Efeito para ajustar os limites (fitBounds) na carga inicial
   useEffect(() => {
     if (!map || !isLoaded || hasAdjustedInitialBounds.current) return;
     
@@ -98,7 +97,6 @@ const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine
     );
   }
 
-  // Estado de Erro (seu fallback)
   if (loadError) {
     return (
       <div className="relative w-full h-full bg-background">
@@ -146,7 +144,6 @@ const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine
     );
   }
 
-  // Renderização Principal do Mapa
   return (
     <div className="relative w-full h-full bg-background">
       <GoogleMap
@@ -155,18 +152,18 @@ const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine
         zoom={PARANA_BOUNDS.zoom}
         onLoad={onLoad}
         onUnmount={onUnmount}
-        mapTypeId={mapStyle} // Usa a prop 'mapStyle' diretamente
+        mapTypeId={mapStyle}
         options={{
-          disableDefaultUI: true,       // Remove todos os controles padrão
-          zoomControl: true,          // Adiciona apenas o controle de zoom
+          disableDefaultUI: true,
+          zoomControl: true,
           zoomControlOptions: {
-            position: window.google.maps.ControlPosition.TOP_RIGHT // Posição igual ao Mapbox
+            position: window.google.maps.ControlPosition.TOP_RIGHT
           },
-          mapTypeControl: false,      // Remove seletor de tipo de mapa (já temos o nosso)
-          streetViewControl: false,   // Remove Street View
+          mapTypeControl: false,
+          streetViewControl: false,
+          clickableIcons: false
         }}
       >
-        {/* Renderização dos marcadores */}
         {machines
           .filter(machine => machineDataAdapter.hasValidCoordinates(machine))
           .map(machine => {
