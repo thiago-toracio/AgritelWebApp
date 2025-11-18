@@ -31,6 +31,7 @@ import {
   RefreshCw,
   Calendar,
   HelpCircle,
+  GroupIcon
 } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
 import { MachineData, MachineAlertData } from "@/types/machine";
@@ -52,6 +53,8 @@ interface MapControlsProps {
   countdown: number;
   refreshInterval: number;
   onRefreshIntervalChange: (interval: number) => void;
+  isClustering: boolean;
+  onToggleClustering: () => void;
 }
 
 const MapControls = ({
@@ -67,10 +70,12 @@ const MapControls = ({
   countdown,
   refreshInterval,
   onRefreshIntervalChange,
+  isClustering,
+  onToggleClustering,
 }: MapControlsProps) => {
   const [showMapStyles, setShowMapStyles] = useState(false);
   const [openRefreshPopover, setOpenRefreshPopover] = useState(false);
-  
+
   const alertsCount = alerts.filter((alert) => !alert.isRead).length;
 
   const refreshIntervals = [
@@ -174,7 +179,7 @@ const MapControls = ({
           <Card className="bg-gradient-overlay border-border/50 shadow-overlay backdrop-blur-sm">
             <CardContent className="p-3">
               <div className="flex items-center space-x-0.5 md:space-x-1.5 overflow-x-auto scrollbar-hide whitespace-nowrap justify-center px-2">
-                
+
                 <button
                   onClick={() => onToggleStatus("green")}
                   className="flex items-center space-x-1 hover:bg-muted/50 px-2 py-1 rounded transition-colors cursor-pointer"
@@ -299,19 +304,25 @@ const MapControls = ({
                 open={openRefreshPopover}
                 onOpenChange={setOpenRefreshPopover}
               >
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="w-10 h-10 p-0 relative group"
-                    title="Intervalo de Atualização"
-                  >
-                    <RefreshCw className="w-5 h-5 transition-transform group-hover:rotate-45" />
-                    <div className="absolute -top-1 -right-1 bg-primary text-primary-foreground rounded-full w-4 h-4 flex items-center justify-center text-[10px] font-bold leading-none shadow-sm">
-                      {countdown}
-                    </div>
-                  </Button>
-                </PopoverTrigger>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="w-10 h-10 p-0 relative group"
+                      >
+                        <RefreshCw className="w-5 h-5 transition-transform group-hover:rotate-45" />
+                        <div className="absolute -top-1 -right-1 bg-primary text-primary-foreground rounded-full w-4 h-4 flex items-center justify-center text-[10px] font-bold leading-none shadow-sm">
+                          {countdown}
+                        </div>
+                      </Button>
+                    </PopoverTrigger>
+                  </TooltipTrigger>
+                  <TooltipContent align="start">
+                    <p>Intervalo de Atualização</p>
+                  </TooltipContent>
+                </Tooltip>
                 <PopoverContent
                   className="w-auto p-2 bg-card border-border/50 shadow-lg"
                   align="start"
@@ -341,18 +352,44 @@ const MapControls = ({
                 </PopoverContent>
               </Popover>
 
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant={isClustering ? "default" : "ghost"}
+                    size="sm"
+                    className="w-10 h-10 p-0"
+                    onClick={onToggleClustering}
+                  >
+                    <GroupIcon className="w-5 h-5" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent align="start">
+                  <p>
+                    {isClustering
+                      ? "Desagrupar veículos próximos"
+                      : "Agrupar veículos próximos"}
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+
               <div className="w-full h-px bg-border my-1" />
 
               <div className="relative">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setShowMapStyles(!showMapStyles)}
-                  className="w-10 h-10 p-0"
-                  title="Alterar Mapa"
-                >
-                  <Map className="w-6 h-6" />
-                </Button>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setShowMapStyles(!showMapStyles)}
+                      className="w-10 h-10 p-0"
+                    >
+                      <Map className="w-6 h-6" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent align="start">
+                    <p>Alterar Estilo do Mapa</p>
+                  </TooltipContent>
+                </Tooltip>
 
                 {showMapStyles && (
                   <Card className="absolute left-14 top-0 min-w-[140px] bg-gradient-overlay border-border/50 shadow-overlay backdrop-blur-sm">
@@ -384,7 +421,18 @@ const MapControls = ({
 
               <div className="w-full h-px bg-border my-1" />
 
-              <ThemeToggle />
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  {/* Assumindo que ThemeToggle renderiza um botão */}
+                  <div className="flex items-center justify-center">
+                    <ThemeToggle />
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent align="start">
+                  <p>Alterar Tema</p>
+                </TooltipContent>
+              </Tooltip>
+
             </div>
           </CardContent>
         </Card>

@@ -204,6 +204,10 @@ const MachineGrid = ({
     }
   }, [searchTerm, expandAll]);
 
+  useEffect(() => {
+    expandAll();
+  }, [statusFilter]);
+
   const areAllExpanded =
     Object.keys(groupedMachines).length > 0 &&
     Object.keys(groupedMachines).every((area) => expandedAreas[area]);
@@ -410,12 +414,12 @@ const MachineGrid = ({
                 {areAllExpanded ? (
                   <>
                     <Minimize2 className="w-3 h-3 mr-1" />
-                    Fechar Tudo
+                    Recolher Tudo
                   </>
                 ) : (
                   <>
                     <Maximize2 className="w-3 h-3 mr-1" />
-                    Abrir Tudo
+                    Expandir Tudo
                   </>
                 )}
               </Button>
@@ -462,9 +466,10 @@ const MachineGrid = ({
                             selectedMachine === machine.vehicleInfo.id &&
                               "ring-2 ring-primary shadow-glow"
                           )}
-                          onClick={() =>
-                            onMachineSelect(machine.vehicleInfo.id)
-                          }
+                          onClick={() => {
+                            onMachineSelect(machine.vehicleInfo.id);
+                            onClose();
+                          }}
                         >
                           <CardContent className="p-2.5 h-full flex flex-col relative">
                             <div className="flex items-start justify-between gap-2 pb-2 mb-2 border-b border-border/30">
@@ -591,7 +596,7 @@ const MachineGrid = ({
                                 )}
 
                                 {machineDataAdapter.getNotation(machine)
-                                  ?.localRegistrationTime && (
+                                  ?.registrationTime && (
                                   <div className="text-xs">
                                     <span className="text-muted-foreground">
                                       Apontamento às{" "}
@@ -601,7 +606,7 @@ const MachineGrid = ({
                                         new Date(
                                           machineDataAdapter.getNotation(
                                             machine
-                                          )?.localRegistrationTime || new Date()
+                                          )?.registrationTime || new Date()
                                         ),
                                         "dd/MM/yyyy HH:mm",
                                         { locale: ptBR }

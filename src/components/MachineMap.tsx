@@ -1,23 +1,40 @@
-import { useEffect, useRef, useState, useCallback } from 'react';
-import { GoogleMap, useLoadScript, OverlayViewF, OverlayView } from '@react-google-maps/api'
-import { MachineData, MachineAlertData } from '@/types/machine';
-import MachineMarker from './MachineMarker';
-import FallbackMachineMarker from './FallbackMachineMarker';
-import { PARANA_BOUNDS } from '@/lib/mapbox'; 
-import { MapStyle } from './MapControls';
-import { machineDataAdapter } from '@/utils/machineDataAdapter';
-import React from 'react';
+import { useEffect, useRef, useState, useCallback, useMemo } from "react";
+import {
+  GoogleMap,
+  useLoadScript,
+  OverlayViewF,
+  OverlayView,
+} from "@react-google-maps/api";
+import useSupercluster from "use-supercluster";
+import { MachineData, MachineAlertData } from "@/types/machine";
+import MachineMarker from "./MachineMarker";
+import FallbackMachineMarker from "./FallbackMachineMarker";
+import { PARANA_BOUNDS } from "@/lib/mapbox";
+import { MapStyle } from "./MapControls";
+import { machineDataAdapter } from "@/utils/machineDataAdapter";
+import React from "react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+
 const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY as string;
 
 const containerStyle = {
-  width: '100%',
-  height: '100%'
+  width: "100%",
+  height: "100%",
 };
 
 const googleCenter = {
   lat: PARANA_BOUNDS.center[1],
-  lng: PARANA_BOUNDS.center[0]
+  lng: PARANA_BOUNDS.center[0],
 };
+
+// --- CONFIGURAÇÕES DO CLUSTER ---
+const CLUSTER_RADIUS = 100;
+const MAX_ZOOM_CLUSTER = 11;
 
 interface MachineMapProps {
   machines: MachineData[];
@@ -26,9 +43,18 @@ interface MachineMapProps {
   focusOnMachine?: string;
   mapStyle: MapStyle;
   alerts: MachineAlertData[];
+  isClustering: boolean;
 }
 
-const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine, mapStyle, alerts }: MachineMapProps) => {
+const MachineMap = ({
+  machines,
+  selectedMachine,
+  onMachineSelect,
+  focusOnMachine,
+  mapStyle,
+  alerts,
+  isClustering,
+}: MachineMapProps) => {
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: GOOGLE_MAPS_API_KEY,
   });
@@ -37,8 +63,12 @@ const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine
   const hasAdjustedInitialBounds = useRef(false);
   const [hoveredMachine, setHoveredMachine] = useState<string | undefined>();
 
+  const [bounds, setBounds] = useState<number[] | null>(null);
+  const [zoom, setZoom] = useState<number>(PARANA_BOUNDS.zoom);
+
   const onLoad = useCallback((mapInstance: google.maps.Map) => {
     setMap(mapInstance);
+    handleMapIdle(mapInstance);
   }, []);
 
   const onUnmount = useCallback(() => {
@@ -53,38 +83,89 @@ const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine
 
   useEffect(() => {
     if (!map || !isLoaded || hasAdjustedInitialBounds.current) return;
-    
-    const validMachines = machines.filter(machine => machineDataAdapter.hasValidCoordinates(machine));
-    
+
+    const validMachines = machines.filter((machine) =>
+      machineDataAdapter.hasValidCoordinates(machine)
+    );
+
     if (validMachines.length > 0) {
       const bounds = new window.google.maps.LatLngBounds();
-      
-      validMachines.forEach(machine => {
-        bounds.extend(new window.google.maps.LatLng(
-          machine.deviceMessage.gps.latitude,
-          machine.deviceMessage.gps.longitude
-        ));
+
+      validMachines.forEach((machine) => {
+        bounds.extend(
+          new window.google.maps.LatLng(
+            machine.deviceMessage.gps.latitude,
+            machine.deviceMessage.gps.longitude
+          )
+        );
       });
-      
+
       map.fitBounds(bounds, { top: 100, bottom: 100, left: 100, right: 100 });
-      
+
       hasAdjustedInitialBounds.current = true;
     }
   }, [map, machines, isLoaded]);
 
   useEffect(() => {
     if (focusOnMachine && map && isLoaded) {
-      const machine = machines.find(m => m.vehicleInfo.id === focusOnMachine);
+      const machine = machines.find((m) => m.vehicleInfo.id === focusOnMachine);
       if (machine && machineDataAdapter.hasValidCoordinates(machine)) {
         const position = {
           lat: machine.deviceMessage.gps.latitude,
-          lng: machine.deviceMessage.gps.longitude
+          lng: machine.deviceMessage.gps.longitude,
         };
         map.panTo(position);
         map.setZoom(16);
       }
     }
   }, [focusOnMachine, map, machines, isLoaded]);
+
+  const handleMapIdle = (mapInstance?: google.maps.Map) => {
+    const currentMap = mapInstance || map;
+    if (!currentMap) return;
+
+    const newZoom = currentMap.getZoom();
+    if (newZoom) setZoom(newZoom);
+
+    const newBounds = currentMap.getBounds();
+    if (newBounds) {
+      const ne = newBounds.getNorthEast();
+      const sw = newBounds.getSouthWest();
+      setBounds([sw.lng(), sw.lat(), ne.lng(), ne.lat()]);
+    }
+  };
+
+  const points = useMemo(
+    () =>
+      machines
+        .filter((m) => machineDataAdapter.hasValidCoordinates(m))
+        .map((machine) => ({
+          type: "Feature",
+          properties: {
+            cluster: false,
+            machine: machine,
+            machineId: machine.vehicleInfo.id,
+          },
+          geometry: {
+            type: "Point",
+            coordinates: [
+              machine.deviceMessage.gps.longitude,
+              machine.deviceMessage.gps.latitude,
+            ],
+          },
+        })),
+    [machines]
+  );
+
+  const { clusters, supercluster } = useSupercluster({
+    points,
+    bounds,
+    zoom,
+    options: {
+      radius: CLUSTER_RADIUS,
+      maxZoom: MAX_ZOOM_CLUSTER,
+    },
+  });
 
   if (!isLoaded) {
     return (
@@ -97,107 +178,176 @@ const MachineMap = ({ machines, selectedMachine, onMachineSelect, focusOnMachine
     );
   }
 
-  if (loadError) {
-    return (
+  return (
+    <TooltipProvider>
       <div className="relative w-full h-full bg-background">
-        <div className="absolute inset-0 z-10 bg-gradient-to-br from-slate-900 to-slate-800"
-          style={{
-            backgroundImage: `
-              radial-gradient(circle at 25% 25%, hsl(var(--agriculture-green) / 0.1) 0%, transparent 50%),
-              radial-gradient(circle at 75% 75%, hsl(var(--agriculture-blue) / 0.1) 0%, transparent 50%)
-            `
+        <GoogleMap
+          mapContainerStyle={containerStyle}
+          center={googleCenter}
+          zoom={PARANA_BOUNDS.zoom}
+          onLoad={onLoad}
+          onUnmount={onUnmount}
+          mapTypeId={mapStyle}
+          onIdle={handleMapIdle}
+          options={{
+            disableDefaultUI: true,
+            zoomControl: true,
+            zoomControlOptions: {
+              position: window.google.maps.ControlPosition.TOP_RIGHT,
+            },
+            mapTypeControl: false,
+            streetViewControl: false,
+            clickableIcons: false,
           }}
         >
-          <div className="absolute inset-0 opacity-20">
-            <svg width="100%" height="100%">
-              <defs>
-                <pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse">
-                  <path d="M 50 0 L 0 0 0 50" fill="none" stroke="hsl(var(--border))" strokeWidth="0.5"/>
-                </pattern>
-              </defs>
-              <rect width="100%" height="100%" fill="url(#grid)" />
-            </svg>
-          </div>
-          
-          <div className="absolute top-4 left-4 bg-agriculture-blue/10 border border-agriculture-blue/20 text-agriculture-blue px-4 py-3 rounded-lg text-sm max-w-md">
-            <p className="font-medium">Erro ao carregar mapa!</p>
-            <p className="text-xs mt-1 opacity-90">
-              Para ver o mapa real, verifique sua chave da Google Maps API e as restrições no Google Cloud.
-              <br />
-              <span className="text-xs opacity-75">Obtenha em: console.cloud.google.com</span>
-            </p>
-          </div>
-        </div>
-        
-        <div className="absolute inset-0 z-20 pointer-events-none">
-          {machines.map((machine) => (
-            <div key={machine.vehicleInfo.id} className="pointer-events-auto">
-              <FallbackMachineMarker
-                machine={machine}
-                isSelected={selectedMachine === machine.vehicleInfo.id}
-                onClick={() => onMachineSelect(machine.vehicleInfo.id)}
-              />
-            </div>
-          ))}
-        </div>
+          {isClustering
+            ? clusters.map((cluster) => {
+                const [longitude, latitude] = cluster.geometry.coordinates;
+                const {
+                  cluster: isCluster,
+                  point_count: pointCount,
+                  machine,
+                } = cluster.properties;
+
+                if (isCluster) {
+                  const size = 35 + (pointCount / points.length) * 20;
+                  const tooltipText = `${pointCount} ${
+                    pointCount > 1 ? "máquinas agrupadas" : "máquina agrupada"
+                  } nesta região`;
+
+                  return (
+                    <OverlayViewF
+                      key={`cluster-${cluster.id}`}
+                      position={{ lat: latitude, lng: longitude }}
+                      mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
+                    >
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <div
+                            className="relative"
+                            style={{
+                              width: `${size}px`,
+                              height: `${size}px`,
+                              transform: "translate(-50%, -50%)",
+                            }}
+                            onClick={() => {
+                              if (!supercluster || !map) return;
+                              const expansionZoom = Math.min(
+                                supercluster.getClusterExpansionZoom(
+                                  cluster.id as number
+                                ),
+                                20
+                              );
+                              map.setZoom(expansionZoom);
+                              map.panTo({ lat: latitude, lng: longitude });
+                            }}
+                          >
+                            <span className="absolute inline-flex h-full w-full rounded-full bg-blue-500 opacity-75 animate-ping z-0"></span>
+                            <div className="relative z-10 flex h-full w-full items-center justify-center rounded-full bg-blue-500 text-white border-2 border-white/50 shadow-lg cursor-pointer transition-all hover:scale-110">
+                              <span className="text-sm font-bold">
+                                {pointCount}
+                              </span>
+                            </div>
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>{tooltipText}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </OverlayViewF>
+                  );
+                }
+
+                const machineAlerts = alerts.filter(
+                  (alert) =>
+                    alert.machineId === machine.vehicleInfo.id && !alert.isRead
+                );
+                const isSelected = machine.vehicleInfo.id === selectedMachine;
+                const isHovered = machine.vehicleInfo.id === hoveredMachine;
+                let z = 1;
+                if (isHovered) z = 500;
+                if (isSelected) z = 1000;
+
+                return (
+                  <OverlayViewF
+                    key={machine.vehicleInfo.id}
+                    position={{ lat: latitude, lng: longitude }}
+                    mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
+                    zIndex={z}
+                  >
+                    <div
+                      style={{
+                        transform: "translate(-50%, -50%)",
+                        outline: "none",
+                      }}
+                      onMouseEnter={() =>
+                        setHoveredMachine(machine.vehicleInfo.id)
+                      }
+                      onMouseOut={() => setHoveredMachine(undefined)}
+                    >
+                      <MachineMarker
+                        machine={machine}
+                        isSelected={isSelected}
+                        onClick={() => onMachineSelect(machine.vehicleInfo.id)}
+                        alerts={machineAlerts}
+                      />
+                    </div>
+                  </OverlayViewF>
+                );
+              })
+            : machines
+                .filter((machine) =>
+                  machineDataAdapter.hasValidCoordinates(machine)
+                )
+                .map((machine) => {
+                  const machineAlerts = alerts.filter(
+                    (alert) =>
+                      alert.machineId === machine.vehicleInfo.id &&
+                      !alert.isRead
+                  );
+                  const isSelected = machine.vehicleInfo.id === selectedMachine;
+                  const isHovered = machine.vehicleInfo.id === hoveredMachine;
+                  let z = 1;
+                  if (isHovered) z = 500;
+                  if (isSelected) z = 1000;
+
+                  return (
+                    <OverlayViewF
+                      key={machine.vehicleInfo.id}
+                      position={{
+                        lat: machine.deviceMessage.gps.latitude,
+                        lng: machine.deviceMessage.gps.longitude,
+                      }}
+                      mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
+                      zIndex={z}
+                    >
+                      <div
+                        style={{
+                          transform: "translate(-50%, -50%)",
+                          outline: "none",
+                        }}
+                        onMouseEnter={() =>
+                          setHoveredMachine(machine.vehicleInfo.id)
+                        }
+                        onMouseOut={() => setHoveredMachine(undefined)}
+                      >
+                        <MachineMarker
+                          machine={machine}
+                          isSelected={
+                            selectedMachine === machine.vehicleInfo.id
+                          }
+                          onClick={() =>
+                            onMachineSelect(machine.vehicleInfo.id)
+                          }
+                          alerts={machineAlerts}
+                        />
+                      </div>
+                    </OverlayViewF>
+                  );
+                })}
+        </GoogleMap>
       </div>
-    );
-  }
-
-  return (
-    <div className="relative w-full h-full bg-background">
-      <GoogleMap
-        mapContainerStyle={containerStyle}
-        center={googleCenter}
-        zoom={PARANA_BOUNDS.zoom}
-        onLoad={onLoad}
-        onUnmount={onUnmount}
-        mapTypeId={mapStyle}
-        options={{
-          disableDefaultUI: true,
-          zoomControl: true,
-          zoomControlOptions: {
-            position: window.google.maps.ControlPosition.TOP_RIGHT
-          },
-          mapTypeControl: false,
-          streetViewControl: false,
-          clickableIcons: false
-        }}
-      >
-        {machines
-          .filter(machine => machineDataAdapter.hasValidCoordinates(machine))
-          .map(machine => {
-            const machineAlerts = alerts.filter(alert => alert.machineId === machine.vehicleInfo.id && !alert.isRead);
-            const isSelected = machine.vehicleInfo.id === selectedMachine;
-            const isHovered = machine.vehicleInfo.id === hoveredMachine;
-            let z = 1;
-            if (isHovered) z = 500;
-            if (isSelected) z = 1000;
-            return (
-
-              <OverlayViewF
-                key={machine.vehicleInfo.id}
-                position={{
-                  lat: machine.deviceMessage.gps.latitude,
-                  lng: machine.deviceMessage.gps.longitude
-                }}
-                mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
-                zIndex={z}
-              >
-                <div style={{ transform: 'translate(-50%, -50%)', outline: 'none' }}>
-                  <MachineMarker
-                    machine={machine}
-                    isSelected={selectedMachine === machine.vehicleInfo.id}
-                    onClick={() => onMachineSelect(machine.vehicleInfo.id)}
-                    alerts={machineAlerts}
-                  />
-                </div>
-              </OverlayViewF>
-            );
-          })
-        }
-      </GoogleMap>
-    </div>
+    </TooltipProvider>
   );
 };
 

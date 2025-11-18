@@ -52,7 +52,7 @@ export const mockMachines: MachineData[] = [
       notation: {
         code: 'AP001',
         name: 'Colheita Talhão A1',
-        localRegistrationTime: new Date(Date.now() - 5400000).toISOString(),
+        registrationTime: new Date(Date.now() - 5400000).toISOString(),
       }
     },
     deviceMessage: {
@@ -129,7 +129,7 @@ export const mockMachines: MachineData[] = [
       notation: {
         code: 'AP002',
         name: 'Transbordo Talhão B3',
-        localRegistrationTime: new Date(Date.now() - 7200000).toISOString(),
+        registrationTime: new Date(Date.now() - 7200000).toISOString(),
       }
     },
     deviceMessage: {
@@ -183,7 +183,7 @@ export const mockMachines: MachineData[] = [
       notation: {
         code: 'AP003',
         name: 'Preparo Solo C2',
-        localRegistrationTime: new Date(Date.now() - 3600000).toISOString(),
+        registrationTime: new Date(Date.now() - 3600000).toISOString(),
       }
     },
     deviceMessage: {

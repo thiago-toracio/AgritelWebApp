@@ -20,7 +20,7 @@ export interface DeviceState {
 export interface NotationData {
   code: string;
   name: string;
-  localRegistrationTime?: Date | string;
+  registrationTime?: Date | string;
 }
 
 export interface TelemetryData {

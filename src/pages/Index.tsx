@@ -1,16 +1,21 @@
-import { useState, useMemo, useEffect, useCallback } from 'react';
-import { MachineData, MachineAlertData } from '@/types/machine';
-import { machineService } from '@/services/api/machineService';
-import { machineDataAdapter } from '@/utils/machineDataAdapter';
-import MachineMap from '@/components/MachineMap';
-import MachineGrid from '@/components/MachineGrid';
-import MachineSidebar from '@/components/MachineSidebar';
-import MapControls, { MapStyle } from '@/components/MapControls';
-import AlertsPanel from '@/components/AlertsPanel';
-import MachineStatusPanel from '@/components/MachineStatusPanel';
-import { cookieManager } from '@/utils/cookieManager';
+import { useState, useMemo, useEffect, useCallback } from "react";
+import { MachineData, MachineAlertData } from "@/types/machine";
+import { machineService } from "@/services/api/machineService";
+import { machineDataAdapter } from "@/utils/machineDataAdapter";
+import MachineMap from "@/components/MachineMap";
+import MachineGrid from "@/components/MachineGrid";
+import MachineSidebar from "@/components/MachineSidebar";
+import MapControls, { MapStyle } from "@/components/MapControls";
+import AlertsPanel from "@/components/AlertsPanel";
+import MachineStatusPanel from "@/components/MachineStatusPanel";
+import { cookieManager } from "@/utils/cookieManager";
 
-const validMapStyles: MapStyle[] = ["roadmap", "satellite", "hybrid", "terrain"];
+const validMapStyles: MapStyle[] = [
+  "roadmap",
+  "satellite",
+  "hybrid",
+  "terrain",
+];
 
 const Index = () => {
   const [machines, setMachines] = useState<MachineData[]>([]);
@@ -20,34 +25,42 @@ const Index = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isAlertsPanelOpen, setIsAlertsPanelOpen] = useState(false);
   const [isStatusPanelOpen, setIsStatusPanelOpen] = useState(false);
-  const [statusPanelFilter, setStatusPanelFilter] = useState<string | undefined>();
+  const [statusPanelFilter, setStatusPanelFilter] = useState<
+    string | undefined
+  >();
   const [alerts, setAlerts] = useState<MachineAlertData[]>([]);
   const [focusOnMachine, setFocusOnMachine] = useState<string | undefined>();
-  
+  const [isClustering, setIsClustering] = useState(() => {
+    const saved = localStorage.getItem("isClustering");
+    return saved !== null ? JSON.parse(saved) : true;
+  });
+
   const formatDateTimeLocal = (date: Date): string => {
     const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    const seconds = String(date.getSeconds()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+    const seconds = String(date.getSeconds()).padStart(2, "0");
     return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
   };
-  
+
   const getDefaultJourneyStart = () => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     return formatDateTimeLocal(today);
   };
-  
-  const [journeyStartTime, setJourneyStartTime] = useState<string>(getDefaultJourneyStart());
-  
+
+  const [journeyStartTime, setJourneyStartTime] = useState<string>(
+    getDefaultJourneyStart()
+  );
+
   const [mapStyle, setMapStyle] = useState<MapStyle>(() => {
-    const saved = localStorage.getItem('mapStyle');
+    const saved = localStorage.getItem("mapStyle");
     if (saved && validMapStyles.includes(saved as MapStyle)) {
       return saved as MapStyle;
     }
-    return 'satellite'; 
+    return "satellite";
   });
 
   const [refreshInterval, setRefreshInterval] = useState<number>(() => {
@@ -55,39 +68,46 @@ const Index = () => {
     return saved ? parseInt(saved) : 30;
   });
   const [countdown, setCountdown] = useState(refreshInterval);
-  
-  const loadMachines = useCallback(async (isInitial = false) => {
-    try {
-      if (isInitial) {
-        setIsInitialLoading(true);
+
+  const handleToggleClustering = useCallback(() => {
+    setIsClustering((prev) => !prev);
+  }, []);
+
+  const loadMachines = useCallback(
+    async (isInitial = false) => {
+      try {
+        if (isInitial) {
+          setIsInitialLoading(true);
+        }
+        const data = await machineService.getMachines(journeyStartTime);
+
+        const readAlertIds = cookieManager.getReadAlerts();
+
+        const machinesWithReadState = data.map((machine) => ({
+          ...machine,
+          alerts: machine.alerts.map((alert) => ({
+            ...alert,
+            machineName: machine.vehicleInfo.name,
+            isRead: alert.isRead || readAlertIds.includes(alert.id),
+          })),
+        }));
+
+        setMachines(machinesWithReadState);
+      } catch (error) {
+        console.error("Failed to load machines:", error);
+      } finally {
+        if (isInitial) {
+          setIsInitialLoading(false);
+        }
       }
-      const data = await machineService.getMachines(journeyStartTime);
-      
-      const readAlertIds = cookieManager.getReadAlerts();
-      
-      const machinesWithReadState = data.map(machine => ({
-        ...machine,
-        alerts: machine.alerts.map(alert => ({
-          ...alert,
-          machineName: machine.vehicleInfo.name,
-          isRead: alert.isRead || readAlertIds.includes(alert.id)
-        }))
-      }));
-      
-      setMachines(machinesWithReadState);
-    } catch (error) {
-      console.error('Failed to load machines:', error);
-    } finally {
-      if (isInitial) {
-        setIsInitialLoading(false);
-      }
-    }
-  }, [journeyStartTime]);
+    },
+    [journeyStartTime]
+  );
 
   const handleRefresh = useCallback(() => {
     loadMachines();
   }, [loadMachines]);
-  
+
   useEffect(() => {
     const timer = setInterval(() => {
       setCountdown((prev) => {
@@ -100,7 +120,7 @@ const Index = () => {
     }, 1000);
     return () => clearInterval(timer);
   }, [handleRefresh, refreshInterval]);
-  
+
   const handleRefreshIntervalChange = (interval: number) => {
     setRefreshInterval(interval);
     setCountdown(interval);
@@ -108,8 +128,12 @@ const Index = () => {
   };
 
   useEffect(() => {
-    localStorage.setItem('mapStyle', mapStyle);
+    localStorage.setItem("mapStyle", mapStyle);
   }, [mapStyle]);
+
+  useEffect(() => {
+    localStorage.setItem("isClustering", JSON.stringify(isClustering));
+  }, [isClustering]);
 
   useEffect(() => {
     loadMachines(true);
@@ -117,7 +141,7 @@ const Index = () => {
 
   const consolidatedAlerts = useMemo(() => {
     const allAlerts: MachineAlertData[] = [];
-    machines.forEach(machine => {
+    machines.forEach((machine) => {
       if (machine.alerts && machine.alerts.length > 0) {
         allAlerts.push(...machine.alerts);
       }
@@ -127,9 +151,9 @@ const Index = () => {
 
   useEffect(() => {
     const readAlertIds = cookieManager.getReadAlerts();
-    const alertsWithReadState = consolidatedAlerts.map(alert => ({
+    const alertsWithReadState = consolidatedAlerts.map((alert) => ({
       ...alert,
-      isRead: alert.isRead || readAlertIds.includes(alert.id)
+      isRead: alert.isRead || readAlertIds.includes(alert.id),
     }));
     setAlerts(alertsWithReadState);
   }, [consolidatedAlerts]);
@@ -181,9 +205,11 @@ const Index = () => {
 
   const handleMarkAsRead = (alertId: string) => {
     cookieManager.saveReadAlert(alertId);
-    setAlerts(prev => prev.map(alert => 
-      alert.id === alertId ? { ...alert, isRead: true } : alert
-    ));
+    setAlerts((prev) =>
+      prev.map((alert) =>
+        alert.id === alertId ? { ...alert, isRead: true } : alert
+      )
+    );
   };
 
   const handleViewMachineFromAlert = useCallback((machineId: string) => {
@@ -195,8 +221,8 @@ const Index = () => {
     }, 2000);
   }, []);
 
-  const selectedMachineData = selectedMachine 
-    ? machines.find(m => m.vehicleInfo.id === selectedMachine) 
+  const selectedMachineData = selectedMachine
+    ? machines.find((m) => m.vehicleInfo.id === selectedMachine)
     : null;
 
   const handleMapStyleChange = (style: MapStyle) => {
@@ -207,7 +233,9 @@ const Index = () => {
     return (
       <div className="flex h-screen w-full items-center justify-center bg-background">
         <div className="text-center">
-          <div className="mb-4 text-xl font-semibold">Carregando máquinas...</div>
+          <div className="mb-4 text-xl font-semibold">
+            Carregando máquinas...
+          </div>
         </div>
       </div>
     );
@@ -222,6 +250,7 @@ const Index = () => {
         focusOnMachine={focusOnMachine}
         mapStyle={mapStyle}
         alerts={alerts}
+        isClustering={isClustering}
       />
 
       <MapControls
@@ -237,6 +266,8 @@ const Index = () => {
         countdown={countdown}
         refreshInterval={refreshInterval}
         onRefreshIntervalChange={handleRefreshIntervalChange}
+        isClustering={isClustering}
+        onToggleClustering={handleToggleClustering}
       />
 
       <MachineGrid

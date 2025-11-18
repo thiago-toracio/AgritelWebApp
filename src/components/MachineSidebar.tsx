@@ -264,14 +264,14 @@ const MachineSidebar = ({ machine, isOpen, onClose }: MachineSidebarProps) => {
                     </span>
                   </div>
                   {machineDataAdapter.getNotation(machine)
-                    ?.localRegistrationTime && (
+                    ?.registrationTime && (
                     <div className="text-xs text-muted-foreground pl-6">
                       Apontamento às{" "}
                       {format(
                         new Date(
                           machineDataAdapter.getNotation(
                             machine
-                          )!.localRegistrationTime!
+                          )!.registrationTime!
                         ),
                         "dd/MM/yyyy HH:mm",
                         { locale: ptBR }

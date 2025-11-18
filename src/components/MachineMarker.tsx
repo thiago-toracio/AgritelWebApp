@@ -50,17 +50,20 @@ const MachineMarker: React.FC<MachineMarkerProps> = ({
     return colors[color] || "text-gray-500";
   };
 
+  const hasInfo = machine.deviceMessage.operator ||
+    machineDataAdapter.getNotation(machine) ||
+    machine.deviceMessage.area;
+
+  const hasTelemetry = (machine.telemetry?.odometer !== undefined &&
+    machine.telemetry.odometer > 0) ||
+    (machine.telemetry?.operationHours !== undefined &&
+      machine.telemetry.operationHours > 0);
+
   return (
     <div
       className="cursor-pointer group transition-all duration-200"
       onClick={onClick}
     >
-      {/* Active status pulse animation */}
-      {/* {statusColor === "green" && (
-        <div className="absolute inset-0 rounded-full animate-pulse-green" />
-      )} */}
-
-      {/* Main machine icon container */}
       <div
         className={cn(
           "relative flex items-center justify-center transition-all duration-300"
@@ -87,7 +90,6 @@ const MachineMarker: React.FC<MachineMarkerProps> = ({
           </div>
         )}
       </div>
-      {/* Hover tooltip with machine details */}
       <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-4 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none z-[10000] scale-95 group-hover:scale-100">
         <div className="bg-card border-2 border-primary/20 rounded-lg px-3 py-2.5 shadow-2xl backdrop-blur-md min-w-[200px] group-hover:min-w-[260px] transition-all duration-300 ring-1 ring-primary/10">
           <div className="flex items-center justify-between gap-2 mb-2">
@@ -110,7 +112,6 @@ const MachineMarker: React.FC<MachineMarkerProps> = ({
             {statusTooltip}
           </div>
 
-          {/* Destacar Velocidade e RPM */}
           <div className="flex gap-2 mb-3">
             <div className="flex-1 bg-muted/50 rounded-lg px-3 py-2 flex items-center gap-2">
               <Activity className="w-4 h-4 text-primary" />
@@ -157,19 +158,19 @@ const MachineMarker: React.FC<MachineMarkerProps> = ({
                   </span>
                 </div>
                 {machineDataAdapter.getNotation(machine)
-                  ?.localRegistrationTime && (
-                  <div className="text-[11px] text-muted-foreground pl-5">
-                    {format(
-                      new Date(
-                        machineDataAdapter.getNotation(
-                          machine
-                        )!.localRegistrationTime!
-                      ),
-                      "dd/MM/yyyy 'às' HH:mm",
-                      { locale: ptBR }
-                    )}
-                  </div>
-                )}
+                  ?.registrationTime && (
+                    <div className="text-[11px] text-muted-foreground pl-5">
+                      {format(
+                        new Date(
+                          machineDataAdapter.getNotation(
+                            machine
+                          )!.registrationTime!
+                        ),
+                        "dd/MM/yyyy 'às' HH:mm",
+                        { locale: ptBR }
+                      )}
+                    </div>
+                  )}
               </div>
             )}
 
@@ -182,35 +183,40 @@ const MachineMarker: React.FC<MachineMarkerProps> = ({
               </div>
             )}
 
-            {(machine.deviceMessage.operator ||
-              machineDataAdapter.getNotation(machine) ||
-              machine.deviceMessage.area) && (
-              <div className="border-t border-border pt-1.5 mt-1.5" />
+            {hasTelemetry && (
+              <>
+                {hasInfo && (
+                  <div className="border-t border-border pt-1.5" />
+                )}
+
+                {machine.telemetry?.odometer !== undefined &&
+                  machine.telemetry.odometer > 0 && (
+                    <div className="flex items-center gap-1.5">
+                      <Route className="w-3 h-3 text-muted-foreground" />
+                      <span className="text-xs text-card-foreground">
+                        <span className="font-medium">Odômetro:</span>{" "}
+                        {machine.telemetry.odometer.toFixed(1)} km
+                      </span>
+                    </div>
+                  )}
+
+                {machine.telemetry?.operationHours !== undefined &&
+                  machine.telemetry.operationHours > 0 && (
+                    <div className="flex items-center gap-1.5">
+                      <Timer className="w-3 h-3 text-muted-foreground" />
+                      <span className="text-xs text-card-foreground">
+                        <span className="font-medium">Horímetro Motor:</span>{" "}
+                        {machine.telemetry.operationHours.toFixed(1)}h
+                      </span>
+                    </div>
+                  )}
+              </>
             )}
 
-            {machine.telemetry?.odometer !== undefined &&
-              machine.telemetry.odometer > 0 && (
-                <div className="flex items-center gap-1.5">
-                  <Route className="w-3 h-3 text-muted-foreground" />
-                  <span className="text-xs text-card-foreground">
-                    <span className="font-medium">Odômetro:</span>{" "}
-                    {machine.telemetry.odometer.toFixed(1)} km
-                  </span>
-                </div>
-              )}
-
-            {machine.telemetry?.operationHours !== undefined &&
-              machine.telemetry.operationHours > 0 && (
-                <div className="flex items-center gap-1.5">
-                  <Timer className="w-3 h-3 text-muted-foreground" />
-                  <span className="text-xs text-card-foreground">
-                    <span className="font-medium">Horímetro Motor:</span>{" "}
-                    {machine.telemetry.operationHours.toFixed(1)}h
-                  </span>
-                </div>
-              )}
-
-            <div className="flex items-center gap-1.5 pt-1.5 mt-1.5 border-t border-border">
+            <div className={cn(
+              "flex items-center gap-1.5",
+              (hasInfo || hasTelemetry) && "pt-1.5 mt-1.5 border-t border-border"
+            )}>
               <MapPin className="w-3 h-3 text-muted-foreground" />
               <span className="text-[11px] text-muted-foreground">
                 {machine.deviceMessage.gps.latitude.toFixed(6)},{" "}
