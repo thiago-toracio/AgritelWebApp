@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { MachineData, MachineAlertData } from "@/types/machine";
 import {
   AlertTriangle,
@@ -90,7 +90,7 @@ const MachineMarker: React.FC<MachineMarkerProps> = ({
           </div>
         )}
       </div>
-      <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-4 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none z-[10000] scale-95 group-hover:scale-100">
+      <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-4 opacity-0 group-hover:opacity-100 transition-all duration-300 z-[10000] scale-95 group-hover:scale-100 delay-300 group-hover:delay-0">
         <div className="bg-card border-2 border-primary/20 rounded-lg px-3 py-2.5 shadow-2xl backdrop-blur-md min-w-[200px] group-hover:min-w-[260px] transition-all duration-300 ring-1 ring-primary/10">
           <div className="flex items-center justify-between gap-2 mb-2">
             <div className="text-sm font-semibold text-card-foreground">
@@ -239,4 +239,4 @@ const MachineMarker: React.FC<MachineMarkerProps> = ({
   );
 };
 
-export default MachineMarker;
+export default memo(MachineMarker);

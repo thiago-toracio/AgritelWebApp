@@ -32,7 +32,6 @@ const googleCenter = {
   lng: PARANA_BOUNDS.center[0],
 };
 
-// --- CONFIGURAÇÕES DO CLUSTER ---
 const CLUSTER_RADIUS = 100;
 const MAX_ZOOM_CLUSTER = 11;
 
@@ -61,7 +60,6 @@ const MachineMap = ({
 
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const hasAdjustedInitialBounds = useRef(false);
-  const [hoveredMachine, setHoveredMachine] = useState<string | undefined>();
 
   const [bounds, setBounds] = useState<number[] | null>(null);
   const [zoom, setZoom] = useState<number>(PARANA_BOUNDS.zoom);
@@ -231,14 +229,9 @@ const MachineMap = ({
                               transform: "translate(-50%, -50%)",
                             }}
                             onClick={() => {
-                              if (!supercluster || !map) return;
-                              const expansionZoom = Math.min(
-                                supercluster.getClusterExpansionZoom(
-                                  cluster.id as number
-                                ),
-                                20
-                              );
-                              map.setZoom(expansionZoom);
+                              if (!map) return;
+                              const zoomParaDesagrupar = MAX_ZOOM_CLUSTER + 1;
+                              map.setZoom(zoomParaDesagrupar);
                               map.panTo({ lat: latitude, lng: longitude });
                             }}
                           >
@@ -263,9 +256,8 @@ const MachineMap = ({
                     alert.machineId === machine.vehicleInfo.id && !alert.isRead
                 );
                 const isSelected = machine.vehicleInfo.id === selectedMachine;
-                const isHovered = machine.vehicleInfo.id === hoveredMachine;
+
                 let z = 1;
-                if (isHovered) z = 500;
                 if (isSelected) z = 1000;
 
                 return (
@@ -280,10 +272,6 @@ const MachineMap = ({
                         transform: "translate(-50%, -50%)",
                         outline: "none",
                       }}
-                      onMouseEnter={() =>
-                        setHoveredMachine(machine.vehicleInfo.id)
-                      }
-                      onMouseOut={() => setHoveredMachine(undefined)}
                     >
                       <MachineMarker
                         machine={machine}
@@ -306,9 +294,8 @@ const MachineMap = ({
                       !alert.isRead
                   );
                   const isSelected = machine.vehicleInfo.id === selectedMachine;
-                  const isHovered = machine.vehicleInfo.id === hoveredMachine;
+
                   let z = 1;
-                  if (isHovered) z = 500;
                   if (isSelected) z = 1000;
 
                   return (
@@ -326,10 +313,6 @@ const MachineMap = ({
                           transform: "translate(-50%, -50%)",
                           outline: "none",
                         }}
-                        onMouseEnter={() =>
-                          setHoveredMachine(machine.vehicleInfo.id)
-                        }
-                        onMouseOut={() => setHoveredMachine(undefined)}
                       >
                         <MachineMarker
                           machine={machine}
