@@ -456,15 +456,15 @@ const MachineGrid = ({
                   </div>
 
                   {expandedAreas[area] && (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-1">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-1">
                       {groupMachines.map((machine) => (
                         <Card
                           key={machine.vehicleInfo.id}
                           className={cn(
-                            "cursor-pointer transition-all duration-200 hover:shadow-lg border-2 w-full h-[265px]",
+                            "cursor-pointer transition-all duration-200 hover:shadow-lg border-2 w-full h-[280px]",
                             getStatusBgClass(machine),
                             selectedMachine === machine.vehicleInfo.id &&
-                              "ring-2 ring-primary shadow-glow"
+                            "ring-2 ring-primary shadow-glow"
                           )}
                           onClick={() => {
                             onMachineSelect(machine.vehicleInfo.id);
@@ -482,19 +482,19 @@ const MachineGrid = ({
                                   {machine.alerts.filter(
                                     (alert) => !alert.isRead
                                   ).length > 0 && (
-                                    <div className="absolute -top-1 -right-1 min-w-[16px] h-4 bg-warning rounded-full flex items-center justify-center px-1">
-                                      <AlertTriangle className="w-2.5 h-2.5 text-background flex-shrink-0" />
-                                      <span className="text-[9px] font-bold text-background ml-0.5">
-                                        {
-                                          machine.alerts.filter(
-                                            (alert) => !alert.isRead
-                                          ).length
-                                        }
-                                      </span>
-                                    </div>
-                                  )}
+                                      <div className="absolute -top-1 -right-1 min-w-[16px] h-4 bg-warning rounded-full flex items-center justify-center px-1">
+                                        <AlertTriangle className="w-2.5 h-2.5 text-background flex-shrink-0" />
+                                        <span className="text-[9px] font-bold text-background ml-0.5">
+                                          {
+                                            machine.alerts.filter(
+                                              (alert) => !alert.isRead
+                                            ).length
+                                          }
+                                        </span>
+                                      </div>
+                                    )}
                                 </div>
-                                <h3 className="font-semibold text-[11px] text-card-foreground line-clamp-2">
+                                <h3 className="font-semibold text-base text-card-foreground line-clamp-2">
                                   {machine.vehicleInfo.name}
                                 </h3>
                               </div>
@@ -502,24 +502,24 @@ const MachineGrid = ({
                               <div className="flex flex-col items-end space-y-1 flex-shrink-0">
                                 <Badge
                                   variant={getStatusBadgeVariant(
-                                    machine.deviceState.color
+                                    machineDataAdapter.getStatusColor(machine)
                                   )}
-                                  className="text-[8.5px] px-1.5 py-0.5 h-4.5"
+                                  className="text-xs px-1.5 py-0.5 h-5"
                                 >
-                                  {machine.deviceState.tooltip}
+                                  {machineDataAdapter.getStatusTooltip(machine)}
                                 </Badge>
 
                                 <div className="flex items-center gap-1 whitespace-nowrap">
                                   {machine.deviceMessage.networkSource && (
                                     <Badge
                                       variant="outline"
-                                      className="text-[9px] px-1 py-0 h-4"
+                                      className="text-[10px] px-1 py-0 h-4"
                                     >
                                       {machine.deviceMessage.networkSource}
                                     </Badge>
                                   )}
                                   {machine.deviceMessage.lastUpdate && (
-                                    <span className="text-[10px] text-muted-foreground">
+                                    <span className="text-[11px] text-muted-foreground">
                                       {format(
                                         new Date(
                                           machine.deviceMessage.lastUpdate
@@ -597,30 +597,30 @@ const MachineGrid = ({
 
                                 {machineDataAdapter.getNotation(machine)
                                   ?.registrationTime && (
-                                  <div className="text-xs">
-                                    <span className="text-muted-foreground">
-                                      Apontamento às{" "}
-                                    </span>
-                                    <span className="text-card-foreground font-medium">
-                                      {format(
-                                        new Date(
-                                          machineDataAdapter.getNotation(
-                                            machine
-                                          )?.registrationTime || new Date()
-                                        ),
-                                        "dd/MM/yyyy HH:mm",
-                                        { locale: ptBR }
-                                      )}
-                                    </span>
-                                  </div>
-                                )}
+                                    <div className="text-xs">
+                                      <span className="text-muted-foreground">
+                                        Apontamento às{" "}
+                                      </span>
+                                      <span className="text-card-foreground font-medium">
+                                        {format(
+                                          new Date(
+                                            machineDataAdapter.getNotation(
+                                              machine
+                                            )?.registrationTime || new Date()
+                                          ),
+                                          "dd/MM/yyyy HH:mm",
+                                          { locale: ptBR }
+                                        )}
+                                      </span>
+                                    </div>
+                                  )}
                               </div>
                             </div>
 
                             <div className="mt-auto pt-2 border-t border-foreground/20 relative">
                               <span
                                 className={cn(
-                                  "absolute -top-[7px] left-1/2 -translate-x-1/2 px-1.5 text-[9px] font-medium uppercase tracking-wide rounded-sm",
+                                  "absolute -top-[7px] left-1/2 -translate-x-1/2 px-1.5 text-xs font-medium uppercase tracking-wide rounded-sm",
                                   "bg-[#00b359] text-white",
                                   "dark:bg-card dark:text-yellow-400"
                                 )}
@@ -632,8 +632,8 @@ const MachineGrid = ({
                                   <Tooltip>
                                     <TooltipTrigger asChild>
                                       <div className="flex flex-col items-center cursor-help min-w-0">
-                                        <Timer className="w-3.5 h-3.5 text-muted-foreground mb-0.5 flex-shrink-0" />
-                                        <span className="text-[10px] font-medium text-card-foreground whitespace-nowrap truncate max-w-full">
+                                        <Timer className="w-4 h-4 text-muted-foreground mb-0.5 flex-shrink-0" />
+                                        <span className="text-sm font-medium text-card-foreground whitespace-nowrap truncate max-w-full">
                                           {machine.tripJourney
                                             .hourmeterTotalFormatted || "0:00"}
                                         </span>
@@ -646,8 +646,8 @@ const MachineGrid = ({
                                   <Tooltip>
                                     <TooltipTrigger asChild>
                                       <div className="flex flex-col items-center cursor-help min-w-0">
-                                        <Settings className="w-3.5 h-3.5 text-muted-foreground mb-0.5 flex-shrink-0" />
-                                        <span className="text-[10px] font-medium text-card-foreground whitespace-nowrap truncate max-w-full">
+                                        <Settings className="w-4 h-4 text-muted-foreground mb-0.5 flex-shrink-0" />
+                                        <span className="text-xs font-medium text-card-foreground whitespace-nowrap truncate max-w-full">
                                           {machine.tripJourney
                                             .hourmeterWorkedFormatted || "0:00"}
                                         </span>
@@ -660,8 +660,8 @@ const MachineGrid = ({
                                   <Tooltip>
                                     <TooltipTrigger asChild>
                                       <div className="flex flex-col items-center cursor-help min-w-0">
-                                        <Grid3x3 className="w-3.5 h-3.5 text-muted-foreground mb-0.5 flex-shrink-0" />
-                                        <span className="text-[10px] font-medium text-card-foreground whitespace-nowrap truncate max-w-full">
+                                        <Grid3x3 className="w-4 h-4 text-muted-foreground mb-0.5 flex-shrink-0" />
+                                        <span className="text-xs font-medium text-card-foreground whitespace-nowrap truncate max-w-full">
                                           {machine.tripJourney.area.toFixed(1)}
                                         </span>
                                       </div>
@@ -673,8 +673,8 @@ const MachineGrid = ({
                                   <Tooltip>
                                     <TooltipTrigger asChild>
                                       <div className="flex flex-col items-center cursor-help min-w-0">
-                                        <Droplets className="w-3.5 h-3.5 text-muted-foreground mb-0.5 flex-shrink-0" />
-                                        <span className="text-[10px] font-medium text-card-foreground whitespace-nowrap truncate max-w-full">
+                                        <Droplets className="w-4 h-4 text-muted-foreground mb-0.5 flex-shrink-0" />
+                                        <span className="text-xs font-medium text-card-foreground whitespace-nowrap truncate max-w-full">
                                           {machine.tripJourney.fuelConsumption.toFixed(
                                             0
                                           )}
@@ -689,8 +689,8 @@ const MachineGrid = ({
                                   <Tooltip>
                                     <TooltipTrigger asChild>
                                       <div className="flex flex-col items-center cursor-help min-w-0">
-                                        <Route className="w-3.5 h-3.5 text-muted-foreground mb-0.5 flex-shrink-0" />
-                                        <span className="text-[10px] font-medium text-card-foreground whitespace-nowrap truncate max-w-full">
+                                        <Route className="w-4 h-4 text-muted-foreground mb-0.5 flex-shrink-0" />
+                                        <span className="text-xs font-medium text-card-foreground whitespace-nowrap truncate max-w-full">
                                           {machine.tripJourney.odometer.toFixed(
                                             0
                                           )}{" "}

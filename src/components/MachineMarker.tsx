@@ -21,6 +21,8 @@ interface MachineMarkerProps {
   isSelected: boolean;
   onClick: () => void;
   alerts: MachineAlertData[];
+  onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
 }
 
 const MachineMarker: React.FC<MachineMarkerProps> = ({
@@ -28,6 +30,8 @@ const MachineMarker: React.FC<MachineMarkerProps> = ({
   isSelected,
   onClick,
   alerts,
+  onMouseEnter,
+  onMouseLeave,
 }) => {
   const statusColor = machineDataAdapter.getStatusColor(machine);
   const statusTooltip = machineDataAdapter.getStatusTooltip(machine);
@@ -67,6 +71,8 @@ const MachineMarker: React.FC<MachineMarkerProps> = ({
     <div
       className="cursor-pointer group transition-all duration-200"
       onClick={onClick}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
     >
       <div
         className={cn(

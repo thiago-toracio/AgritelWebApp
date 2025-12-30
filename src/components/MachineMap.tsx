@@ -63,6 +63,7 @@ const MachineMap = ({
 
   const [bounds, setBounds] = useState<number[] | null>(null);
   const [zoom, setZoom] = useState<number>(PARANA_BOUNDS.zoom);
+  const [hoveredMachineId, setHoveredMachineId] = useState<string | null>(null);
 
   const onLoad = useCallback((mapInstance: google.maps.Map) => {
     setMap(mapInstance);
@@ -200,70 +201,116 @@ const MachineMap = ({
         >
           {isClustering
             ? clusters.map((cluster) => {
-                const [longitude, latitude] = cluster.geometry.coordinates;
-                const {
-                  cluster: isCluster,
-                  point_count: pointCount,
-                  machine,
-                } = cluster.properties;
+              const [longitude, latitude] = cluster.geometry.coordinates;
+              const {
+                cluster: isCluster,
+                point_count: pointCount,
+                machine,
+              } = cluster.properties;
 
-                if (isCluster) {
-                  const size = 35 + (pointCount / points.length) * 20;
-                  const tooltipText = `${pointCount} ${
-                    pointCount > 1 ? "máquinas agrupadas" : "máquina agrupada"
+              if (isCluster) {
+                const size = 35 + (pointCount / points.length) * 20;
+                const tooltipText = `${pointCount} ${pointCount > 1 ? "máquinas agrupadas" : "máquina agrupada"
                   } nesta região`;
 
-                  return (
-                    <OverlayViewF
-                      key={`cluster-${cluster.id}`}
-                      position={{ lat: latitude, lng: longitude }}
-                      mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
-                    >
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <div
-                            className="relative"
-                            style={{
-                              width: `${size}px`,
-                              height: `${size}px`,
-                              transform: "translate(-50%, -50%)",
-                            }}
-                            onClick={() => {
-                              if (!map) return;
-                              const zoomParaDesagrupar = MAX_ZOOM_CLUSTER + 1;
-                              map.setZoom(zoomParaDesagrupar);
-                              map.panTo({ lat: latitude, lng: longitude });
-                            }}
-                          >
-                            <span className="absolute inline-flex h-full w-full rounded-full bg-blue-500 opacity-75 animate-ping z-0"></span>
-                            <div className="relative z-10 flex h-full w-full items-center justify-center rounded-full bg-blue-500 text-white border-2 border-white/50 shadow-lg cursor-pointer transition-all hover:scale-110">
-                              <span className="text-sm font-bold">
-                                {pointCount}
-                              </span>
-                            </div>
+                return (
+                  <OverlayViewF
+                    key={`cluster-${cluster.id}`}
+                    position={{ lat: latitude, lng: longitude }}
+                    mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
+                  >
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div
+                          className="relative"
+                          style={{
+                            width: `${size}px`,
+                            height: `${size}px`,
+                            transform: "translate(-50%, -50%)",
+                          }}
+                          onClick={() => {
+                            if (!map) return;
+                            const zoomParaDesagrupar = MAX_ZOOM_CLUSTER + 1;
+                            map.setZoom(zoomParaDesagrupar);
+                            map.panTo({ lat: latitude, lng: longitude });
+                          }}
+                        >
+                          <span className="absolute inline-flex h-full w-full rounded-full bg-blue-500 opacity-75 animate-ping z-0"></span>
+                          <div className="relative z-10 flex h-full w-full items-center justify-center rounded-full bg-blue-500 text-white border-2 border-white/50 shadow-lg cursor-pointer transition-all hover:scale-110">
+                            <span className="text-sm font-bold">
+                              {pointCount}
+                            </span>
                           </div>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>{tooltipText}</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </OverlayViewF>
-                  );
-                }
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>{tooltipText}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </OverlayViewF>
+                );
+              }
 
+              const machineAlerts = alerts.filter(
+                (alert) =>
+                  alert.machineId === machine.vehicleInfo.id && !alert.isRead
+              );
+              const isSelected = machine.vehicleInfo.id === selectedMachine;
+              const isHovered = machine.vehicleInfo.id === hoveredMachineId;
+
+              let z = 1;
+              if (isSelected) z = 1000;
+              if (isHovered) z = 2000;
+
+              return (
+                <OverlayViewF
+                  key={machine.vehicleInfo.id}
+                  position={{ lat: latitude, lng: longitude }}
+                  mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
+                  zIndex={z}
+                >
+                  <div
+                    style={{
+                      transform: "translate(-50%, -50%)",
+                      outline: "none",
+                    }}
+                  >
+                    <MachineMarker
+                      machine={machine}
+                      isSelected={isSelected}
+                      onClick={() => onMachineSelect(machine.vehicleInfo.id)}
+                      alerts={machineAlerts}
+                      onMouseEnter={() => setHoveredMachineId(machine.vehicleInfo.id)}
+                      onMouseLeave={() => setHoveredMachineId(null)}
+                    />
+                  </div>
+                </OverlayViewF>
+              );
+            })
+            : machines
+              .filter((machine) =>
+                machineDataAdapter.hasValidCoordinates(machine)
+              )
+              .map((machine) => {
                 const machineAlerts = alerts.filter(
                   (alert) =>
-                    alert.machineId === machine.vehicleInfo.id && !alert.isRead
+                    alert.machineId === machine.vehicleInfo.id &&
+                    !alert.isRead
                 );
                 const isSelected = machine.vehicleInfo.id === selectedMachine;
+                const isHovered = machine.vehicleInfo.id === hoveredMachineId;
 
                 let z = 1;
                 if (isSelected) z = 1000;
+                if (isHovered) z = 2000;
 
                 return (
                   <OverlayViewF
                     key={machine.vehicleInfo.id}
-                    position={{ lat: latitude, lng: longitude }}
+                    position={{
+                      lat: machine.deviceMessage.gps.latitude,
+                      lng: machine.deviceMessage.gps.longitude,
+                    }}
                     mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
                     zIndex={z}
                   >
@@ -275,59 +322,20 @@ const MachineMap = ({
                     >
                       <MachineMarker
                         machine={machine}
-                        isSelected={isSelected}
-                        onClick={() => onMachineSelect(machine.vehicleInfo.id)}
+                        isSelected={
+                          selectedMachine === machine.vehicleInfo.id
+                        }
+                        onClick={() =>
+                          onMachineSelect(machine.vehicleInfo.id)
+                        }
                         alerts={machineAlerts}
+                        onMouseEnter={() => setHoveredMachineId(machine.vehicleInfo.id)}
+                        onMouseLeave={() => setHoveredMachineId(null)}
                       />
                     </div>
                   </OverlayViewF>
                 );
-              })
-            : machines
-                .filter((machine) =>
-                  machineDataAdapter.hasValidCoordinates(machine)
-                )
-                .map((machine) => {
-                  const machineAlerts = alerts.filter(
-                    (alert) =>
-                      alert.machineId === machine.vehicleInfo.id &&
-                      !alert.isRead
-                  );
-                  const isSelected = machine.vehicleInfo.id === selectedMachine;
-
-                  let z = 1;
-                  if (isSelected) z = 1000;
-
-                  return (
-                    <OverlayViewF
-                      key={machine.vehicleInfo.id}
-                      position={{
-                        lat: machine.deviceMessage.gps.latitude,
-                        lng: machine.deviceMessage.gps.longitude,
-                      }}
-                      mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
-                      zIndex={z}
-                    >
-                      <div
-                        style={{
-                          transform: "translate(-50%, -50%)",
-                          outline: "none",
-                        }}
-                      >
-                        <MachineMarker
-                          machine={machine}
-                          isSelected={
-                            selectedMachine === machine.vehicleInfo.id
-                          }
-                          onClick={() =>
-                            onMachineSelect(machine.vehicleInfo.id)
-                          }
-                          alerts={machineAlerts}
-                        />
-                      </div>
-                    </OverlayViewF>
-                  );
-                })}
+              })}
         </GoogleMap>
       </div>
     </TooltipProvider>

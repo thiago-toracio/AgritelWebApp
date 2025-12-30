@@ -18,7 +18,7 @@ const validMapStyles: MapStyle[] = [
 ];
 
 const Index = () => {
-  const [machines, setMachines] = useState<MachineData[]>([]);
+  const [rawMachines, setRawMachines] = useState<MachineData[]>([]);
   const [isInitialLoading, setIsInitialLoading] = useState(true);
   const [selectedMachine, setSelectedMachine] = useState<string | undefined>();
   const [isGridOpen, setIsGridOpen] = useState(false);
@@ -34,6 +34,71 @@ const Index = () => {
     const saved = localStorage.getItem("isClustering");
     return saved !== null ? JSON.parse(saved) : true;
   });
+
+  const CACHE_KEY_PREFIX = "driver_cache_";
+  const EXPIRATION_MS = 60 * 60 * 1000;
+
+  useEffect(() => {
+    rawMachines.forEach((machine) => {
+      const vid = machine.vehicleInfo?.id;
+      if (!vid) return;
+
+      const key = `${CACHE_KEY_PREFIX}${vid}`;
+      const ignition = machine.deviceMessage?.flag?.ignition;
+      const operator = machine.deviceMessage?.operator;
+
+      if (ignition === true && operator) {
+        const data = { name: operator, timestamp: Date.now() };
+        localStorage.setItem(key, JSON.stringify(data));
+      } else if (ignition === false) {
+        localStorage.removeItem(key);
+      }
+    });
+  }, [rawMachines]);
+
+  const machines = useMemo(() => {
+    return rawMachines.map((machine) => {
+      const vid = machine.vehicleInfo?.id;
+      if (!vid) return machine;
+
+      const key = `${CACHE_KEY_PREFIX}${vid}`;
+      const ignition = machine.deviceMessage?.flag?.ignition;
+      const operator = machine.deviceMessage?.operator;
+
+      if (ignition && !operator) {
+        const cachedRaw = localStorage.getItem(key);
+        if (cachedRaw) {
+          try {
+            const cached = JSON.parse(cachedRaw);
+            if (
+              cached.name &&
+              Date.now() - cached.timestamp < EXPIRATION_MS
+            ) {
+              return {
+                ...machine,
+                deviceMessage: {
+                  ...machine.deviceMessage,
+                  operator: cached.name,
+                },
+              };
+            }
+          } catch (e) {
+            console.error("Error parsing driver cache", e);
+          }
+        }
+      } else if (!ignition && operator) {
+        // User Requirement: If Ignition is OFF, do not show Driver.
+        return {
+          ...machine,
+          deviceMessage: {
+            ...machine.deviceMessage,
+            operator: undefined, // or null/empty string depending on typing
+          },
+        };
+      }
+      return machine;
+    });
+  }, [rawMachines]);
 
   const formatDateTimeLocal = (date: Date): string => {
     const year = date.getFullYear();
@@ -92,7 +157,7 @@ const Index = () => {
           })),
         }));
 
-        setMachines(machinesWithReadState);
+        setRawMachines(machinesWithReadState);
       } catch (error) {
         console.error("Failed to load machines:", error);
       } finally {
