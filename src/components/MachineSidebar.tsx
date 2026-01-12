@@ -29,7 +29,7 @@ import { cn } from "@/lib/utils";
 import { format, formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { machineDataAdapter } from "@/utils/machineDataAdapter";
-import MachineIcon from "@/components/MachineIcons"; // <-- 1. IMPORTADO AQUI
+import MachineIcon from "@/components/MachineIcons";
 
 interface MachineSidebarProps {
   machine: MachineData | null;
@@ -241,57 +241,57 @@ const MachineSidebar = ({ machine, isOpen, onClose }: MachineSidebarProps) => {
         {(machine.deviceMessage.operator ||
           machineDataAdapter.getNotation(machine) ||
           machine.deviceMessage.area) && (
-          <Card className="mb-6">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium">Operação</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {machine.deviceMessage.operator && (
-                <div className="flex items-center space-x-2">
-                  <User className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-sm text-card-foreground font-medium">
-                    {machine.deviceMessage.operator}
-                  </span>
-                </div>
-              )}
-              {machineDataAdapter.getNotation(machine) && (
-                <div className="space-y-1">
+            <Card className="mb-6">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-medium">Operação</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {machine.deviceMessage.operator && (
                   <div className="flex items-center space-x-2">
-                    <FileText className="w-4 h-4 text-muted-foreground" />
+                    <User className="w-4 h-4 text-muted-foreground" />
                     <span className="text-sm text-card-foreground font-medium">
-                      {machineDataAdapter.getNotation(machine)?.code} -{" "}
-                      {machineDataAdapter.getNotation(machine)?.name}
+                      {machine.deviceMessage.operator}
                     </span>
                   </div>
-                  {machineDataAdapter.getNotation(machine)
-                    ?.registrationTime && (
-                    <div className="text-xs text-muted-foreground pl-6">
-                      Apontamento às{" "}
-                      {format(
-                        new Date(
-                          machineDataAdapter.getNotation(
-                            machine
-                          )!.registrationTime!
-                        ),
-                        "dd/MM/yyyy HH:mm",
-                        { locale: ptBR }
-                      )}
+                )}
+                {machineDataAdapter.getNotation(machine) && (
+                  <div className="space-y-1">
+                    <div className="flex items-center space-x-2">
+                      <FileText className="w-4 h-4 text-muted-foreground" />
+                      <span className="text-sm text-card-foreground font-medium">
+                        {machineDataAdapter.getNotation(machine)?.code} -{" "}
+                        {machineDataAdapter.getNotation(machine)?.name}
+                      </span>
                     </div>
-                  )}
-                </div>
-              )}
-              {machine.deviceMessage.area && (
-                <div className="flex items-center space-x-2">
-                  <MapPin className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">Área:</span>
-                  <span className="text-sm text-card-foreground">
-                    {machine.deviceMessage.area}
-                  </span>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        )}
+                    {machineDataAdapter.getNotation(machine)
+                      ?.registrationTime && (
+                        <div className="text-xs text-muted-foreground pl-6">
+                          Apontamento às{" "}
+                          {format(
+                            new Date(
+                              machineDataAdapter.getNotation(
+                                machine
+                              )!.registrationTime!
+                            ),
+                            "dd/MM/yyyy HH:mm",
+                            { locale: ptBR }
+                          )}
+                        </div>
+                      )}
+                  </div>
+                )}
+                {machine.deviceMessage.area && (
+                  <div className="flex items-center space-x-2">
+                    <MapPin className="w-4 h-4 text-muted-foreground" />
+                    <span className="text-sm text-muted-foreground">Área:</span>
+                    <span className="text-sm text-card-foreground">
+                      {machine.deviceMessage.area}
+                    </span>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          )}
 
         {/* Trip Journey Information */}
         <Card className="mb-6">

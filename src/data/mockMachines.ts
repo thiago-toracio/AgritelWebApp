@@ -30,7 +30,6 @@ const createTripJourney = (hourmeterIgnition: number) => {
 };
 
 export const mockMachines: MachineData[] = [
-  // TESTE DE Z-INDEX - Máquinas muito próximas para testar sobreposição de tooltips
   {
     icon: 'sugar-cane-harvester-red.svg',
     vehicleInfo: {
@@ -145,7 +144,6 @@ export const mockMachines: MachineData[] = [
       },
       gps: {
         heading: 90,
-        // MUITO PRÓXIMO da máquina 1 (diferença de ~11 metros)
         latitude: -22.9036,
         longitude: -47.0617,
         direction: 90,
@@ -200,7 +198,6 @@ export const mockMachines: MachineData[] = [
       },
       gps: {
         heading: 180,
-        // MUITO PRÓXIMO das máquinas 1 e 2 (mesmo grupo)
         latitude: -22.9035,
         longitude: -47.0615,
         direction: 180,

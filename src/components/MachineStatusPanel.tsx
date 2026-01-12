@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/tooltip";
 import { MachineData } from "@/types/machine";
 import { machineDataAdapter } from "@/utils/machineDataAdapter";
-import MachineIcon from "@/components/MachineIcons"; // <-- 1. IMPORTADO AQUI
+import MachineIcon from "@/components/MachineIcons";
 
 interface MachineStatusPanelProps {
   machines: MachineData[];
@@ -137,10 +137,7 @@ const MachineStatusPanel = ({
         )} hover:shadow-md transition-shadow`}
       >
         <CardContent className="p-4">
-          {/* MODIFICADO AQUI: Wrapper Flex Adicionado */}
           <div className="flex gap-3">
-            
-            {/* 2. Ícone adicionado */}
             <div className="flex-shrink-0">
               <MachineIcon
                 icon={machineDataAdapter.getIcon(machine)}
@@ -148,12 +145,10 @@ const MachineStatusPanel = ({
               />
             </div>
 
-            {/* 3. Conteúdo agrupado */}
             <div className="flex-1 min-w-0">
               <div className="flex justify-between items-start mb-3">
                 <div>
                   <h4 className="font-semibold text-base">{machineName}</h4>
-                  {/* 4. TIPO REMOVIDO DAQUI */}
                 </div>
                 <Badge
                   variant="secondary"
@@ -266,9 +261,7 @@ const MachineStatusPanel = ({
                 Ver no Mapa
               </Button>
             </div>
-            {/* Fim do conteúdo agrupado */}
           </div>
-          {/* Fim do Wrapper Flex */}
         </CardContent>
       </Card>
     );
