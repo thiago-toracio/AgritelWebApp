@@ -33,7 +33,6 @@ import {
   HelpCircle,
   RefreshCw,
   Activity,
-  Layers,
   Boxes,
 } from "lucide-react";
 import MachineIcon from "@/components/MachineIcons";
@@ -110,7 +109,7 @@ const MachineGrid = ({
       let key = "";
 
       if (groupBy === "area") {
-        key = machine.deviceMessage.area || machine.vehicleInfo.deviceGroupName || "Sem Frente";
+        key = machine.deviceMessage.area || "Sem Frente";
       } else {
         // Padrão: Agrupar por Device Group Name
         key = machine.vehicleInfo.deviceGroupName || "Sem Grupo";
@@ -444,7 +443,7 @@ const MachineGrid = ({
                         : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
                     )}
                   >
-                    <Layers className="w-3.5 h-3.5" />
+                    <MapPin className="w-3.5 h-3.5" />
                     Área
                   </button>
 
@@ -499,6 +498,11 @@ const MachineGrid = ({
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
+                        {groupBy === "area" ? (
+                          <MapPin className="w-5 h-5 text-muted-foreground" />
+                        ) : (
+                          <Boxes className="w-5 h-5 text-muted-foreground" />
+                        )}
                         <h3 className="text-lg font-semibold text-card-foreground">
                           {getAreaDisplayName(area)}
                         </h3>
