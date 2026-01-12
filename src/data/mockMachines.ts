@@ -41,6 +41,7 @@ export const mockMachines: MachineData[] = [
       plate: 'ABC0001',
       color: 'Red',
       vehicleType: 'sugar-cane-harvester',
+      deviceGroupName: 'Frente Colheita 01',
     },
     telemetry: {
       speed: 5.2,
@@ -118,6 +119,7 @@ export const mockMachines: MachineData[] = [
       plate: 'ABC0002',
       color: 'Amarelo',
       vehicleType: 'loader-sugar-cane',
+      deviceGroupName: 'Frente Colheita 01',
     },
     telemetry: {
       speed: 8.7,
@@ -172,6 +174,7 @@ export const mockMachines: MachineData[] = [
       plate: 'ABC0003',
       color: 'Verde',
       vehicleType: 'tractor',
+      deviceGroupName: 'Frente Colheita 01',
     },
     telemetry: {
       speed: 12.5,
@@ -228,6 +231,7 @@ export const mockMachines: MachineData[] = [
       plate: 'ABC0004',
       color: 'Verde',
       vehicleType: 'sugar-cane-harvester',
+      deviceGroupName: 'Frente Colheita 02',
     },
     telemetry: {
       speed: 35.0,
@@ -277,6 +281,7 @@ export const mockMachines: MachineData[] = [
       plate: 'ABC0005',
       color: 'Amarelo',
       vehicleType: 'loader-sugar-cane',
+      deviceGroupName: 'Frente Colheita 02',
     },
     telemetry: {
       speed: 40.2,
@@ -326,6 +331,7 @@ export const mockMachines: MachineData[] = [
       plate: 'ABC0006',
       color: 'Verde',
       vehicleType: 'tractor',
+      deviceGroupName: 'Frente Colheita 03',
     },
     telemetry: {
       speed: 45.8,

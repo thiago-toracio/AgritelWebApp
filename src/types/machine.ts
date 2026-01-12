@@ -43,6 +43,7 @@ export interface VehicleInfoView {
   plate: string;
   color: string;
   vehicleType: string;
+  deviceGroupName?: string;
 }
 
 export interface GpsData {
@@ -59,8 +60,8 @@ export interface DeviceMessage {
   transmissionReason: string;
   flag: DeviceFlags;
   gps: GpsData;
-  operator: string; 
-  area: string; 
+  operator: string;
+  area: string;
   networkSource: string;
 }
 
@@ -110,4 +111,4 @@ export interface MachineData {
   icon: string;
 }
 
-export interface MachineLocation extends LocationData {}
+export interface MachineLocation extends LocationData { }

@@ -33,6 +33,8 @@ import {
   HelpCircle,
   RefreshCw,
   Activity,
+  Layers,
+  Boxes,
 } from "lucide-react";
 import MachineIcon from "@/components/MachineIcons";
 import { cn } from "@/lib/utils";
@@ -90,25 +92,46 @@ const MachineGrid = ({
     return matchesSearch && matchesStatus;
   });
 
-  const groupedMachines = filteredMachines.reduce((groups, machine) => {
-    const area = machine.deviceMessage.area || "Sem Frente";
-    if (!groups[area]) {
-      groups[area] = [];
-    }
-    groups[area].push(machine);
-    return groups;
-  }, {} as Record<string, MachineData[]>);
+  // --- ESTADO: Tipo de Agrupamento com Persistência ---
+  const [groupBy, setGroupBy] = useState<"area" | "group">(() => {
+    // Carrega do localStorage ou define "group" como padrão
+    const saved = localStorage.getItem("machineGridGroupBy");
+    return saved === "area" || saved === "group" ? saved : "group";
+  });
+
+  // Salva a preferência sempre que mudar
+  useEffect(() => {
+    localStorage.setItem("machineGridGroupBy", groupBy);
+  }, [groupBy]);
+
+  // --- LÓGICA DE AGRUPAMENTO ---
+  const groupedMachines = useMemo(() => {
+    return filteredMachines.reduce((groups, machine) => {
+      let key = "";
+
+      if (groupBy === "area") {
+        key = machine.deviceMessage.area || machine.vehicleInfo.deviceGroupName || "Sem Frente";
+      } else {
+        // Padrão: Agrupar por Device Group Name
+        key = machine.vehicleInfo.deviceGroupName || "Sem Grupo";
+      }
+
+      if (!groups[key]) {
+        groups[key] = [];
+      }
+      groups[key].push(machine);
+      return groups;
+    }, {} as Record<string, MachineData[]>);
+  }, [filteredMachines, groupBy]);
 
   const [expandedAreas, setExpandedAreas] = useState<Record<string, boolean>>(
-    () => {
-      const allAreas = machines.reduce((acc, machine) => {
-        const area = machine.deviceMessage.area || "Sem Frente";
-        acc[area] = true;
-        return acc;
-      }, {} as Record<string, boolean>);
-      return allAreas;
-    }
+    {}
   );
+
+  // Expande tudo quando o agrupamento muda para facilitar a visualização
+  useEffect(() => {
+    expandAll();
+  }, [groupBy]);
 
   const getGroupStats = (machines: MachineData[]) => {
     const total = machines.length;
@@ -404,27 +427,66 @@ const MachineGrid = ({
               </div>
             </div>
 
-            {Object.keys(groupedMachines).length > 0 && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={areAllExpanded ? collapseAll : expandAll}
-                className="text-xs flex-shrink-0"
-              >
-                {areAllExpanded ? (
-                  <>
-                    <Minimize2 className="w-3 h-3 mr-1" />
-                    Recolher Tudo
-                  </>
-                ) : (
-                  <>
-                    <Maximize2 className="w-3 h-3 mr-1" />
-                    Expandir Tudo
-                  </>
-                )}
-              </Button>
-            )}
-          </div>
+            <div className="flex items-center gap-4">
+              {/* Agrupamento */}
+              <div className="flex items-center space-x-3 hidden md:flex">
+                <span className="text-sm text-muted-foreground mr-1">
+                  Agrupar por:
+                </span>
+
+                <div className="flex items-center bg-background border border-border rounded-lg p-0.5 shadow-sm">
+                  <button
+                    onClick={() => setGroupBy("area")}
+                    className={cn(
+                      "px-3 py-1.5 text-xs font-medium rounded-md transition-all flex items-center gap-2",
+                      groupBy === "area"
+                        ? "bg-emerald-600 text-white shadow-sm"
+                        : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                    )}
+                  >
+                    <Layers className="w-3.5 h-3.5" />
+                    Área
+                  </button>
+
+                  <div className="w-px h-4 bg-border mx-1" />
+
+                  <button
+                    onClick={() => setGroupBy("group")}
+                    className={cn(
+                      "px-3 py-1.5 text-xs font-medium rounded-md transition-all flex items-center gap-2",
+                      groupBy === "group"
+                        ? "bg-emerald-600 text-white shadow-sm"
+                        : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                    )}
+                  >
+                    <Boxes className="w-3.5 h-3.5" />
+                    Grupo
+                  </button>
+                </div>
+              </div>
+
+              {Object.keys(groupedMachines).length > 0 && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={areAllExpanded ? collapseAll : expandAll}
+                  className="text-xs flex-shrink-0"
+                >
+                  {areAllExpanded ? (
+                    <>
+                      <Minimize2 className="w-3 h-3 mr-1" />
+                      Recolher Tudo
+                    </>
+                  ) : (
+                    <>
+                      <Maximize2 className="w-3 h-3 mr-1" />
+                      Expandir Tudo
+                    </>
+                  )}
+                </Button>
+              )}
+            </div>
+          </div >
 
           <div className="space-y-4 max-h-96 overflow-y-auto pl-1 pr-2">
             {Object.entries(groupedMachines).map(([area, groupMachines]) => {
@@ -715,16 +777,18 @@ const MachineGrid = ({
             })}
           </div>
 
-          {Object.keys(groupedMachines).length === 0 && (
-            <div className="text-center py-8">
-              <p className="text-muted-foreground">
-                Nenhuma máquina encontrada
-              </p>
-            </div>
-          )}
-        </CardContent>
-      </Card>
-    </div>
+          {
+            Object.keys(groupedMachines).length === 0 && (
+              <div className="text-center py-8">
+                <p className="text-muted-foreground">
+                  Nenhuma máquina encontrada
+                </p>
+              </div>
+            )
+          }
+        </CardContent >
+      </Card >
+    </div >
   );
 };
 
