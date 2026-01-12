@@ -258,9 +258,9 @@ const MachineMap = ({
               const isSelected = machine.vehicleInfo.id === selectedMachine;
               const isHovered = machine.vehicleInfo.id === hoveredMachineId;
 
-              let z = 1;
-              if (isSelected) z = 1000;
-              if (isHovered) z = 2000;
+              let z = 100;
+              if (isSelected) z = 10000;
+              if (isHovered) z = 20000;
 
               return (
                 <OverlayViewF
@@ -300,9 +300,9 @@ const MachineMap = ({
                 const isSelected = machine.vehicleInfo.id === selectedMachine;
                 const isHovered = machine.vehicleInfo.id === hoveredMachineId;
 
-                let z = 1;
-                if (isSelected) z = 1000;
-                if (isHovered) z = 2000;
+                let z = 100;
+                if (isSelected) z = 10000;
+                if (isHovered) z = 20000;
 
                 return (
                   <OverlayViewF

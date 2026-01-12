@@ -7,14 +7,14 @@ import { MachineData } from '@/types/machine';
 const createTripJourney = (hourmeterIgnition: number) => {
   const hourmeterWorked = hourmeterIgnition * 0.95;
   const hourmeterTotal = hourmeterIgnition;
-  
+
   // Formata horas decimais para "H:MM"
   const formatHours = (hours: number): string => {
     const h = Math.floor(hours);
     const m = Math.round((hours - h) * 60);
     return `${h}:${m.toString().padStart(2, '0')}`;
   };
-  
+
   return {
     hourmeterIgnition,
     hourmeterWorked,
@@ -30,7 +30,7 @@ const createTripJourney = (hourmeterIgnition: number) => {
 };
 
 export const mockMachines: MachineData[] = [
-  // Green - Working machines
+  // TESTE DE Z-INDEX - Máquinas muito próximas para testar sobreposição de tooltips
   {
     icon: 'sugar-cane-harvester-red.svg',
     vehicleInfo: {
@@ -145,10 +145,11 @@ export const mockMachines: MachineData[] = [
       },
       gps: {
         heading: 90,
-        latitude: -22.9145,
-        longitude: -47.0726,
+        // MUITO PRÓXIMO da máquina 1 (diferença de ~11 metros)
+        latitude: -22.9036,
+        longitude: -47.0617,
         direction: 90,
-        locationData: { latitude: -22.9145, longitude: -47.0726 },
+        locationData: { latitude: -22.9036, longitude: -47.0617 },
       },
       operator: 'Maria Santos',
       area: 'Talhão B3',
@@ -199,10 +200,11 @@ export const mockMachines: MachineData[] = [
       },
       gps: {
         heading: 180,
-        latitude: -22.9255,
-        longitude: -47.0836,
+        // MUITO PRÓXIMO das máquinas 1 e 2 (mesmo grupo)
+        latitude: -22.9035,
+        longitude: -47.0615,
         direction: 180,
-        locationData: { latitude: -22.9255, longitude: -47.0836 },
+        locationData: { latitude: -22.9035, longitude: -47.0615 },
       },
       operator: 'Pedro Oliveira',
       area: 'Talhão C2',

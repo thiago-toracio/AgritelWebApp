@@ -49,9 +49,9 @@ const Index = () => {
 
       if (ignition === true && operator) {
         const data = { name: operator, timestamp: Date.now() };
-        localStorage.setItem(key, JSON.stringify(data));
+        sessionStorage.setItem(key, JSON.stringify(data));
       } else if (ignition === false) {
-        localStorage.removeItem(key);
+        sessionStorage.removeItem(key);
       }
     });
   }, [rawMachines]);
@@ -66,7 +66,7 @@ const Index = () => {
       const operator = machine.deviceMessage?.operator;
 
       if (ignition && !operator) {
-        const cachedRaw = localStorage.getItem(key);
+        const cachedRaw = sessionStorage.getItem(key);
         if (cachedRaw) {
           try {
             const cached = JSON.parse(cachedRaw);

@@ -103,16 +103,16 @@ const MachineMarker: React.FC<MachineMarkerProps> = ({
 
       {/* Container de Posicionamento e Animação de Entrada/Saída */}
       <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-4 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-300 z-[10000] translate-y-2 group-hover:translate-y-0 delay-300 group-hover:delay-0">
-        
+
         {/* CORREÇÃO AQUI:
             Removi o 'group-hover:min-w-[260px]' e fixei 'min-w-[260px]'.
             Assim ele não muda de tamanho quando o mouse sai.
         */}
         <div className="bg-card border-2 border-primary/20 rounded-lg px-4 py-3 shadow-2xl backdrop-blur-md min-w-[260px] max-w-[280px] transition-all duration-300 ring-1 ring-primary/10">
-          
+
           <div className="flex items-start justify-between gap-3 mb-1">
-            <div 
-              className="text-sm font-bold text-card-foreground line-clamp-2 leading-tight" 
+            <div
+              className="text-sm font-bold text-card-foreground line-clamp-2 leading-tight"
               title={name}
             >
               {name}
@@ -184,18 +184,18 @@ const MachineMarker: React.FC<MachineMarkerProps> = ({
                 </div>
                 {machineDataAdapter.getNotation(machine)
                   ?.registrationTime && (
-                  <div className="text-[10px] text-muted-foreground pl-9 -mt-0.5">
-                    {format(
-                      new Date(
-                        machineDataAdapter.getNotation(
-                          machine
-                        )!.registrationTime!
-                      ),
-                      "dd/MM/yyyy 'às' HH:mm",
-                      { locale: ptBR }
-                    )}
-                  </div>
-                )}
+                    <div className="text-[10px] text-muted-foreground pl-9 -mt-0.5">
+                      {format(
+                        new Date(
+                          machineDataAdapter.getNotation(
+                            machine
+                          )!.registrationTime!
+                        ),
+                        "dd/MM/yyyy 'às' HH:mm",
+                        { locale: ptBR }
+                      )}
+                    </div>
+                  )}
               </div>
             )}
 
@@ -261,11 +261,11 @@ const MachineMarker: React.FC<MachineMarkerProps> = ({
           <div className="text-[10px] text-muted-foreground mt-2 pt-2 border-t border-border">
             Atualizado:{" "}
             <span className="font-medium text-foreground">
-            {format(
-              new Date(machine.deviceMessage.lastUpdate),
-              "dd/MM/yyyy HH:mm:ss",
-              { locale: ptBR }
-            )}
+              {format(
+                new Date(machine.deviceMessage.lastUpdate),
+                "dd/MM/yyyy HH:mm:ss",
+                { locale: ptBR }
+              )}
             </span>
           </div>
         </div>
