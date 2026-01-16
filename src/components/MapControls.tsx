@@ -33,7 +33,6 @@ import {
   HelpCircle,
   GroupIcon
 } from "lucide-react";
-import ThemeToggle from "./ThemeToggle";
 import { MachineData, MachineAlertData } from "@/types/machine";
 import { machineDataAdapter } from "@/utils/machineDataAdapter";
 import { format, subHours, startOfHour } from "date-fns";
@@ -418,20 +417,6 @@ const MapControls = ({
                   </Card>
                 )}
               </div>
-
-              <div className="w-full h-px bg-border my-1" />
-
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  {/* Assumindo que ThemeToggle renderiza um botão */}
-                  <div className="flex items-center justify-center">
-                    <ThemeToggle />
-                  </div>
-                </TooltipTrigger>
-                <TooltipContent align="start">
-                  <p>Alterar Tema</p>
-                </TooltipContent>
-              </Tooltip>
 
             </div>
           </CardContent>

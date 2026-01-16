@@ -76,6 +76,16 @@ All colors MUST be HSL - Agricultural theme with modern tech aesthetics
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
+    /* Sidebar colors */
+    --sidebar-background: 220 15% 18%;
+    --sidebar-foreground: 220 15% 95%;
+    --sidebar-primary: 142 85% 45%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 15% 25%;
+    --sidebar-accent-foreground: 220 15% 95%;
+    --sidebar-border: 220 15% 25%;
+    --sidebar-ring: 142 85% 45%;
+
     --radius: 0.5rem;
   }
 

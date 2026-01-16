@@ -3,7 +3,11 @@
  * Handles HTTP requests with credentials and error handling
  */
 
-const BASE_URL = '/api/reactapp';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5032';
+const BASE_URL = `${API_URL}/api`;
+
+console.log('🔌 API URL:', API_URL);
+console.log('🔌 BASE_URL:', BASE_URL);
 
 export class ApiClient {
   private baseUrl: string;
@@ -16,7 +20,10 @@ export class ApiClient {
    * Generic GET request
    */
   async get<T>(endpoint: string): Promise<T> {
-    const response = await fetch(`${this.baseUrl}${endpoint}`, {
+    const url = `${this.baseUrl}${endpoint}`;
+    console.log('🌐 GET:', url);
+    
+    const response = await fetch(url, {
       method: 'GET',
       credentials: 'include',
       headers: {
@@ -35,7 +42,10 @@ export class ApiClient {
    * Generic POST request
    */
   async post<T>(endpoint: string, data: unknown): Promise<T> {
-    const response = await fetch(`${this.baseUrl}${endpoint}`, {
+    const url = `${this.baseUrl}${endpoint}`;
+    console.log('🌐 POST:', url);
+    
+    const response = await fetch(url, {
       method: 'POST',
       credentials: 'include',
       headers: {

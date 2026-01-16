@@ -34,6 +34,11 @@ import {
   RefreshCw,
   Activity,
   Boxes,
+  MoreHorizontal,
+  History,
+  TrendingUp,
+  Fuel as FuelIcon,
+  Wrench,
 } from "lucide-react";
 import MachineIcon from "@/components/MachineIcons";
 import { cn } from "@/lib/utils";
@@ -46,6 +51,14 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface MachineGridProps {
   machines: MachineData[];
@@ -55,6 +68,7 @@ interface MachineGridProps {
   selectedMachine?: string;
   journeyStartTime?: string;
   countdown: number;
+  onViewHistory: (machine: MachineData) => void;
 }
 
 const MachineGrid = ({
@@ -65,6 +79,7 @@ const MachineGrid = ({
   selectedMachine,
   journeyStartTime,
   countdown,
+  onViewHistory,
 }: MachineGridProps) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
@@ -566,6 +581,37 @@ const MachineGrid = ({
                               </div>
 
                               <div className="flex flex-col items-end space-y-1 flex-shrink-0">
+                                {/* Context Menu */}
+                                <div onClick={(e) => e.stopPropagation()}>
+                                  <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                      <Button variant="ghost" className="h-6 w-6 p-0 hover:bg-muted" >
+                                        <span className="sr-only">Abrir menu</span>
+                                        <MoreHorizontal className="h-4 w-4" />
+                                      </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent align="end">
+                                      <DropdownMenuLabel>Ações</DropdownMenuLabel>
+                                      <DropdownMenuItem onClick={() => onViewHistory(machine)}>
+                                        <History className="mr-2 h-4 w-4" />
+                                        <span>Map / Histórico</span>
+                                      </DropdownMenuItem>
+                                      <DropdownMenuItem disabled>
+                                         <TrendingUp className="mr-2 h-4 w-4" />
+                                         <span>Gráfico</span>
+                                      </DropdownMenuItem>
+                                       <DropdownMenuItem disabled>
+                                         <FuelIcon className="mr-2 h-4 w-4" />
+                                         <span>Consumo</span>
+                                      </DropdownMenuItem>
+                                       <DropdownMenuItem disabled>
+                                         <Wrench className="mr-2 h-4 w-4" />
+                                         <span>Manutenção</span>
+                                      </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                  </DropdownMenu>
+                                </div>
+
                                 <Badge
                                   variant={getStatusBadgeVariant(
                                     machineDataAdapter.getStatusColor(machine)

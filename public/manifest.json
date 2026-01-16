@@ -1,0 +1,18 @@
+{
+  "name": "Agritel - Monitoramento Agrícola",
+  "short_name": "Agritel",
+  "description": "Sistema de Monitoramento de Máquinas Agrícolas em Tempo Real",
+  "start_url": "/reactapp/monitoramento-online/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#22c55e",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    }
+  ],
+  "categories": ["business", "productivity"]
+}

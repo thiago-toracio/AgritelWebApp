@@ -8,6 +8,7 @@ import MachineSidebar from "@/components/MachineSidebar";
 import MapControls, { MapStyle } from "@/components/MapControls";
 import AlertsPanel from "@/components/AlertsPanel";
 import MachineStatusPanel from "@/components/MachineStatusPanel";
+import { LoadingTractor } from "@/components/LoadingTractor";
 import { cookieManager } from "@/utils/cookieManager";
 
 const validMapStyles: MapStyle[] = [
@@ -17,10 +18,15 @@ const validMapStyles: MapStyle[] = [
   "terrain",
 ];
 
+import { HistoryModal } from "@/components/HistoryModal";
+
+// ... previous imports
+
 const Index = () => {
   const [rawMachines, setRawMachines] = useState<MachineData[]>([]);
   const [isInitialLoading, setIsInitialLoading] = useState(true);
   const [selectedMachine, setSelectedMachine] = useState<string | undefined>();
+  const [historyMachine, setHistoryMachine] = useState<MachineData | null>(null); // State for history modal
   const [isGridOpen, setIsGridOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isAlertsPanelOpen, setIsAlertsPanelOpen] = useState(false);
@@ -296,18 +302,14 @@ const Index = () => {
 
   if (isInitialLoading) {
     return (
-      <div className="flex h-screen w-full items-center justify-center bg-background">
-        <div className="text-center">
-          <div className="mb-4 text-xl font-semibold">
-            Carregando máquinas...
-          </div>
-        </div>
+      <div className="flex h-full w-full items-center justify-center bg-background">
+        <LoadingTractor message="Carregando máquinas..." subtitle="Obtendo status das máquinas" />
       </div>
     );
   }
 
   return (
-    <div className="relative h-screen w-full overflow-hidden bg-background">
+    <div className="relative h-full w-full overflow-hidden bg-background">
       <MachineMap
         machines={machines}
         selectedMachine={selectedMachine}
@@ -343,6 +345,7 @@ const Index = () => {
         selectedMachine={selectedMachine}
         journeyStartTime={journeyStartTime}
         countdown={countdown}
+        onViewHistory={(machine) => setHistoryMachine(machine)}
       />
 
       <AlertsPanel
@@ -365,6 +368,13 @@ const Index = () => {
         machine={selectedMachineData}
         isOpen={isSidebarOpen}
         onClose={handleCloseSidebar}
+      />
+
+      <HistoryModal 
+        isOpen={!!historyMachine} // Control visibility
+        onClose={() => setHistoryMachine(null)}
+        machineId={historyMachine?.vehicleInfo?.id || ""}
+        machineName={historyMachine?.vehicleInfo?.name || ""}
       />
     </div>
   );
