@@ -188,10 +188,8 @@ const MapBounds = ({ geoJson }: { geoJson: GeoJsonFeatureCollection }) => {
   return null;
 };
 
-// ==================================================================================
-// NATIVE LEAFLET LAYERS - Uses L.layerGroup for maximum performance
-// Bypasses React's virtual DOM entirely for the heavy rendering
-// ==================================================================================
+import { FastTelemetryLayer } from './FastTelemetryLayer';
+
 interface NativeLayersProps {
   filteredFeatures: any[];
   mapType: MapType;
@@ -203,183 +201,38 @@ interface NativeLayersProps {
 
 const NativeLayers = ({ filteredFeatures, mapType, activeRange, config, maxSections, onHover }: NativeLayersProps) => {
   const map = useMap();
-  const layerGroupRef = useRef<L.LayerGroup | null>(null);
-  const mouseoutTimeoutRef = useRef<number | null>(null);
-  const currentFeatureRef = useRef<any | null>(null);
-  const hoveredPolygonRef = useRef<L.Polygon | L.Polyline | null>(null);
-
-  const getEffectiveWidth = useCallback((props: TelemetryProperties): number => {
-    const rawWidth = props.actualWorkingWidth ?? 30;
-    const sections = props.sections as boolean[] | undefined;
-    if (!Array.isArray(sections) || maxSections === 0) return rawWidth;
-    const activeCount = sections.filter(s => s).length;
-    return (activeCount / maxSections) * rawWidth;
-  }, [maxSections]);
-
-  // Helper to clear hover with debounce
-  const scheduleHoverClear = useCallback(() => {
-    if (mouseoutTimeoutRef.current) {
-      clearTimeout(mouseoutTimeoutRef.current);
-    }
-    mouseoutTimeoutRef.current = window.setTimeout(() => {
-      // Reset previous polygon style
-      if (hoveredPolygonRef.current) {
-        // @ts-ignore - Custom property
-        const originalColor = hoveredPolygonRef.current.options.originalColor;
-        // @ts-ignore
-        const originalWeight = hoveredPolygonRef.current.options.originalWeight ?? 0;
-        hoveredPolygonRef.current.setStyle({ 
-          color: originalColor, 
-          weight: originalWeight 
-        });
-        hoveredPolygonRef.current = null;
-      }
-      currentFeatureRef.current = null;
-      onHover(null);
-    }, 30); // 30ms debounce
-  }, [onHover]);
-
-  // Helper to set hover (cancels pending clear, skips if same feature)
-  const setHover = useCallback((f: any, polygon: L.Polygon | L.Polyline, originalColor: string, originalWeight: number) => {
-    // Cancel any pending clear
-    if (mouseoutTimeoutRef.current) {
-      clearTimeout(mouseoutTimeoutRef.current);
-      mouseoutTimeoutRef.current = null;
-    }
-    
-    // Skip if same feature (prevents flicker when moving within same polygon)
-    if (currentFeatureRef.current === f) {
-      return;
-    }
-    
-    // Reset previous polygon style
-    if (hoveredPolygonRef.current && hoveredPolygonRef.current !== polygon) {
-      // @ts-ignore
-      const prevOriginalColor = hoveredPolygonRef.current.options.originalColor;
-      // @ts-ignore
-      const prevOriginalWeight = hoveredPolygonRef.current.options.originalWeight ?? 0;
-      hoveredPolygonRef.current.setStyle({ 
-        color: prevOriginalColor, 
-        weight: prevOriginalWeight 
-      });
-    }
-    
-    // Highlight new polygon
-    polygon.setStyle({ color: 'red', weight: 3 });
-    hoveredPolygonRef.current = polygon;
-    
-    currentFeatureRef.current = f;
-    onHover(f);
-  }, [onHover]);
+  const layerRef = useRef<FastTelemetryLayer | null>(null);
 
   useEffect(() => {
-    // Clean up previous layers
-    if (layerGroupRef.current) {
-      map.removeLayer(layerGroupRef.current);
-    }
-    if (mouseoutTimeoutRef.current) {
-      clearTimeout(mouseoutTimeoutRef.current);
-      mouseoutTimeoutRef.current = null;
-    }
-    hoveredPolygonRef.current = null;
-    currentFeatureRef.current = null;
-
-    // Create new layer group
-    const layerGroup = L.layerGroup();
-
-    filteredFeatures.forEach((f) => {
-      const coords = f.geometry.coordinates;
-      if (coords.length < 2) return;
-      
-      const props = f.properties;
-      const isWorking = props?.working === true || props?.transmissionReason === WORKING_EVENT;
-      const isDislocating = props?.dislocating === true 
-        || props?.transmissionReason === DISLOCATING_EVENT 
-        || props?.transmissionReason === BEING_DISPLACEMENT;
-      
-      const p1: [number, number] = [coords[0][0], coords[0][1]];
-      const p2: [number, number] = [coords[1][0], coords[1][1]];
-      
-      if (isWorking) {
-        const widthM = getEffectiveWidth(props);
-        if (widthM <= 0.1) return;
-
-        const polygonCoords = lineToPolygon(p1, p2, widthM);
-        const value = getValue(props, mapType);
-        const color = getColor(value, activeRange, config.invertColor);
-        
-        const polygon = L.polygon(polygonCoords, {
-          color: color,
-          fillColor: color,
-          fillOpacity: 0.8,
-          weight: 0,
-          interactive: true,
-          // @ts-ignore - Store original for reset
-          originalColor: color,
-          originalWeight: 0,
-          featureData: f
+    if (!layerRef.current) {
+        layerRef.current = new FastTelemetryLayer({
+            features: filteredFeatures,
+            mapType,
+            activeRange,
+            config,
+            maxSections,
+            getValue, // Pass the getValue function from parent scope
+            onHover
         });
-
-        polygon.on('mouseover', () => setHover(f, polygon, color, 0));
-        polygon.on('mouseout', scheduleHoverClear);
-
-
-        layerGroup.addLayer(polygon);
-      } else if (isDislocating) {
-        const lineColor = 'hsl(200, 85%, 55%)';
-        const polyline = L.polyline(
-          [[coords[0][1], coords[0][0]], [coords[1][1], coords[1][0]]],
-          { 
-            color: lineColor, 
-            weight: 4, 
-            opacity: 0.9,
-            interactive: true,
-            // @ts-ignore
-            originalColor: lineColor,
-            originalWeight: 4,
-            featureData: f
-          }
-        );
-
-        polyline.on('mouseover', () => setHover(f, polyline, lineColor, 4));
-        polyline.on('mouseout', scheduleHoverClear);
-
-        layerGroup.addLayer(polyline);
-      } else {
-        const statusColor = props?.maneuvering ? 'hsl(45, 85%, 55%)' : 'hsl(0, 0%, 50%)';
-        const polyline = L.polyline(
-          [[coords[0][1], coords[0][0]], [coords[1][1], coords[1][0]]],
-          { 
-            color: statusColor, 
-            weight: 2, 
-            opacity: 0.7,
-            interactive: true,
-            // @ts-ignore
-            originalColor: statusColor,
-            originalWeight: 2,
-            featureData: f
-          }
-        );
-
-        polyline.on('mouseover', () => setHover(f, polyline, statusColor, 2));
-        polyline.on('mouseout', scheduleHoverClear);
-
-        layerGroup.addLayer(polyline);
-      }
-    });
-
-
-    layerGroup.addTo(map);
-    layerGroupRef.current = layerGroup;
+        map.addLayer(layerRef.current);
+    } else {
+        layerRef.current.setOptions({
+            features: filteredFeatures,
+            mapType,
+            activeRange,
+            config,
+            maxSections
+        });
+        // Force redraw if needed, setOptions handles it
+    }
 
     return () => {
-      if (layerGroupRef.current) {
-        map.removeLayer(layerGroupRef.current);
-      }
-      // Reset hovered polygon ref (no layer to remove, style is on the polygon itself)
-      hoveredPolygonRef.current = null;
+        if (layerRef.current) {
+            map.removeLayer(layerRef.current);
+            layerRef.current = null;
+        }
     };
-  }, [filteredFeatures, mapType, activeRange, config, map, getEffectiveWidth, onHover]);
+  }, [map, filteredFeatures, mapType, activeRange, config, maxSections, onHover]);
 
   return null;
 };
