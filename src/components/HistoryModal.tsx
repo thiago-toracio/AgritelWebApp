@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo, useRef } from 'react';
+import { useEffect, useState, useMemo, useRef, lazy, Suspense } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -17,8 +17,10 @@ import { telemetryService, MapReportResponse, ActiveDayInfo } from '@/services/a
 import { machineService } from '@/services/api/machineService';
 import { MachineData } from '@/types/machine';
 import { useToast } from '@/hooks/use-toast';
-import HistoryMap from './HistoryMap';
+import { useMachines } from '@/hooks/useMachines';
 import { LoadingTractor } from './LoadingTractor';
+
+const HistoryMap = lazy(() => import('./HistoryMap'));
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -34,7 +36,7 @@ interface HistoryModalProps {
 
 export const HistoryModal = ({ isOpen, onClose, machineId: initialMachineId, machineName: initialMachineName }: HistoryModalProps) => {
   const [currentMachineId, setCurrentMachineId] = useState(initialMachineId);
-  const [machinesList, setMachinesList] = useState<MachineData[]>([]);
+  const { data: machinesList = [] } = useMachines();
 
   const [dateRange, setDateRange] = useState<DateRange | undefined>({
     from: new Date(),
@@ -51,20 +53,13 @@ export const HistoryModal = ({ isOpen, onClose, machineId: initialMachineId, mac
   // Filter state
   const [statusFilter, setStatusFilter] = useState<'all' | 'working' | 'dislocating' | 'stopped'>('all');
   const [maxActiveSectionsFilter, setMaxActiveSectionsFilter] = useState<number | null>(null);
-
+  
   // Sync props to state when modal opens with different machine
   useEffect(() => {
     if (isOpen) {
         setCurrentMachineId(initialMachineId);
     }
   }, [isOpen, initialMachineId]);
-
-  // Fetch machines list
-  useEffect(() => {
-      if (isOpen && machinesList.length === 0) {
-          machineService.getMachines().then(setMachinesList).catch(console.error);
-      }
-  }, [isOpen, machinesList.length]); // Added machinesList.length to avoid re-fetching if already loaded
 
   // Calculate max sections from data (highest active section index)
   const maxSections = useMemo(() => {
@@ -448,14 +443,16 @@ export const HistoryModal = ({ isOpen, onClose, machineId: initialMachineId, mac
               </div>
             ) : (
               mapData && (
-                <HistoryMap 
-                  geoJson={mapData.geoJson} 
-                  ranges={mapData.range}
-                  statusFilter={statusFilter}
-                  maxActiveSectionsFilter={maxActiveSectionsFilter}
-                  averageFuel={mapData.total.averageFuelConsumption}
-                  averagePitch={mapData.total.averagePitch}
-                />
+                <Suspense fallback={<div className="absolute inset-0 flex items-center justify-center"><LoadingTractor /></div>}>
+                  <HistoryMap 
+                    geoJson={mapData.geoJson} 
+                    ranges={mapData.range}
+                    statusFilter={statusFilter}
+                    maxActiveSectionsFilter={maxActiveSectionsFilter}
+                    averageFuel={mapData.total.averageFuelConsumption}
+                    averagePitch={mapData.total.averagePitch}
+                  />
+                </Suspense>
               )
             )}
             

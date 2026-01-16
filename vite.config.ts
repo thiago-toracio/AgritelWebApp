@@ -44,7 +44,7 @@ export default defineConfig(({ mode, command }) => {
         // Proxy is only needed in development to forward /api calls to the backend (to avoid CORS)
         proxy: {
           "/api": {
-            target: env.VITE_API_TARGET || "https://localhost:44348",
+            target: env.VITE_API_TARGET || "https://localhost:7193",
             secure: false,
             changeOrigin: true,
           },
